@@ -120,7 +120,7 @@ const onMenuClick = item => {
       }
     })
   } else if (item.value === 'copyOrMove') {
-    // 移动
+    // 复制/移动
     emitter.emit('show_move_dialog', {
       type: 'file',
       name: props.data.name,

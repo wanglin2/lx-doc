@@ -126,5 +126,13 @@ export default {
       return getMockData('moveFolder', data)
     }
     return http.post('/moveFolder', data)
+  },
+
+  // 复制文件夹
+  copyFolder(data) {
+    if (isDev) {
+      return getMockData('copyFolder', data)
+    }
+    return http.post('/copyFolder', data)
   }
 }

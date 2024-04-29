@@ -13,12 +13,8 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="onClose">取消</el-button>
-        <el-button type="primary" @click="onConfirmCopy" v-if="isEditFile"
-          >复制</el-button
-        >
-        <el-button type="primary" @click="onConfirmMove">{{
-          isEditFile ? '移动' : '确定'
-        }}</el-button>
+        <el-button type="primary" @click="onConfirmCopy">复制</el-button>
+        <el-button type="primary" @click="onConfirmMove">移动</el-button>
       </span>
     </template>
   </el-dialog>
@@ -79,16 +75,20 @@ const onClose = () => {
 // 确认复制
 const onConfirmCopy = () => {
   if (!currentNodeData.value) {
-    ElMessage.warning('请选择要文件夹')
+    ElMessage.warning('请选择要复制到的文件夹')
     return
   }
-  copyFile()
+  if (editData.value.type === 'folder') {
+    copyFolder()
+  } else {
+    copyFile()
+  }
 }
 
 // 确认移动
 const onConfirmMove = () => {
   if (!currentNodeData.value) {
-    ElMessage.warning('请选择要文件夹')
+    ElMessage.warning('请选择要移动到的文件夹')
     return
   }
   if (editData.value.type === 'folder') {
@@ -113,6 +113,37 @@ const copyFile = async () => {
   }
 }
 
+// 移动文件
+const moveFile = async () => {
+  try {
+    await api.moveFile({
+      ids: editData.value.ids,
+      newFolderId: currentNodeData.value.id
+    })
+    if (editData.value.callback) editData.value.callback()
+    onClose()
+    ElMessage.success('移动成功')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// 复制文件夹
+const copyFolder = async () => {
+  try {
+    await api.copyFolder({
+      id: editData.value.ids[0],
+      folderId: currentNodeData.value.id
+    })
+    if (editData.value.callback) editData.value.callback()
+    onClose()
+    emitter.emit('copy_folder_success')
+    ElMessage.success('复制成功')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // 移动文件夹
 const moveFolder = async () => {
   try {
@@ -123,21 +154,6 @@ const moveFolder = async () => {
     if (editData.value.callback) editData.value.callback()
     onClose()
     emitter.emit('move_folder_success')
-    ElMessage.success('移动成功')
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-// 移动文件
-const moveFile = async () => {
-  try {
-    await api.moveFile({
-      ids: editData.value.ids,
-      newFolderId: currentNodeData.value.id
-    })
-    if (editData.value.callback) editData.value.callback()
-    onClose()
     ElMessage.success('移动成功')
   } catch (error) {
     console.log(error)

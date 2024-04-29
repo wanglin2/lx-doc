@@ -59,8 +59,8 @@ const menuList = reactive([
     icon: 'icon-zhongmingming'
   },
   {
-    name: '移动',
-    value: 'move',
+    name: '复制/移动',
+    value: 'copyOrMove',
     icon: 'icon-a-yidong2'
   },
   {
@@ -85,8 +85,8 @@ const onMenuClick = item => {
         emits('renamed')
       }
     })
-  } else if (item.value === 'move') {
-    // 移动
+  } else if (item.value === 'copyOrMove') {
+    // 复制/移动
     emitter.emit('show_move_dialog', {
       type: 'folder',
       name: props.data.name,

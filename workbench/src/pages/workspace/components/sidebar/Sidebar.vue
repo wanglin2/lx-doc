@@ -104,6 +104,7 @@ const reloadTree = () => {
   })
 }
 emitter.on('move_folder_success', reloadTree)
+emitter.on('copy_folder_success', reloadTree)
 
 // 刷新指定节点的父节点数据
 const refreshParentNode = id => {
