@@ -47,7 +47,7 @@
 
 <script setup>
 import { getFileTypeIcon, getFileTypeConfig } from '@/utils'
-import Menu from './Menu.vue'
+import Menu from '../common/Menu.vue'
 import { reactive } from 'vue'
 import useFileHandle from '@/hooks/useFileHandle'
 import emitter from '@/utils/eventBus'

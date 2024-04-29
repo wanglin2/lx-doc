@@ -31,7 +31,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
-import Menu from './Menu.vue'
+import Menu from '../common/Menu.vue'
 import emitter from '@/utils/eventBus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'

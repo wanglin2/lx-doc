@@ -32,24 +32,34 @@
           </div>
         </div>
         <div class="right">
-          <el-button style="margin-right: 12px" @click="createFolder"
+          <el-button class="marginRight" @click="createFolder"
             >新建文件夹</el-button
           >
+          <TypeFilter
+            class="marginRight"
+            :filterType="currentFilterType"
+            @change="onFilterTypeChange"
+          ></TypeFilter>
+          <Sort
+            class="marginRight"
+            :sortField="currentSortField"
+            :sortType="currentSortType"
+            @changeType="onsortTypeChange"
+            @changeField="onSortFieldChange"
+          ></Sort>
           <el-tooltip
             effect="light"
             :content="currentLayoutType === 'grid' ? '网格视图' : '列表视图'"
             placement="bottom"
           >
-            <div class="layoutBtn" @click="toggleLayoutType">
-              <span
-                class="iconfont"
-                :class="[
-                  currentLayoutType === 'grid'
-                    ? 'icon-shuanglieliebiao'
-                    : 'icon-danlieliebiao'
-                ]"
-              ></span>
-            </div>
+            <IconBtn
+              :icon="
+                currentLayoutType === 'grid'
+                  ? 'icon-shuanglieliebiao'
+                  : 'icon-danlieliebiao'
+              "
+              @click="toggleLayoutType"
+            ></IconBtn>
           </el-tooltip>
         </div>
       </div>
@@ -124,6 +134,9 @@ import api from '@/api'
 import NoData from './NoData.vue'
 import ContextMenu from './ContextMenu.vue'
 import emitter from '@/utils/eventBus'
+import IconBtn from '../common/IconBtn.vue'
+import TypeFilter from './TypeFilter.vue'
+import Sort from './Sort.vue'
 
 const store = useStore()
 
@@ -140,6 +153,9 @@ const currentFolderPath = computed(() => {
 const folderList = ref([])
 const fileList = ref([])
 const isLoading = ref(true)
+const currentFilterType = ref('all')
+const currentSortField = ref('createAt')
+const currentSortType = ref('desc')
 // 监听当前所在文件夹，改变了刷新列表数据
 watch(
   () => {
@@ -157,7 +173,10 @@ const getFolderAndFileList = async () => {
     fileList.value = []
     isLoading.value = true
     const { data } = await api.getFolderAndFileList({
-      folderId: currentFolder.value ? currentFolder.value.id : ''
+      folderId: currentFolder.value ? currentFolder.value.id : '',
+      type: currentFilterType.value === 'all' ? '' : currentFilterType.value,
+      sortField: currentSortField.value,
+      sortType: currentSortType.value
     })
     if (currentFolder.value === null) {
       const folder = data.folderList[0]
@@ -179,6 +198,21 @@ const getFolderAndFileList = async () => {
   }
 }
 emitter.on('refresh_list', getFolderAndFileList)
+
+// 修改过滤类型
+const onFilterTypeChange = val => {
+  currentFilterType.value = val
+  getFolderAndFileList()
+}
+// 排序改变
+const onSortFieldChange = val => {
+  currentSortField.value = val
+  getFolderAndFileList()
+}
+const onsortTypeChange = val => {
+  currentSortType.value = val
+  getFolderAndFileList()
+}
 
 // 文件夹路径点击
 const onFolderPathClick = path => {
@@ -382,33 +416,8 @@ const toggleLayoutType = async () => {
         display: flex;
         align-items: center;
 
-        .layoutBtn {
-          width: 32px;
-          height: 32px;
-          border: var(--el-border);
-          border-color: var(--el-border-color);
-          border-radius: var(--el-border-radius-base);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .marginRight {
           margin-right: 12px;
-          cursor: pointer;
-          background-color: #fff;
-
-          &:hover {
-            background-color: var(--el-color-primary-light-9);
-            border-color: var(--el-color-primary-light-7);
-            outline: none;
-
-            .iconfont {
-              color: var(--el-color-primary);
-            }
-          }
-
-          .iconfont {
-            font-size: 20px;
-            color: var(--el-text-color-regular);
-          }
         }
       }
     }
