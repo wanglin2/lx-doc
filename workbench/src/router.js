@@ -1,23 +1,30 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Index from './pages/index/Index.vue';
-import Workspace from './pages/workspace/Workspace.vue';
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-    { 
-        name: 'Index',
-        path: '/', 
-        component: Index
-    },
-    {
-        name: 'Workspace',
-        path: '/workspace',
-        component: Workspace
-    },
+  {
+    path: '/',
+    redirect: '/workspace'
+  },
+  {
+    name: 'Workspace',
+    path: '/workspace',
+    component: () => import('@/pages/workspace/Index.vue')
+  },
+  {
+    name: 'Login',
+    path: '/login',
+    component: () => import('@/pages/login/Index.vue')
+  },
+  {
+    name: 'Error',
+    path: '/error',
+    component: () => import('@/pages/Error/Index.vue')
+  }
 ]
 
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes,
+  history: createWebHistory(),
+  routes
 })
 
 export default router

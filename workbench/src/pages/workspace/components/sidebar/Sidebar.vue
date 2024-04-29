@@ -1,0 +1,268 @@
+<template>
+  <div class="sidebarContainer">
+    <div class="header">
+      <span class="logo">
+        <img :src="config.logo" alt="" />
+      </span>
+      <span class="title">{{ config.name }}</span>
+    </div>
+    <div class="createBox" @click.stop>
+      <div
+        class="createBtn"
+        @click="createTypeListVisible = !createTypeListVisible"
+      >
+        <span class="iconfont icon-jia"></span>
+        <span class="text">创建</span>
+      </div>
+      <div class="createTypeList" v-show="createTypeListVisible">
+        <div
+          class="createTypeItem"
+          v-for="item in config.createTypeList"
+          :key="item.value"
+          @click="createAndOpenNewFile(item.value)"
+        >
+          <span
+            class="iconfont"
+            :class="[item.icon]"
+            :style="{ color: item.color }"
+          ></span>
+          <span class="text">{{ item.name }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="menuList">
+      <div class="folderTree">
+        <FolderTree
+          v-if="isLoadTree"
+          ref="FolderTreeRef"
+          :isNotSetCurrentNode="isNotSetCurrentNode"
+          :currentNodeKey="currentFolder ? currentFolder.id : ''"
+          @currentChange="onCurrentChange"
+        ></FolderTree>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { nextTick, ref, watch, computed, onUnmounted } from 'vue'
+import config from '@/config'
+import api from '@/api'
+import useFileHandle from '@/hooks/useFileHandle'
+import { useStore } from '@/store'
+import FolderTree from '../common/FolderTree.vue'
+import emitter from '@/utils/eventBus'
+
+const store = useStore()
+
+// 创建列表的显示
+const createTypeListVisible = ref(false)
+const hideCreateTypeList = () => {
+  createTypeListVisible.value = false
+}
+window.addEventListener('click', hideCreateTypeList)
+
+// 创建新文件
+const { createAndOpenNewFile } = useFileHandle()
+
+// 文件夹树
+const isLoadTree = ref(true)
+const isNotSetCurrentNode = ref(false)
+const FolderTreeRef = ref(null)
+// 监听当前所在文件夹，改变了刷新列表数据
+const currentFolder = computed(() => {
+  return store.currentFolder
+})
+watch(
+  () => {
+    return currentFolder.value
+  },
+  () => {
+    FolderTreeRef.value.setCurrentKey(currentFolder.value.id)
+  }
+)
+
+// 修改当前文件夹、路径
+const onCurrentChange = (data, node) => {
+  if (!data || !node) return
+  const pathList = [{ ...data }]
+  let parent = node.parent
+  while (parent && parent.level > 0) {
+    pathList.unshift({ ...parent.data })
+    parent = parent.parent
+  }
+  store.setCurrentFolderPath(pathList)
+  store.setCurrentFolder({ ...data })
+}
+
+// 重新加载树
+const reloadTree = () => {
+  isNotSetCurrentNode.value = true
+  isLoadTree.value = false
+  nextTick(() => {
+    isLoadTree.value = true
+  })
+}
+emitter.on('move_folder_success', reloadTree)
+
+// 刷新指定节点的父节点数据
+const refreshParentNode = id => {
+  const tree = FolderTreeRef.value.getTree()
+  const node = tree.getNode(id)
+  if (node) {
+    const parent = node.parent
+    if (parent.expanded) {
+      FolderTreeRef.value.updateNodeById(parent.data.id)
+    }
+  }
+}
+emitter.on('delete_folder_success', refreshParentNode)
+emitter.on('update_folder_success', refreshParentNode)
+
+// 刷新指定节点数据
+const refreshNode = id => {
+  const tree = FolderTreeRef.value.getTree()
+  const node = tree.getNode(id)
+  if (node) {
+    FolderTreeRef.value.updateNodeById(id)
+  }
+}
+emitter.on('create_folder_success', refreshNode)
+
+onUnmounted(() => {
+  emitter.off('move_folder_success', reloadTree)
+  emitter.off('delete_folder_success', refreshParentNode)
+  emitter.off('create_folder_success', refreshNode)
+})
+</script>
+
+<style lang="less" scoped>
+.sidebarContainer {
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #e9edf2;
+  flex-shrink: 0;
+
+  .header {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    justify-content: center;
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      color: var(--theme-color);
+    }
+  }
+
+  .createBox {
+    padding: 0 12px;
+    position: relative;
+    z-index: 2;
+
+    .createBtn {
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--theme-color);
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:active {
+        opacity: 0.6;
+      }
+
+      .text {
+        margin-left: 12px;
+      }
+    }
+
+    .createTypeList {
+      position: absolute;
+      left: 12px;
+      top: 38px;
+      width: 272px;
+      padding: 16px 20px 0;
+      background: #fff;
+      box-shadow: 0 6px 16px 1px rgba(0, 0, 0, 0.08),
+        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      border: 1px solid #e9edf2;
+      display: flex;
+      flex-wrap: wrap;
+
+      .createTypeItem {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 70px;
+        height: 65px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        margin-right: 10px;
+        font-weight: bold;
+
+        &:nth-of-type(3n) {
+          margin-right: 0;
+        }
+
+        &:hover {
+          background: #f3f5f9;
+        }
+
+        .iconfont {
+          font-size: 24px;
+        }
+
+        .text {
+          color: #6c7d8f;
+          font-size: 12px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+
+  .menuList {
+    margin-top: 20px;
+
+    .folderTree {
+      .customFolderTreeNode {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #212930;
+
+        .iconfont {
+          font-size: 18px;
+        }
+
+        .text {
+          margin-left: 6px;
+        }
+      }
+    }
+  }
+}
+</style>

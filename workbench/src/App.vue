@@ -1,23 +1,35 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { useRouter } from 'vue-router'
+import { useStore } from './store'
 
+const store = useStore()
+const router = useRouter()
+
+const init = async () => {
+  try {
+    const taskList = [store.getUserInfo(), store.getUserConfig()]
+    await Promise.all(taskList)
+  } catch (error) {
+    router.push({
+      name: 'Error'
+    })
+  }
+}
+
+init()
 </script>
 
 <style lang="less">
-* {
-  margin: 0;
-  padding: 0;
+::-webkit-scrollbar {
+  width: 4px;
+  height: 5px;
 }
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
 }
 </style>

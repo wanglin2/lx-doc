@@ -1,85 +1,130 @@
-import axios from 'axios';
+import http from './httpInstance'
+import getMockData from './mock'
 
 const isDev = process.env.NODE_ENV === 'development'
-axios.defaults.baseURL = isDev ? `http://lxqnsys.com/board/api/dev` : './api/v1';
-
-const crateFormData = (data = {}) => {
-    let formData = new FormData()
-    Object.keys(data).forEach((key) => {
-        formData.append(key, data[key])
-    })
-    return formData;
-}
 
 export default {
-    // 退出登录
-    logout() {
-        return axios.get('/logout.php')
-    },
+  // 退出登录
+  logout() {
+    if (isDev) {
+      return getMockData('logout')
+    }
+    return http.get('/logout')
+  },
 
-    // 获取用户信息
-    getUserInfo() {
-        return axios.get(`/getUserInfo.php`);
-    },
+  // 获取用户信息
+  getUserInfo() {
+    if (isDev) {
+      return getMockData('getUserInfo')
+    }
+    return http.get('/getUserInfo')
+  },
 
-    // 创建文件
-    createFile(data) {
-        return axios.post('/create.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 获取用户配置
+  getUserConfig() {
+    if (isDev) {
+      return getMockData('getUserConfig')
+    }
+    return http.get('/getUserConfig')
+  },
 
-    // 更新文件
-    updateFile(data) {
-        return axios.post('/update.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 更新用户配置
+  updateUserConfig(data) {
+    if (isDev) {
+      return getMockData('updateUserConfig', data)
+    }
+    return http.post('/updateUserConfig', data)
+  },
 
-    // 删除文件
-    deleteFile(data) {
-        return axios.post('/delete.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 获取文件夹树，异步树
+  getFolderTree(params) {
+    if (isDev) {
+      return getMockData('getFolderTree', params)
+    }
+    return http.get('/getFolderTree', {
+      params
+    })
+  },
 
-    // 获取文件数据
-    getFile() {
-        return axios.get(`/get.php`);
-    },
+  // 获取某个文件夹下的文件夹列表和文件列表
+  getFolderAndFileList(params) {
+    if (isDev) {
+      return getMockData('getFolderAndFileList', params)
+    }
+    return http.get('/getFolderAndFileList', {
+      params
+    })
+  },
 
-    // 获取文件列表
-    getFileList(params) {
-        return axios.get(`/getList.php`, {
-            params
-        });
-    },
+  // 创建新文件--------------------
+  createFile(data) {
+    if (isDev) {
+      return getMockData('createFile', data)
+    }
+    return http.post('/createFile', data)
+  },
 
-    // 创建文件夹
-    createFolder(data) {
-        return axios.post('/createFolder.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 更新文件
+  updateFile(data) {
+    if (isDev) {
+      return getMockData('updateFile', data)
+    }
+    return http.post('/updateFile', data)
+  },
 
-    // 更新文件夹
-    updateFolder(data) {
-        return axios.post('/updateFolder.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 移动文件
+  moveFile(data) {
+    if (isDev) {
+      return getMockData('moveFile', data)
+    }
+    return http.post('/moveFile', data)
+  },
 
-    // 删除文件夹
-    deleteFolder(data) {
-        return axios.post('/deleteFolder.php', crateFormData(data), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-    },
+  // 复制文件
+  copyFile(data) {
+    if (isDev) {
+      return getMockData('copyFile', data)
+    }
+    return http.post('/copyFile', data)
+  },
 
-    // 获取文件夹列表
-    getFolderList(params) {
-        return axios.get(`/getFolderList.php`, {
-            params
-        });
-    },
+  // 删除文件
+  deleteFile(data) {
+    if (isDev) {
+      return getMockData('deleteFile', data)
+    }
+    return http.post('/deleteFile', data)
+  },
+
+  // 新建文件夹--------------------
+  crateFolder(data) {
+    if (isDev) {
+      return getMockData('crateFolder', data)
+    }
+    return http.post('/crateFolder', data)
+  },
+
+  // 更新文件夹
+  updateFolder(data) {
+    if (isDev) {
+      return getMockData('updateFolder', data)
+    }
+    return http.post('/updateFolder', data)
+  },
+
+  // 删除文件夹
+  deleteFolder(data) {
+    if (isDev) {
+      return getMockData('deleteFolder', data)
+    }
+    return http.post('/deleteFolder', data)
+  },
+
+  // 移动文件夹
+  moveFolder(data) {
+    if (isDev) {
+      return getMockData('moveFolder', data)
+    }
+    return http.post('/moveFolder', data)
+  }
 }

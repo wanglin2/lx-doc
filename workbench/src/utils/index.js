@@ -1,43 +1,57 @@
-const isDev = process.env.NODE_ENV === 'development'
-const ip = '192.168.3.143'
+import config from '@/config'
 
-// 打开编辑页面
-export const openEditPage = (type, uid) => {
-    switch (type) {
-        case "whiteboard":
-            localStorage.removeItem('excalidraw-state')
-            localStorage.removeItem('excalidraw')
-            location.href = (isDev ? `http://${ip}:3000/` : '../whiteboard/') + '?uid=' + uid
-            break;
-        case "mind":
-            localStorage.removeItem('SIMPLE_MIND_MAP_DATA')
-            location.href = (isDev ? `http://${ip}:8080/#/` : '../mind-map/#/') + uid
-            break;
-        case "bpmn":
-            location.href = (isDev ? `http://${ip}:8082/#/bpmn/` : '../process/#/bpmn/') + uid
-            break;
-        case "markdown":
-            location.href = (isDev ? `http://${ip}:3000/` : '../markdown-nice/') + '?uid=' + uid
-            break;
-        case "sheet":
-            location.href = (isDev ? `http://${ip}:8083/` : '../sheet/') + '?uid=' + uid
-            break;
-        case "ppt":
-            location.href = (isDev ? `http://${ip}:8084/` : '../PPTist/') + '?uid=' + uid
-            break;
-        case "doc":
-            location.href = (isDev ? `http://${ip}:8085/` : '../docs/') + '?uid=' + uid
-            break;
-        case "process":
-            location.href = (isDev ? `http://${ip}:8086/index.html` : '../flowchart/') + '?uid=' + uid
-            break;
-        case "whiteboard2":
-            location.href = (isDev ? `http://${ip}:8087/` : '../whiteboard2/') + '?uid=' + uid
-            break;
-        case "resume":
-            location.href = (isDev ? `http://${ip}:8088/` : '../resume/') + '?uid=' + uid
-            break;
-        default:
-            break;
+// 平级数组转树
+export const arrayToTree = (
+  array,
+  idProp = 'id',
+  parentIdProp = 'parentId'
+) => {
+  const map = {}
+  array.forEach(item => {
+    const id = item[idProp]
+    const parentId = item[parentIdProp]
+    if (!map[id]) {
+      map[id] = item
     }
+    if (parentId) {
+      if (!map[parentId]) {
+        const par = array.find(item2 => {
+          return item2[idProp] === parentId
+        })
+        map[parentId] = par
+      }
+      map[parentId].children = map[parentId].children || []
+      map[parentId].children.push(item)
+    }
+  })
+  return Object.keys(map)
+    .filter(item => {
+      return !map[item].parentId
+    })
+    .map(item => {
+      return map[item]
+    })
+}
+
+// 获取指定文件类型的图标
+export const getFileTypeIcon = type => {
+  const res = config.createTypeList.find(item => {
+    return item.value === type
+  })
+  return res ? res.icon : ''
+}
+
+// 获取指定文件类型的类型名称
+export const getFileTypeName = type => {
+  const res = config.createTypeList.find(item => {
+    return item.value === type
+  })
+  return res ? res.name : ''
+}
+
+// 获取指定文件类型的配置数据
+export const getFileTypeConfig = type => {
+  return config.createTypeList.find(item => {
+    return item.value === type
+  })
 }
