@@ -58,7 +58,7 @@
               </div>
             </template>
             <Menu
-              :list="menuList"
+              :list="getMenuList(scope.row)"
               @click="onMenuClick($event, scope.row)"
             ></Menu>
           </el-popover>
@@ -111,6 +111,19 @@ const props = defineProps({
     default() {
       return []
     }
+  },
+  // 覆盖原有的菜单列表
+  coverFileMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  coverFolderMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
   }
 })
 const emits = defineEmits(['folderClick', 'fileClick', 'actionClick'])
@@ -126,7 +139,7 @@ const list = computed(() => {
     ...props.fileList
   ]
 })
-const menuList = reactive([
+const menuList = [
   {
     name: '重命名',
     value: 'rename',
@@ -142,7 +155,18 @@ const menuList = reactive([
     value: 'delete',
     icon: 'icon-shanchu'
   }
-])
+]
+const getMenuList = row => {
+  if (row.type === 'folder') {
+    return props.coverFolderMenuList.length > 0
+      ? [...props.coverFolderMenuList]
+      : [...menuList]
+  } else {
+    return props.coverFileMenuList.length > 0
+      ? [...props.coverFileMenuList]
+      : [...menuList]
+  }
+}
 
 // 表格行点击
 const onTableRowClick = row => {
@@ -155,14 +179,18 @@ const onTableRowClick = row => {
 
 // 操作点击
 const onMenuClick = (action, data) => {
+  const resourceType = data.type === 'folder' ? 'folder' : 'file'
   emits(
     'actionClick',
     {
       action: action.value,
       data
     },
-    data.type === 'folder' ? 'folder' : 'file'
+    resourceType
   )
+  if (typeof action.onClick === 'function') {
+    action.onClick(data, resourceType)
+  }
 }
 </script>
 

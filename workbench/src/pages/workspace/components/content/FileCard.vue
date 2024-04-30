@@ -83,12 +83,20 @@ const props = defineProps({
     type: Number,
     default: 0
   },
+  // 是否是多选模式
   isSelectMode: {
     type: Boolean,
     default: false
   },
   // 文件附加的菜单列表
   fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 覆盖原有菜单列表
+  coverFileMenuList: {
     type: Array,
     default() {
       return []
@@ -104,29 +112,31 @@ const emits = defineEmits(['click', 'actionClick'])
 const store = useStore()
 
 const menuList = computed(() => {
-  return [
-    // {
-    //   name: '预览',
-    //   value: 'preview',
-    //   icon: 'icon-zitiyulan'
-    // },
-    {
-      name: '重命名',
-      value: 'rename',
-      icon: 'icon-zhongmingming'
-    },
-    {
-      name: '复制/移动',
-      value: 'copyOrMove',
-      icon: 'icon-a-yidong2'
-    },
-    {
-      name: '删除',
-      value: 'delete',
-      icon: 'icon-shanchu'
-    },
-    ...props.fileAdditionalMenuList
-  ]
+  return props.coverFileMenuList.length > 0
+    ? [...props.coverFileMenuList]
+    : [
+        // {
+        //   name: '预览',
+        //   value: 'preview',
+        //   icon: 'icon-zitiyulan'
+        // },
+        {
+          name: '重命名',
+          value: 'rename',
+          icon: 'icon-zhongmingming'
+        },
+        {
+          name: '复制/移动',
+          value: 'copyOrMove',
+          icon: 'icon-a-yidong2'
+        },
+        {
+          name: '删除',
+          value: 'delete',
+          icon: 'icon-shanchu'
+        },
+        ...props.fileAdditionalMenuList
+      ]
 })
 
 const onClick = () => {
@@ -141,7 +151,7 @@ const onClick = () => {
 const onMenuClick = item => {
   emits('actionClick', item.value)
   if (typeof item.onClick === 'function') {
-    item.onClick(props.data)
+    item.onClick(props.data, 'file')
   }
 }
 

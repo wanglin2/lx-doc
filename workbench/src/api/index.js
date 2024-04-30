@@ -167,5 +167,37 @@ export default {
       return getMockData('collect', data)
     }
     return http.post('/collect', data)
+  },
+
+  // 获取回收站列表-------------------------------------
+  getRecycleFolderAndFileList(data) {
+    if (useMock) {
+      return getMockData('getRecycleFolderAndFileList', data)
+    }
+    return http.post('/getRecycleFolderAndFileList', data)
+  },
+
+  // 从回收站恢复文件夹或文件
+  restore(data) {
+    if (useMock) {
+      return getMockData('restore', data)
+    }
+    return http.post('/restore', data)
+  },
+
+  // 彻底删除文件夹或文件
+  completelyDelete(data) {
+    if (useMock) {
+      return getMockData('completelyDelete', data)
+    }
+    return http.post('/completelyDelete', data)
+  },
+
+  // 清空回收站
+  emptyRecycle() {
+    if (useMock) {
+      return getMockData('emptyRecycle')
+    }
+    return http.post('/emptyRecycle')
   }
 }

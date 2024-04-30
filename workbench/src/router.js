@@ -20,6 +20,11 @@ const routes = [
         name: 'Collect',
         path: 'collect',
         component: () => import('@/pages/workspace/Collect.vue')
+      },
+      {
+        name: 'Recycle',
+        path: 'recycle',
+        component: () => import('@/pages/workspace/Recycle.vue')
       }
     ]
   },

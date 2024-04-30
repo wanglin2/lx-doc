@@ -12,6 +12,7 @@
         type="folder"
         :list="folderList"
         :enableDrag="enableDrag"
+        :coverFolderMenuList="coverFolderMenuList"
         @moved="onMoved"
         @click="onFolderClick"
         @actionClick="onActionClick($event, 'folder')"
@@ -31,6 +32,7 @@
         :enableDrag="enableDrag"
         :fileAdditionalMenuList="fileAdditionalMenuList"
         :showCollectBtn="showCollectBtn"
+        :coverFileMenuList="coverFileMenuList"
         @click="onFileClick"
         @actionClick="onActionClick($event, 'file')"
       ></GridView>
@@ -41,6 +43,8 @@
       :folderList="folderList"
       :fileList="fileList"
       :showCheckbox="showCheckbox"
+      :coverFolderMenuList="coverFolderMenuList"
+      :coverFileMenuList="coverFileMenuList"
       @folderClick="onFolderClick"
       @fileClick="onFileClick"
       @actionClick="onActionClick"
@@ -108,11 +112,24 @@ const props = defineProps({
       return []
     }
   },
+  // 覆盖原有的菜单列表
+  coverFileMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  coverFolderMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
   // 是否显示收藏按钮
   showCollectBtn: {
     type: Boolean,
     default: true
-  },
+  }
 })
 const emits = defineEmits(['renamed', 'moved', 'deleted', 'folderClick'])
 const fileHandle = useFileHandle()
@@ -169,7 +186,7 @@ const onMoved = () => {
 
 // 删除文件夹
 const deleteFolder = async (id, name) => {
-  ElMessageBox.confirm(`是否确认删除【${name}】`, '删除文件夹', {
+  ElMessageBox.confirm(`是否确认删除【${name}】？`, '删除文件夹', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
@@ -189,7 +206,7 @@ const deleteFolder = async (id, name) => {
 
 // 删除文件夹
 const deleteFile = async (id, name) => {
-  ElMessageBox.confirm(`是否确认删除【${name}】`, '删除文件', {
+  ElMessageBox.confirm(`是否确认删除【${name}】？`, '删除文件', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'

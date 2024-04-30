@@ -251,6 +251,21 @@ const mockData = {
   },
   getCollectFileList: ({ name }) => {
     return createFileList()
+  },
+  getRecycleFolderAndFileList: () => {
+    return {
+      folderList: [
+        {
+          name: '学习',
+          id: '1-1'
+        },
+        {
+          name: '周末计划',
+          id: '1-2'
+        }
+      ],
+      fileList: createFileList()
+    }
   }
 }
 

@@ -5,7 +5,7 @@
         <el-input
           v-model="searchText"
           style="width: 300px; --el-border-radius-base: 16px"
-          placeholder="搜索收藏的文件"
+          placeholder="搜索回收站的文件/文件夹"
           clearable
           :prefix-icon="Search"
           @keyup.enter="onSearch"
@@ -23,7 +23,10 @@
           <div class="searchTip" v-if="isSearch">
             “{{ currentSearchText }}”的搜索结果：
           </div>
-          <div class="title" v-else>文件</div>
+          <div class="titleInfo" v-else>
+            <div class="title">回收站</div>
+            <div class="emptyBtn" @click="emptyRecycle">清空回收站</div>
+          </div>
         </div>
         <div class="right"></div>
         <el-tooltip
@@ -45,21 +48,20 @@
         <!-- 视图 -->
         <View
           :view="currentLayoutType"
+          :folderList="folderList"
           :fileList="fileList"
           :isLoading="isLoading"
           :showCheckbox="false"
           :enableDrag="false"
-          :showTitle="false"
-          :fileAdditionalMenuList="menuList"
-          @renamed="getCollectFileList"
-          @moved="getCollectFileList"
-          @deleted="getCollectFileList"
+          :coverFileMenuList="menuList"
+          :coverFolderMenuList="menuList"
+          :showCollectBtn="false"
         ></View>
         <!-- 无数据 -->
         <NoData
-          :tip="isSearch ? '搜索无结果' : '收藏夹空空如也'"
+          :tip="isSearch ? '搜索无结果' : '回收站空空如也'"
           :showAddIcon="false"
-          v-if="!isLoading && fileList.length <= 0"
+          v-if="!isLoading && fileList.length <= 0 && folderList.length <= 0"
         ></NoData>
       </div>
     </div>
@@ -88,10 +90,10 @@ const onSearch = () => {
   if (text) {
     isSearch.value = true
     currentSearchText.value = text
-    getCollectFileList()
+    getRecycleFolderAndFileList()
   } else {
     resetSearch()
-    getCollectFileList()
+    getRecycleFolderAndFileList()
   }
 }
 const resetSearch = () => {
@@ -104,63 +106,115 @@ const resetSearch = () => {
 const { currentLayoutType, toggleLayoutType } = useLayoutChange()
 
 // 列表
+const folderList = ref([])
 const fileList = ref([])
 const isLoading = ref(true)
 // 获取收藏文件列表
-const getCollectFileList = async () => {
+const getRecycleFolderAndFileList = async () => {
   try {
+    folderList.value = []
     fileList.value = []
     isLoading.value = true
-    const { data } = await api.getCollectFileList({
+    const { data } = await api.getRecycleFolderAndFileList({
       name: currentSearchText.value
     })
-    fileList.value = data || []
+    folderList.value = data.folderList || []
+    fileList.value = data.fileList || []
     isLoading.value = false
   } catch (error) {
     console.log(error)
     isLoading.value = false
   }
 }
-getCollectFileList()
+getRecycleFolderAndFileList()
 
-emitter.on('toggle_collect_success', getCollectFileList)
-
-// 取消收藏
+// 恢复
 const menuList = reactive([
   {
-    name: '取消收藏',
-    value: 'cancelCollect',
-    icon: 'icon-quxiaoshoucang',
-    onClick: item => {
-      cancelCollect(item)
+    name: '恢复',
+    value: 'restore',
+    icon: 'icon-recover',
+    onClick: (item, type) => {
+      restore(item, type)
+    }
+  },
+  {
+    name: '彻底删除',
+    value: 'completelyDelete',
+    icon: 'icon-chedishanchu',
+    onClick: (item, type) => {
+      completelyDelete(item, type)
     }
   }
 ])
 
-const cancelCollect = async item => {
-  ElMessageBox.confirm(`是否确认取消收藏【${item.name}】？`, '取消收藏', {
+// 恢复
+const restore = async (item, type) => {
+  ElMessageBox.confirm(`是否确认恢复【${item.name}】？`, '恢复', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     try {
-      await api.cancelCollect({
-        id: item.id
+      await api.restore({
+        id: item.id,
+        type
       })
       ElMessage({
         type: 'success',
-        message: '取消收藏成功'
+        message: '恢复成功'
       })
-      getCollectFileList()
+      getRecycleFolderAndFileList()
     } catch (error) {
       console.log(error)
     }
   })
 }
 
-onUnmounted(() => {
-  emitter.off('toggle_collect_success', getCollectFileList)
-})
+// 彻底删除
+const completelyDelete = (item, type) => {
+  ElMessageBox.confirm(`是否彻底删除【${item.name}】？`, '彻底删除', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      await api.completelyDelete({
+        id: item.id,
+        type
+      })
+      ElMessage({
+        type: 'success',
+        message: '彻底删除成功'
+      })
+      getRecycleFolderAndFileList()
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+// 清空回收站
+const emptyRecycle = () => {
+  ElMessageBox.confirm(`是否确认清空回收站？`, '彻底删除', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      await api.emptyRecycle()
+      ElMessage({
+        type: 'success',
+        message: '清空回收站成功'
+      })
+      getRecycleFolderAndFileList()
+    } catch (error) {
+      console.log(error)
+    }
+  })
+}
+
+onUnmounted(() => {})
 </script>
 
 <style lang="less" scoped>
@@ -202,6 +256,23 @@ onUnmounted(() => {
       padding: 0 24px;
 
       .left {
+        .titleInfo {
+          display: flex;
+          align-items: center;
+
+          .emptyBtn {
+            margin-left: 12px;
+            color: #f56c6c;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            opacity: 0.8;
+
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
       }
 
       .right {

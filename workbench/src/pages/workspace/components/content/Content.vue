@@ -339,7 +339,7 @@ const copyOrMoveFiles = async () => {
 }
 // 删除多个文件
 const deleteFiles = async () => {
-  ElMessageBox.confirm(`是否确认删除【所选文件】`, '删除文件', {
+  ElMessageBox.confirm(`是否确认删除【所选文件】？`, '删除文件', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
     type: 'warning'

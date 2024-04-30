@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 import Menu from '../common/Menu.vue'
 import { ElMessage } from 'element-plus'
 import api from '@/api'
@@ -53,28 +53,39 @@ const props = defineProps({
   width: {
     type: Number,
     default: 0
+  },
+  // 覆盖原有菜单列表
+  coverFolderMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
   }
 })
 const emits = defineEmits(['click', 'actionClick', 'moved'])
 const store = useStore()
 
-const menuList = reactive([
-  {
-    name: '重命名',
-    value: 'rename',
-    icon: 'icon-zhongmingming'
-  },
-  {
-    name: '复制/移动',
-    value: 'copyOrMove',
-    icon: 'icon-a-yidong2'
-  },
-  {
-    name: '删除',
-    value: 'delete',
-    icon: 'icon-shanchu'
-  }
-])
+const menuList = computed(() => {
+  return props.coverFolderMenuList.length > 0
+    ? props.coverFolderMenuList
+    : [
+        {
+          name: '重命名',
+          value: 'rename',
+          icon: 'icon-zhongmingming'
+        },
+        {
+          name: '复制/移动',
+          value: 'copyOrMove',
+          icon: 'icon-a-yidong2'
+        },
+        {
+          name: '删除',
+          value: 'delete',
+          icon: 'icon-shanchu'
+        }
+      ]
+})
 
 const onClick = () => {
   emits('click')
@@ -82,6 +93,9 @@ const onClick = () => {
 
 const onMenuClick = item => {
   emits('actionClick', item.value)
+  if (typeof item.onClick === 'function') {
+    item.onClick(props.data, 'folder')
+  }
 }
 
 // 移动文件或文件夹

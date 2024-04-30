@@ -13,6 +13,8 @@
       :showCheckbox="showCheckbox"
       :enableDrag="enableDrag"
       :fileAdditionalMenuList="fileAdditionalMenuList"
+      :coverFolderMenuList="coverFolderMenuList"
+      :coverFileMenuList="coverFileMenuList"
       :showCollectBtn="showCollectBtn"
       v-bind="$attrs"
       @click="onClick(item)"
@@ -50,6 +52,19 @@ const props = defineProps({
   },
   // 文件附加的菜单列表
   fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 覆盖原有的菜单列表
+  coverFileMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  coverFolderMenuList: {
     type: Array,
     default() {
       return []

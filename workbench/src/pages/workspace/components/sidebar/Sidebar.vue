@@ -39,7 +39,11 @@
         <span class="iconfont icon-shoucang"></span>
         <span class="text">我的收藏</span>
       </div>
-      <div class="menuItem">
+      <div
+        class="menuItem"
+        :class="{ isActive: route.name === 'Recycle' }"
+        @click="toRecycle"
+      >
         <span class="iconfont icon-shanchu"></span>
         <span class="text">回收站</span>
       </div>
@@ -70,8 +74,6 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-console.log(route.name)
-
 // 创建列表的显示
 const createTypeListVisible = ref(false)
 const hideCreateTypeList = () => {
@@ -87,6 +89,14 @@ const toCollect = () => {
   clearCurrentNode()
   router.push({
     name: 'Collect'
+  })
+}
+
+// 进入回收站页面
+const toRecycle = () => {
+  clearCurrentNode()
+  router.push({
+    name: 'Recycle'
   })
 }
 
