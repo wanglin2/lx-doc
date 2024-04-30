@@ -15,7 +15,7 @@
           <div class="fileNameBox">
             <div
               class="checkBox"
-              v-if="showCheckbox && scope.row.type !== 'folder'"
+              v-if="showCheckbox && scope.row.type !== RESOURCE_TYPES.FOLDER"
               @click.stop
             >
               <el-checkbox
@@ -27,13 +27,13 @@
             <span
               class="icon iconfont"
               :class="[
-                scope.row.type === 'folder'
+                scope.row.type === RESOURCE_TYPES.FOLDER
                   ? 'icon-wenjianjia'
                   : getFileTypeIcon(scope.row.type)
               ]"
               :style="{
                 color:
-                  scope.row.type === 'folder'
+                  scope.row.type === RESOURCE_TYPES.FOLDER
                     ? 'var(--folder-color)'
                     : getFileTypeConfig(scope.row.type)?.color
               }"
@@ -93,6 +93,7 @@ import {
 } from '@/utils'
 import Menu from '../common/Menu.vue'
 import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
+import { RESOURCE_TYPES } from '@/constant'
 
 const props = defineProps({
   // 是否显示多选框
@@ -133,7 +134,7 @@ const list = computed(() => {
     ...props.folderList.map(item => {
       return {
         ...item,
-        type: 'folder'
+        type: RESOURCE_TYPES.FOLDER
       }
     }),
     ...props.fileList
@@ -157,7 +158,7 @@ const menuList = [
   }
 ]
 const getMenuList = row => {
-  if (row.type === 'folder') {
+  if (row.type === RESOURCE_TYPES.FOLDER) {
     return props.coverFolderMenuList.length > 0
       ? [...props.coverFolderMenuList]
       : [...menuList]
@@ -170,7 +171,7 @@ const getMenuList = row => {
 
 // 表格行点击
 const onTableRowClick = row => {
-  if (row.type === 'folder') {
+  if (row.type === RESOURCE_TYPES.FOLDER) {
     emits('folderClick', row)
   } else {
     emits('fileClick', row)
@@ -179,7 +180,7 @@ const onTableRowClick = row => {
 
 // 操作点击
 const onMenuClick = (action, data) => {
-  const resourceType = data.type === 'folder' ? 'folder' : 'file'
+  const resourceType = data.type === RESOURCE_TYPES.FOLDER ? RESOURCE_TYPES.FOLDER : RESOURCE_TYPES.FILE
   emits(
     'actionClick',
     {

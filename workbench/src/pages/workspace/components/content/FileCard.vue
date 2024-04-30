@@ -61,6 +61,7 @@ import api from '@/api'
 import { ElMessage } from 'element-plus'
 import emitter from '@/utils/eventBus'
 import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
+import { RESOURCE_TYPES } from '@/constant'
 
 const props = defineProps({
   // 是否显示多选框
@@ -151,14 +152,14 @@ const onClick = () => {
 const onMenuClick = item => {
   emits('actionClick', item.value)
   if (typeof item.onClick === 'function') {
-    item.onClick(props.data, 'file')
+    item.onClick(props.data, RESOURCE_TYPES.FILE)
   }
 }
 
 // 开始拖拽
 const onDragstart = () => {
   store.setCurrentDragData({
-    type: 'file',
+    type: RESOURCE_TYPES.FILE,
     data: props.data
   })
 }

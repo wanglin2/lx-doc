@@ -9,13 +9,13 @@
         <div class="title">文件夹</div>
       </div>
       <GridView
-        type="folder"
+        :type="RESOURCE_TYPES.FOLDER"
         :list="folderList"
         :enableDrag="enableDrag"
         :coverFolderMenuList="coverFolderMenuList"
         @moved="onMoved"
         @click="onFolderClick"
-        @actionClick="onActionClick($event, 'folder')"
+        @actionClick="onActionClick($event, RESOURCE_TYPES.FOLDER)"
       ></GridView>
       <!-- 文件列表 -->
       <div
@@ -25,7 +25,7 @@
         <div class="title">文件</div>
       </div>
       <GridView
-        type="file"
+        :type="RESOURCE_TYPES.FILE"
         :list="fileList"
         :isSelectMode="isSelectMode"
         :showCheckbox="showCheckbox"
@@ -34,7 +34,7 @@
         :showCollectBtn="showCollectBtn"
         :coverFileMenuList="coverFileMenuList"
         @click="onFileClick"
-        @actionClick="onActionClick($event, 'file')"
+        @actionClick="onActionClick($event, RESOURCE_TYPES.FILE)"
       ></GridView>
     </template>
     <ListView
@@ -59,6 +59,7 @@ import useFileHandle from '@/hooks/useFileHandle'
 import emitter from '@/utils/eventBus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
+import { RESOURCE_TYPES } from '@/constant'
 
 const props = defineProps({
   // 是否显示标题
@@ -148,7 +149,6 @@ const onFileClick = item => {
 const onActionClick = (payload, type) => {
   const action = payload.action
   const { id, name } = payload.data
-  console.log(action, id, name)
   if (action === 'rename') {
     // 重命名
     emitter.emit('show_name_edit_dialog', {
@@ -171,7 +171,7 @@ const onActionClick = (payload, type) => {
     })
   } else if (action === 'delete') {
     // 删除
-    if (type === 'folder') {
+    if (type === RESOURCE_TYPES.FOLDER) {
       deleteFolder(id, name)
     } else {
       deleteFile(id, name)

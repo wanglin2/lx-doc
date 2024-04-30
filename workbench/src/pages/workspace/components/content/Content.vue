@@ -139,6 +139,7 @@ import Sort from './Sort.vue'
 import View from './View.vue'
 import useLayoutChange from '@/hooks/useLayoutChange'
 import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
+import { RESOURCE_TYPES } from '@/constant'
 
 const store = useStore()
 
@@ -324,7 +325,7 @@ const exitSelect = () => {
 const copyOrMoveFiles = async () => {
   try {
     emitter.emit('show_move_dialog', {
-      type: 'file',
+      type: RESOURCE_TYPES.FILE,
       name: '所选文件',
       ids: checkedFileList.value.map(item => {
         return item.id
@@ -379,7 +380,7 @@ emitter.on('contextmenu', hideContextMenu)
 // 5.创建文件夹
 const createFolder = () => {
   emitter.emit('show_name_edit_dialog', {
-    type: 'folder',
+    type: RESOURCE_TYPES.FOLDER,
     callback: data => {
       onFolderClick(data)
     }

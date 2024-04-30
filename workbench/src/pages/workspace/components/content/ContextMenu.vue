@@ -31,6 +31,7 @@
 import { reactive, ref, nextTick, onUnmounted } from 'vue'
 import config from '@/config'
 import useFileHandle from '@/hooks/useFileHandle'
+import { RESOURCE_TYPES } from '@/constant'
 
 const emits = defineEmits(['createFolder'])
 
@@ -40,7 +41,7 @@ const { createAndOpenNewFile } = useFileHandle()
 const menuList = reactive([
   {
     name: '文件夹',
-    value: 'folder',
+    value: RESOURCE_TYPES.FOLDER,
     icon: 'icon-wenjianjia',
     color: 'var(--folder-color)'
   },
@@ -86,7 +87,7 @@ const hide = () => {
 
 const onClick = type => {
   hide()
-  if (type === 'folder') {
+  if (type === RESOURCE_TYPES.FOLDER) {
     emits('createFolder')
   } else {
     createAndOpenNewFile(type)

@@ -33,6 +33,7 @@ import { ElMessage } from 'element-plus'
 import emitter from '@/utils/eventBus'
 import api from '@/api'
 import { useStore } from '@/store'
+import { RESOURCE_TYPES } from '@/constant'
 
 const store = useStore()
 
@@ -42,7 +43,7 @@ const title = computed(() => {
   if (editData.value) {
     if (editData.value.id) {
       return '重命名'
-    } else if (editData.value.type === 'folder') {
+    } else if (editData.value.type === RESOURCE_TYPES.FOLDER) {
       return '新建文件夹'
     }
   } else {
@@ -87,7 +88,7 @@ const onConfirmClick = () => {
       try {
         let tip = ''
         let data = null
-        if (editData.value.type === 'folder') {
+        if (editData.value.type === RESOURCE_TYPES.FOLDER) {
           if (editData.value.id) {
             // 重命名文件夹
             tip = '重命名成功'

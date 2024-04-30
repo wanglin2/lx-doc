@@ -37,6 +37,7 @@ import { ElMessage } from 'element-plus'
 import api from '@/api'
 import { useStore } from '@/store'
 import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
+import { RESOURCE_TYPES } from '@/constant'
 
 const props = defineProps({
   // 是否允许拖拽
@@ -94,7 +95,7 @@ const onClick = () => {
 const onMenuClick = item => {
   emits('actionClick', item.value)
   if (typeof item.onClick === 'function') {
-    item.onClick(props.data, 'folder')
+    item.onClick(props.data, RESOURCE_TYPES.FOLDER)
   }
 }
 
@@ -105,7 +106,7 @@ const onDrop = async () => {
   try {
     if (store.currentDragData) {
       const { type, data } = store.currentDragData
-      if (type === 'file') {
+      if (type === RESOURCE_TYPES.FILE) {
         await api.moveFile({
           ids: [data.id],
           newFolderId: props.data.id
@@ -136,7 +137,7 @@ const onDragleave = e => {
 // 开始拖拽
 const onDragstart = () => {
   store.setCurrentDragData({
-    type: 'folder',
+    type: RESOURCE_TYPES.FOLDER,
     data: props.data
   })
 }

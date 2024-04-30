@@ -27,6 +27,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import FileCard from './FileCard.vue'
 import FolderCard from './FolderCard.vue'
+import { RESOURCE_TYPES } from '@/constant'
 
 const props = defineProps({
   // 是否显示多选框
@@ -79,7 +80,7 @@ const props = defineProps({
 const emits = defineEmits(['click', 'actionClick'])
 
 const comp = computed(() => {
-  return props.type === 'folder' ? FolderCard : FileCard
+  return props.type === RESOURCE_TYPES.FOLDER ? FolderCard : FileCard
 })
 // 计算尺寸
 const gridViewRef = ref(null)

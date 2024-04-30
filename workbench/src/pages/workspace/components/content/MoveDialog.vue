@@ -21,18 +21,19 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import emitter from '@/utils/eventBus'
 import api from '@/api'
 import { useStore } from '@/store'
 import FolderTree from '../common/FolderTree.vue'
+import { RESOURCE_TYPES } from '@/constant'
 
 const store = useStore()
 
 const editData = ref(null)
 const isEditFile = computed(() => {
-  return editData.value && editData.value.type === 'file'
+  return editData.value && editData.value.type === RESOURCE_TYPES.FILE
 })
 const title = computed(() => {
   if (editData.value) {
@@ -78,7 +79,7 @@ const onConfirmCopy = () => {
     ElMessage.warning('请选择要复制到的文件夹')
     return
   }
-  if (editData.value.type === 'folder') {
+  if (editData.value.type === RESOURCE_TYPES.FOLDER) {
     copyFolder()
   } else {
     copyFile()
@@ -91,7 +92,7 @@ const onConfirmMove = () => {
     ElMessage.warning('请选择要移动到的文件夹')
     return
   }
-  if (editData.value.type === 'folder') {
+  if (editData.value.type === RESOURCE_TYPES.FOLDER) {
     moveFolder()
   } else {
     moveFile()
