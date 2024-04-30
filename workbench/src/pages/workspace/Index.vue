@@ -1,7 +1,7 @@
 <template>
   <div class="workspaceContainer">
     <Sidebar></Sidebar>
-    <Content></Content>
+    <router-view></router-view>
     <NameEditDialog></NameEditDialog>
     <MoveDialog></MoveDialog>
   </div>
@@ -11,9 +11,10 @@
 import { useStore } from '../../store'
 import { useRouter } from 'vue-router'
 import Sidebar from './components/sidebar/Sidebar.vue'
-import Content from './components/content/Content.vue'
 import NameEditDialog from './components/content/NameEditDialog.vue'
 import MoveDialog from './components/content/MoveDialog.vue'
+import { onUnmounted } from 'vue'
+import { useBodyContextmenu } from '@/hooks/useContextMenuEvent'
 
 const store = useStore()
 const router = useRouter()
@@ -27,6 +28,12 @@ const init = () => {
 }
 
 init()
+
+// 派发右键菜单事件
+const { unBindContextmenuEvent } = useBodyContextmenu()
+onUnmounted(() => {
+  unBindContextmenuEvent()
+})
 </script>
 
 <style lang="less" scoped>

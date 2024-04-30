@@ -12,7 +12,7 @@
 const props = defineProps({
   tip: {
     type: String,
-    default: '点击左上角「创建」吧'
+    default: ''
   },
   showAddIcon: {
     type: Boolean,

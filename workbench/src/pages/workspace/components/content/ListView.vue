@@ -1,5 +1,8 @@
 <template>
-  <div class="listViewContainer">
+  <div
+    class="listViewContainer"
+    @contextmenu.stop.prevent="emitContextmenuEvent"
+  >
     <el-table
       :data="list"
       style="width: 100%"
@@ -10,8 +13,16 @@
       <el-table-column label="文件名称" prop="name" min-width="200">
         <template #default="scope">
           <div class="fileNameBox">
-            <div class="checkBox" v-if="scope.row.type !== 'folder'" @click.stop>
-              <el-checkbox v-model="scope.row.checked" :label="''" size="large" />
+            <div
+              class="checkBox"
+              v-if="showCheckbox && scope.row.type !== 'folder'"
+              @click.stop
+            >
+              <el-checkbox
+                v-model="scope.row.checked"
+                :label="''"
+                size="large"
+              />
             </div>
             <span
               class="icon iconfont"
@@ -73,7 +84,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import {
   getFileTypeIcon,
   getFileTypeName,
@@ -81,8 +92,14 @@ import {
   formatShowTime
 } from '@/utils'
 import Menu from '../common/Menu.vue'
+import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
 
 const props = defineProps({
+  // 是否显示多选框
+  showCheckbox: {
+    type: Boolean,
+    default: true
+  },
   folderList: {
     type: Array,
     default() {

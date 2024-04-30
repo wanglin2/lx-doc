@@ -18,6 +18,7 @@ const createFileList = () => {
         Math.random() > 0.5
           ? 'https://img2.baidu.com/it/u=2842168711,3751422993&fm=253&fmt=auto&app=120&f=JPEG?w=576&h=500'
           : '',
+      collected: Math.random() > 0.8,
       createAt: '2024-04-29 16:55:55',
       updateAt: '2024-04-20 16:55:55'
     }
@@ -247,6 +248,9 @@ const mockData = {
       name,
       id
     }
+  },
+  getCollectFileList: ({ name }) => {
+    return createFileList()
   }
 }
 

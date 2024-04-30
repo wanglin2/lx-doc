@@ -4,8 +4,8 @@
     :style="{ width: width + 'px' }"
     :class="{ isOnDragOver: isOnDragOver }"
     @click.stop="onClick"
-    @contextmenu.stop
-    :draggable="true"
+    @contextmenu.stop.prevent="onContextmenu"
+    :draggable="enableDrag"
     @dragover.prevent
     @drop.stop="onDrop"
     @dragenter.stop="onDragenter"
@@ -20,6 +20,7 @@
       :width="160"
       trigger="click"
       popper-style="padding: 4px;"
+      v-model:visible="menuListVisible"
     >
       <template #reference>
         <span class="btn iconfont icon-icmore" @click.stop></span>
@@ -30,13 +31,19 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onUnmounted } from 'vue'
 import Menu from '../common/Menu.vue'
 import { ElMessage } from 'element-plus'
 import api from '@/api'
 import { useStore } from '@/store'
+import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
 
 const props = defineProps({
+  // 是否允许拖拽
+  enableDrag: {
+    type: Boolean,
+    default: true
+  },
   data: {
     type: Object,
     default() {
@@ -122,6 +129,14 @@ const onDragstart = () => {
 const onDragend = () => {
   store.setCurrentDragData(null)
 }
+
+// 右键显示菜单
+const { onContextmenu, menuListVisible, unBindContextmenuEvent } =
+  useCardContextMenu()
+
+onUnmounted(() => {
+  unBindContextmenuEvent()
+})
 </script>
 
 <style lang="less" scoped>

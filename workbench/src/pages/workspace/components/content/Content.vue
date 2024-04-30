@@ -94,7 +94,7 @@
           </el-tooltip>
         </div>
       </div>
-      <div class="contentBody" @contextmenu="onContextMenu">
+      <div class="contentBody" @contextmenu.stop.prevent="onContextMenu">
         <!-- 视图 -->
         <View
           :view="currentLayoutType"
@@ -109,7 +109,7 @@
         ></View>
         <!-- 无数据 -->
         <NoData
-          :tip="isSearch ? '搜索无结果' : ''"
+          :tip="isSearch ? '搜索无结果' : '点击左上角「创建」吧'"
           :showAddIcon="!isSearch"
           v-if="!isLoading && folderList.length <= 0 && fileList.length <= 0"
         ></NoData>
@@ -124,19 +124,21 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { Search, ArrowRight } from '@element-plus/icons-vue'
-import Avatar from './Avatar.vue'
+import Avatar from '../common/Avatar.vue'
 import { useStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
-import NoData from './NoData.vue'
+import NoData from '../common/NoData.vue'
 import ContextMenu from './ContextMenu.vue'
 import emitter from '@/utils/eventBus'
 import IconBtn from '../common/IconBtn.vue'
 import TypeFilter from './TypeFilter.vue'
 import Sort from './Sort.vue'
 import View from './View.vue'
+import useLayoutChange from '@/hooks/useLayoutChange'
+import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
 
 const store = useStore()
 
@@ -197,19 +199,6 @@ const isLoading = ref(true)
 const currentFilterType = ref('all')
 const currentSortField = ref('createAt')
 const currentSortType = ref('desc')
-// 监听当前所在文件夹，改变了刷新列表数据
-watch(
-  () => {
-    return currentFolder.value
-  },
-  () => {
-    // 如果当前处于搜索状态
-    if (isSearch.value) {
-      resetSearch()
-    }
-    getFolderAndFileList()
-  }
-)
 
 // 获取文件夹和文件列表
 const getFolderAndFileList = async () => {
@@ -244,6 +233,24 @@ const getFolderAndFileList = async () => {
   }
 }
 emitter.on('refresh_list', getFolderAndFileList)
+// 监听当前所在文件夹，改变了刷新列表数据
+watch(
+  () => {
+    return currentFolder.value
+  },
+  () => {
+    // 如果当前处于搜索状态
+    if (isSearch.value) {
+      resetSearch()
+    }
+    if (currentFolder.value) {
+      getFolderAndFileList()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 
 // 修改过滤类型
 const onFilterTypeChange = val => {
@@ -332,39 +339,42 @@ const copyOrMoveFiles = async () => {
 }
 // 删除多个文件
 const deleteFiles = async () => {
-  try {
-    ElMessageBox.confirm(`是否确认删除【所选文件】`, '删除文件', {
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(async () => {
-      try {
-        await api.deleteFile({
-          ids: checkedFileList.value.map(item => {
-            return item.id
-          })
+  ElMessageBox.confirm(`是否确认删除【所选文件】`, '删除文件', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      await api.deleteFile({
+        ids: checkedFileList.value.map(item => {
+          return item.id
         })
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        })
-        reloadList()
-      } catch (error) {
-        console.log(error)
-      }
-    })
-  } catch (error) {
-    console.log(error)
-  }
+      })
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
+      })
+      reloadList()
+    } catch (error) {
+      console.log(error)
+    }
+  })
 }
 
 // 4.右键菜单
 const ContextMenuRef = ref(null)
 const onContextMenu = e => {
+  emitContextmenuEvent()
   if (ContextMenuRef.value && !isSearch.value) {
     ContextMenuRef.value.show(e)
   }
 }
+const hideContextMenu = () => {
+  if (ContextMenuRef.value) {
+    ContextMenuRef.value.hide()
+  }
+}
+emitter.on('contextmenu', hideContextMenu)
 
 // 5.创建文件夹
 const createFolder = () => {
@@ -377,18 +387,12 @@ const createFolder = () => {
 }
 
 // 6.展示类型
-const currentLayoutType = computed(() => {
-  return store.userConfig?.layoutType
+const { currentLayoutType, toggleLayoutType } = useLayoutChange()
+
+onUnmounted(() => {
+  emitter.off('refresh_list', getFolderAndFileList)
+  emitter.off('contextmenu', hideContextMenu)
 })
-const toggleLayoutType = async () => {
-  try {
-    await store.updateUserConfig({
-      layoutType: currentLayoutType.value === 'grid' ? 'list' : 'grid'
-    })
-  } catch (error) {
-    ElMessage.error('切换失败，请重试')
-  }
-}
 </script>
 
 <style lang="less" scoped>

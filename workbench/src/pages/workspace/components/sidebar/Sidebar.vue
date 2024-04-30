@@ -31,6 +31,18 @@
       </div>
     </div>
     <div class="menuList">
+      <div
+        class="menuItem"
+        :class="{ isActive: route.name === 'Collect' }"
+        @click="toCollect"
+      >
+        <span class="iconfont icon-shoucang"></span>
+        <span class="text">我的收藏</span>
+      </div>
+      <div class="menuItem">
+        <span class="iconfont icon-shanchu"></span>
+        <span class="text">回收站</span>
+      </div>
       <div class="folderTree">
         <FolderTree
           v-if="isLoadTree"
@@ -52,8 +64,13 @@ import useFileHandle from '@/hooks/useFileHandle'
 import { useStore } from '@/store'
 import FolderTree from '../common/FolderTree.vue'
 import emitter from '@/utils/eventBus'
+import { useRouter, useRoute } from 'vue-router'
 
 const store = useStore()
+const route = useRoute()
+const router = useRouter()
+
+console.log(route.name)
 
 // 创建列表的显示
 const createTypeListVisible = ref(false)
@@ -65,9 +82,17 @@ window.addEventListener('click', hideCreateTypeList)
 // 创建新文件
 const { createAndOpenNewFile } = useFileHandle()
 
+// 进入收藏页面
+const toCollect = () => {
+  clearCurrentNode()
+  router.push({
+    name: 'Collect'
+  })
+}
+
 // 文件夹树
 const isLoadTree = ref(true)
-const isNotSetCurrentNode = ref(false)
+const isNotSetCurrentNode = ref(route.name !== 'List')
 const FolderTreeRef = ref(null)
 // 监听当前所在文件夹，改变了刷新列表数据
 const currentFolder = computed(() => {
@@ -78,13 +103,20 @@ watch(
     return currentFolder.value
   },
   () => {
-    FolderTreeRef.value.setCurrentKey(currentFolder.value.id)
+    FolderTreeRef.value.setCurrentKey(
+      currentFolder.value ? currentFolder.value.id : null
+    )
   }
 )
 
 // 修改当前文件夹、路径
 const onCurrentChange = (data, node) => {
   if (!data || !node) return
+  if (route.name !== 'List') {
+    router.push({
+      name: 'List'
+    })
+  }
   const pathList = [{ ...data }]
   let parent = node.parent
   while (parent && parent.level > 0) {
@@ -93,6 +125,11 @@ const onCurrentChange = (data, node) => {
   }
   store.setCurrentFolderPath(pathList)
   store.setCurrentFolder({ ...data })
+}
+
+const clearCurrentNode = () => {
+  store.setCurrentFolderPath([])
+  store.setCurrentFolder(null)
 }
 
 // 重新加载树
@@ -247,6 +284,33 @@ onUnmounted(() => {
 
   .menuList {
     margin-top: 20px;
+
+    .menuItem {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      color: #212930;
+      padding-left: 24px;
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        background-color: var(--el-fill-color-light);
+      }
+
+      &.isActive {
+        background-color: var(--el-color-primary-light-9);
+      }
+
+      .iconfont {
+        font-size: 18px;
+      }
+
+      .text {
+        margin-left: 6px;
+      }
+    }
 
     .folderTree {
       .customFolderTreeNode {

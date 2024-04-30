@@ -143,5 +143,29 @@ export default {
       return getMockData('copyFolder', data)
     }
     return http.post('/copyFolder', data)
+  },
+
+  // 获取收藏的文件列表---------------------
+  getCollectFileList(data) {
+    if (useMock) {
+      return getMockData('getCollectFileList', data)
+    }
+    return http.post('/getCollectFileList', data)
+  },
+
+  // 取消收藏
+  cancelCollect(data) {
+    if (useMock) {
+      return getMockData('cancelCollect', data)
+    }
+    return http.post('/cancelCollect', data)
+  },
+
+  // 收藏文件
+  collect(data) {
+    if (useMock) {
+      return getMockData('collect', data)
+    }
+    return http.post('/collect', data)
   }
 }

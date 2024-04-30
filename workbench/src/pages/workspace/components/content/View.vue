@@ -2,24 +2,35 @@
   <div class="viewContainer">
     <template v-if="view === 'grid'">
       <!-- 文件夹列表 -->
-      <div class="listHeader" v-if="!isLoading && folderList.length > 0">
+      <div
+        class="listHeader"
+        v-if="showTitle && !isLoading && folderList.length > 0"
+      >
         <div class="title">文件夹</div>
       </div>
       <GridView
         type="folder"
         :list="folderList"
+        :enableDrag="enableDrag"
         @moved="onMoved"
         @click="onFolderClick"
         @actionClick="onActionClick($event, 'folder')"
       ></GridView>
       <!-- 文件列表 -->
-      <div class="listHeader" v-if="!isLoading && fileList.length > 0">
+      <div
+        class="listHeader"
+        v-if="showTitle && !isLoading && fileList.length > 0"
+      >
         <div class="title">文件</div>
       </div>
       <GridView
         type="file"
         :list="fileList"
         :isSelectMode="isSelectMode"
+        :showCheckbox="showCheckbox"
+        :enableDrag="enableDrag"
+        :fileAdditionalMenuList="fileAdditionalMenuList"
+        :showCollectBtn="showCollectBtn"
         @click="onFileClick"
         @actionClick="onActionClick($event, 'file')"
       ></GridView>
@@ -29,6 +40,7 @@
       style="padding: 0 12px"
       :folderList="folderList"
       :fileList="fileList"
+      :showCheckbox="showCheckbox"
       @folderClick="onFolderClick"
       @fileClick="onFileClick"
       @actionClick="onActionClick"
@@ -45,6 +57,21 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
 
 const props = defineProps({
+  // 是否显示标题
+  showTitle: {
+    type: Boolean,
+    default: true
+  },
+  // 是否显示多选框
+  showCheckbox: {
+    type: Boolean,
+    default: true
+  },
+  // 是否允许拖拽
+  enableDrag: {
+    type: Boolean,
+    default: true
+  },
   // 视图类型
   view: {
     type: String,
@@ -73,7 +100,19 @@ const props = defineProps({
   isSelectMode: {
     type: Boolean,
     default: false
-  }
+  },
+  // 文件附加的菜单列表
+  fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 是否显示收藏按钮
+  showCollectBtn: {
+    type: Boolean,
+    default: true
+  },
 })
 const emits = defineEmits(['renamed', 'moved', 'deleted', 'folderClick'])
 const fileHandle = useFileHandle()

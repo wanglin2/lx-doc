@@ -10,6 +10,10 @@
         margin: margin + 'px',
         marginBottom: margin + 'px'
       }"
+      :showCheckbox="showCheckbox"
+      :enableDrag="enableDrag"
+      :fileAdditionalMenuList="fileAdditionalMenuList"
+      :showCollectBtn="showCollectBtn"
       v-bind="$attrs"
       @click="onClick(item)"
       @actionClick="onActionClick($event, item)"
@@ -23,6 +27,17 @@ import FileCard from './FileCard.vue'
 import FolderCard from './FolderCard.vue'
 
 const props = defineProps({
+  // 是否显示多选框
+  showCheckbox: {
+    type: Boolean,
+    default: true
+  },
+  // 是否允许拖拽
+  enableDrag: {
+    type: Boolean,
+    default: true
+  },
+  // 类型，文件夹还是文件
   type: {
     type: String,
     default: ''
@@ -32,6 +47,18 @@ const props = defineProps({
     default() {
       return []
     }
+  },
+  // 文件附加的菜单列表
+  fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 是否显示收藏按钮
+  showCollectBtn: {
+    type: Boolean,
+    default: true
   }
 })
 const emits = defineEmits(['click', 'actionClick'])

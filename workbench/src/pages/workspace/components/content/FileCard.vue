@@ -4,8 +4,8 @@
     :style="{ width: width + 'px' }"
     :class="{ isSelectMode: isSelectMode }"
     @click.stop="onClick"
-    @contextmenu.stop
-    :draggable="true"
+    @contextmenu.stop.prevent="onContextmenu"
+    :draggable="enableDrag"
     @dragstart.stop="onDragstart"
     @dragover.prevent
     @dragend.prevent="onDragend"
@@ -18,7 +18,7 @@
         :class="[getFileTypeIcon(data.type)]"
       ></span>
     </div>
-    <div class="checkBox" @click.stop>
+    <div class="checkBox" v-if="showCheckbox" @click.stop>
       <el-checkbox v-model="data.checked" :label="''" size="large" />
     </div>
     <el-popover
@@ -26,6 +26,7 @@
       :width="160"
       trigger="click"
       popper-style="padding: 4px;"
+      v-model:visible="menuListVisible"
     >
       <template #reference>
         <div class="menuBtn" @click.stop>
@@ -41,6 +42,12 @@
         :style="{ color: getFileTypeConfig(data.type).color }"
       ></span>
       <span class="text" :title="data.name">{{ data.name }}</span>
+      <span
+        class="collectBtn iconfont"
+        :class="[data.collected ? 'collected icon-shoucang1' : 'icon-shoucang']"
+        v-if="showCollectBtn"
+        @click.stop="toggleCollect"
+      ></span>
     </div>
   </div>
 </template>
@@ -48,10 +55,24 @@
 <script setup>
 import { getFileTypeIcon, getFileTypeConfig } from '@/utils'
 import Menu from '../common/Menu.vue'
-import { reactive } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import { useStore } from '@/store'
+import api from '@/api'
+import { ElMessage } from 'element-plus'
+import emitter from '@/utils/eventBus'
+import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
 
 const props = defineProps({
+  // 是否显示多选框
+  showCheckbox: {
+    type: Boolean,
+    default: true
+  },
+  // 是否允许拖拽
+  enableDrag: {
+    type: Boolean,
+    default: true
+  },
   data: {
     type: Object,
     default() {
@@ -65,33 +86,48 @@ const props = defineProps({
   isSelectMode: {
     type: Boolean,
     default: false
+  },
+  // 文件附加的菜单列表
+  fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 是否显示收藏按钮
+  showCollectBtn: {
+    type: Boolean,
+    default: true
   }
 })
 const emits = defineEmits(['click', 'actionClick'])
 const store = useStore()
 
-const menuList = reactive([
-  // {
-  //   name: '预览',
-  //   value: 'preview',
-  //   icon: 'icon-zitiyulan'
-  // },
-  {
-    name: '重命名',
-    value: 'rename',
-    icon: 'icon-zhongmingming'
-  },
-  {
-    name: '复制/移动',
-    value: 'copyOrMove',
-    icon: 'icon-a-yidong2'
-  },
-  {
-    name: '删除',
-    value: 'delete',
-    icon: 'icon-shanchu'
-  }
-])
+const menuList = computed(() => {
+  return [
+    // {
+    //   name: '预览',
+    //   value: 'preview',
+    //   icon: 'icon-zitiyulan'
+    // },
+    {
+      name: '重命名',
+      value: 'rename',
+      icon: 'icon-zhongmingming'
+    },
+    {
+      name: '复制/移动',
+      value: 'copyOrMove',
+      icon: 'icon-a-yidong2'
+    },
+    {
+      name: '删除',
+      value: 'delete',
+      icon: 'icon-shanchu'
+    },
+    ...props.fileAdditionalMenuList
+  ]
+})
 
 const onClick = () => {
   if (props.isSelectMode) {
@@ -104,6 +140,9 @@ const onClick = () => {
 
 const onMenuClick = item => {
   emits('actionClick', item.value)
+  if (typeof item.onClick === 'function') {
+    item.onClick(props.data)
+  }
 }
 
 // 开始拖拽
@@ -116,6 +155,38 @@ const onDragstart = () => {
 const onDragend = () => {
   store.setCurrentDragData(null)
 }
+
+// 切换收藏状态
+const toggleCollect = async () => {
+  try {
+    const { collected, id } = props.data
+    const newCollected = !collected
+    if (collected) {
+      // 取消收藏
+      await api.cancelCollect({
+        id
+      })
+    } else {
+      // 收藏
+      await api.collect({
+        id
+      })
+    }
+    props.data.collected = newCollected
+    ElMessage.success((newCollected ? '' : '取消') + `收藏成功`)
+    emitter.emit('toggle_collect_success')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// 右键显示菜单
+const { onContextmenu, menuListVisible, unBindContextmenuEvent } =
+  useCardContextMenu()
+
+onUnmounted(() => {
+  unBindContextmenuEvent()
+})
 </script>
 
 <style lang="less" scoped>
@@ -136,6 +207,11 @@ const onDragend = () => {
     }
     .menuBtn {
       visibility: visible;
+    }
+    .infoBox {
+      .collectBtn {
+        visibility: visible;
+      }
     }
     transform: translateY(-2px);
   }
@@ -210,6 +286,7 @@ const onDragend = () => {
     height: 30px;
     display: flex;
     align-items: center;
+    overflow: hidden;
 
     .iconfont {
       font-size: 20px;
@@ -223,6 +300,22 @@ const onDragend = () => {
       text-overflow: ellipsis;
       color: #212930;
       font-size: 14px;
+    }
+
+    .collectBtn {
+      font-size: 16px;
+      color: #a6b9cd;
+      margin-left: 6px;
+      visibility: hidden;
+
+      &:hover {
+        color: #f93;
+      }
+
+      &.collected {
+        visibility: visible;
+        color: #ff9933;
+      }
     }
   }
 }

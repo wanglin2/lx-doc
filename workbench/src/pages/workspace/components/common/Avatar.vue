@@ -71,6 +71,7 @@ onUnmounted(() => {
 <style lang="less" scoped>
 .avatarBox {
   position: relative;
+  z-index: 1999;
 
   .avatarImgBox {
     width: 32px;
