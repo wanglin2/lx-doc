@@ -2,13 +2,24 @@
   <div class="noDataContainer">
     <span class="emptyIcon iconfont icon-wushuju"></span>
     <div class="tip">
-      <span class="addIcon iconfont icon-jia"></span>
-      <div class="text">点击左上角「创建」吧</div>
+      <span class="addIcon iconfont icon-jia" v-if="showAddIcon"></span>
+      <div class="text">{{ tip }}</div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup>
+const props = defineProps({
+  tip: {
+    type: String,
+    default: '点击左上角「创建」吧'
+  },
+  showAddIcon: {
+    type: Boolean,
+    default: true
+  }
+})
+</script>
 
 <style lang="less" scoped>
 .noDataContainer {

@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
+    "mockDev": "vite --mode mock",
     "build": "vite build",
     "preview": "vite preview"
   },

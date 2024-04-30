@@ -90,11 +90,11 @@ const onConfirmClick = () => {
         if (editData.value.type === 'folder') {
           if (editData.value.id) {
             // 重命名文件夹
-            tip = '新建成功'
+            tip = '重命名成功'
             data = await updateFolder()
           } else {
             // 新建文件夹
-            tip = '重命名成功'
+            tip = '新建成功'
             data = await crateFolder()
           }
         } else {

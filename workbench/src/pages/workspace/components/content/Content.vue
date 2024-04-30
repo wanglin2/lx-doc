@@ -6,7 +6,9 @@
           v-model="searchText"
           style="width: 300px; --el-border-radius-base: 16px"
           placeholder="搜索文件/文件夹"
+          clearable
           :prefix-icon="Search"
+          @keyup.enter="onSearch"
         />
       </div>
       <div class="headerRight">
@@ -38,6 +40,10 @@
               <span class="text">取消批量操作</span>
             </div>
           </div>
+          <!-- 搜索提示 -->
+          <div class="searchTip" v-else-if="isSearch">
+            “{{ currentSearchText }}”的搜索结果：
+          </div>
           <!-- 文件夹路径 -->
           <div class="folderPath" v-else>
             <div
@@ -56,7 +62,7 @@
         </div>
         <div class="right">
           <!-- 操作按钮 -->
-          <el-button class="marginRight" @click="createFolder"
+          <el-button class="marginRight" @click="createFolder" v-if="!isSearch"
             >新建文件夹</el-button
           >
           <TypeFilter
@@ -65,6 +71,7 @@
             @change="onFilterTypeChange"
           ></TypeFilter>
           <Sort
+            v-if="!isSearch"
             class="marginRight"
             :sortField="currentSortField"
             :sortType="currentSortType"
@@ -96,12 +103,14 @@
           :isLoading="isLoading"
           :isSelectMode="checkedFileList.length > 0"
           @folderClick="onFolderClick"
-          @renamed="getFolderAndFileList"
-          @moved="getFolderAndFileList"
-          @deleted="getFolderAndFileList"
+          @renamed="reloadList"
+          @moved="reloadList"
+          @deleted="reloadList"
         ></View>
         <!-- 无数据 -->
         <NoData
+          :tip="isSearch ? '搜索无结果' : ''"
+          :showAddIcon="!isSearch"
           v-if="!isLoading && folderList.length <= 0 && fileList.length <= 0"
         ></NoData>
         <!-- 右键菜单 -->
@@ -118,7 +127,6 @@
 import { ref, computed, watch } from 'vue'
 import { Search, ArrowRight } from '@element-plus/icons-vue'
 import Avatar from './Avatar.vue'
-import GridView from './GridView.vue'
 import { useStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
@@ -132,8 +140,49 @@ import View from './View.vue'
 
 const store = useStore()
 
+// 刷新当前列表列表
+const reloadList = () => {
+  if (isSearch.value) {
+    searchFolderAndFileList()
+  } else {
+    getFolderAndFileList()
+  }
+}
+
 // 1.搜索
+const isSearch = ref(false)
 const searchText = ref('')
+const currentSearchText = ref('')
+const onSearch = () => {
+  const text = searchText.value.trim()
+  if (text) {
+    isSearch.value = true
+    currentSearchText.value = text
+    searchFolderAndFileList()
+  }
+}
+const resetSearch = () => {
+  isSearch.value = false
+  searchText.value = ''
+  currentSearchText.value = ''
+}
+const searchFolderAndFileList = async () => {
+  try {
+    folderList.value = []
+    fileList.value = []
+    isLoading.value = true
+    const { data } = await api.searchFolderAndFile({
+      name: currentSearchText.value,
+      type: currentFilterType.value === 'all' ? '' : currentFilterType.value
+    })
+    folderList.value = data.folderList || []
+    fileList.value = data.fileList || []
+    isLoading.value = false
+  } catch (error) {
+    console.log(error)
+    isLoading.value = false
+  }
+}
 
 // 2.获取文件列表
 const currentFolder = computed(() => {
@@ -154,6 +203,10 @@ watch(
     return currentFolder.value
   },
   () => {
+    // 如果当前处于搜索状态
+    if (isSearch.value) {
+      resetSearch()
+    }
     getFolderAndFileList()
   }
 )
@@ -161,6 +214,7 @@ watch(
 // 获取文件夹和文件列表
 const getFolderAndFileList = async () => {
   try {
+    if (isSearch.value) return
     folderList.value = []
     fileList.value = []
     isLoading.value = true
@@ -194,7 +248,7 @@ emitter.on('refresh_list', getFolderAndFileList)
 // 修改过滤类型
 const onFilterTypeChange = val => {
   currentFilterType.value = val
-  getFolderAndFileList()
+  reloadList()
 }
 // 排序改变
 const onSortFieldChange = val => {
@@ -207,18 +261,21 @@ const onsortTypeChange = val => {
 }
 
 // 文件夹路径点击
-const onFolderPathClick = path => {
-  store.setCurrentFolder(path)
+const onFolderPathClick = folder => {
+  store.setCurrentFolder(folder)
   const index = currentFolderPath.value.findIndex(item => {
-    return item.id === path.id
+    return item.id === folder.id
   })
   store.setCurrentFolderPath(currentFolderPath.value.slice(0, index + 1))
 }
 
 // 文件夹点击
-const onFolderClick = data => {
-  store.setCurrentFolder(data)
-  store.setCurrentFolderPath([...currentFolderPath.value, data])
+const onFolderClick = folder => {
+  store.setCurrentFolder(folder)
+  store.setCurrentFolderPath([
+    ...(isSearch.value ? folder.path : currentFolderPath.value),
+    folder
+  ])
 }
 
 // 3.文件多选
@@ -266,7 +323,7 @@ const copyOrMoveFiles = async () => {
         return item.id
       }),
       callback: () => {
-        getFolderAndFileList()
+        reloadList()
       }
     })
   } catch (error) {
@@ -291,7 +348,7 @@ const deleteFiles = async () => {
           type: 'success',
           message: '删除成功'
         })
-        getFolderAndFileList()
+        reloadList()
       } catch (error) {
         console.log(error)
       }
@@ -304,7 +361,7 @@ const deleteFiles = async () => {
 // 4.右键菜单
 const ContextMenuRef = ref(null)
 const onContextMenu = e => {
-  if (ContextMenuRef.value) {
+  if (ContextMenuRef.value && !isSearch.value) {
     ContextMenuRef.value.show(e)
   }
 }
@@ -373,6 +430,13 @@ const toggleLayoutType = async () => {
       padding: 0 24px;
 
       .left {
+        .searchTip {
+          color: #212930;
+          height: 40px;
+          display: flex;
+          align-items: center;
+        }
+
         .selectActionBox {
           display: flex;
           align-items: center;

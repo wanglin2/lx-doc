@@ -25,7 +25,7 @@
       ></GridView>
     </template>
     <ListView
-      v-else
+      v-else-if="!isLoading && (folderList.length > 0 || fileList.length > 0)"
       style="padding: 0 12px"
       :folderList="folderList"
       :fileList="fileList"
