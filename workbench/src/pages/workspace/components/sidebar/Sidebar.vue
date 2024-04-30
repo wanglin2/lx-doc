@@ -137,6 +137,7 @@ const onCurrentChange = (data, node) => {
   store.setCurrentFolder({ ...data })
 }
 
+// 清空当前所在的文件夹信息
 const clearCurrentNode = () => {
   store.setCurrentFolderPath([])
   store.setCurrentFolder(null)

@@ -8,7 +8,7 @@
       popper-style="padding: 4px;"
     >
       <template #reference>
-        <IconBtn icon="icon-guolv"></IconBtn>
+        <IconBtn icon="icon-guolv" :active="filterType !== 'all'"></IconBtn>
       </template>
       <Menu
         :showIcon="false"

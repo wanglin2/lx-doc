@@ -161,6 +161,7 @@ const onSearch = () => {
   if (text) {
     isSearch.value = true
     currentSearchText.value = text
+    clearCurrentNode()
     searchFolderAndFileList()
   }
 }
@@ -176,7 +177,7 @@ const searchFolderAndFileList = async () => {
     isLoading.value = true
     const { data } = await api.searchFolderAndFile({
       name: currentSearchText.value,
-      type: currentFilterType.value === 'all' ? '' : currentFilterType.value
+      fileType: currentFilterType.value === 'all' ? '' : currentFilterType.value
     })
     folderList.value = data.folderList || []
     fileList.value = data.fileList || []
@@ -240,13 +241,14 @@ watch(
     return currentFolder.value
   },
   () => {
+    if (!currentFolder.value) {
+      return
+    }
     // 如果当前处于搜索状态
     if (isSearch.value) {
       resetSearch()
     }
-    if (currentFolder.value) {
-      getFolderAndFileList()
-    }
+    getFolderAndFileList()
   },
   {
     immediate: true
@@ -284,6 +286,12 @@ const onFolderClick = folder => {
     ...(isSearch.value ? folder.path : currentFolderPath.value),
     folder
   ])
+}
+
+// 清空当前所在的文件夹信息
+const clearCurrentNode = () => {
+  store.setCurrentFolderPath([])
+  store.setCurrentFolder(null)
 }
 
 // 3.文件多选

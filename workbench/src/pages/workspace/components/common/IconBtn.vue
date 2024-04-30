@@ -1,5 +1,5 @@
 <template>
-  <div class="iconBtnContainer" @click="onClick">
+  <div class="iconBtnContainer" @click="onClick" :class="{ active: active }">
     <span class="iconfont" :class="[icon]"></span>
   </div>
 </template>
@@ -9,12 +9,16 @@ const props = defineProps({
   icon: {
     type: String,
     default: ''
+  },
+  active: {
+    type: Boolean,
+    default: false
   }
 })
 const emits = defineEmits(['click'])
 
 const onClick = () => {
-    emits('click')
+  emits('click')
 }
 </script>
 
@@ -31,7 +35,8 @@ const onClick = () => {
   cursor: pointer;
   background-color: #fff;
 
-  &:hover {
+  &:hover,
+  &.active {
     background-color: var(--el-color-primary-light-9);
     border-color: var(--el-color-primary-light-7);
     outline: none;

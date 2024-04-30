@@ -8,7 +8,7 @@
       popper-style="padding: 4px;"
     >
       <template #reference>
-        <IconBtn icon="icon-paixu"></IconBtn>
+        <IconBtn icon="icon-paixu" :active="isChanged"></IconBtn>
       </template>
       <Menu
         :showIcon="false"
@@ -64,6 +64,9 @@ const menuList = reactive([
     value: 'desc'
   }
 ])
+const isChanged = computed(() => {
+  return props.sortField !== 'createAt' || props.sortType !== 'desc'
+})
 
 const onMenuClick = item => {
   if (['asc', 'desc'].includes(item.value)) {
