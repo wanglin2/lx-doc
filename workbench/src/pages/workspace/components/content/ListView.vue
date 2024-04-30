@@ -7,45 +7,65 @@
       :row-style="{ cursor: 'pointer' }"
       @row-click="onTableRowClick"
     >
-      <el-table-column label="文件名称" prop="name">
+      <el-table-column label="文件名称" prop="name" min-width="200">
         <template #default="scope">
-          <span
-            class="icon iconfont"
-            :class="[getFileTypeIcon(scope.row.type)]"
-          ></span>
-          <span>{{ scope.row.name }}</span>
+          <div class="fileNameBox">
+            <div class="checkBox" v-if="scope.row.type !== 'folder'" @click.stop>
+              <el-checkbox v-model="scope.row.checked" :label="''" size="large" />
+            </div>
+            <span
+              class="icon iconfont"
+              :class="[
+                scope.row.type === 'folder'
+                  ? 'icon-wenjianjia'
+                  : getFileTypeIcon(scope.row.type)
+              ]"
+              :style="{
+                color:
+                  scope.row.type === 'folder'
+                    ? 'var(--folder-color)'
+                    : getFileTypeConfig(scope.row.type)?.color
+              }"
+            ></span>
+            <span class="name" :title="scope.row.name">{{
+              scope.row.name
+            }}</span>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="类型" prop="type">
+      <el-table-column label="操作" width="80">
+        <template #default="scope">
+          <el-popover
+            placement="bottom"
+            :width="160"
+            trigger="click"
+            popper-style="padding: 4px;"
+          >
+            <template #reference>
+              <div class="actionTriggerBtn" @click.stop>
+                <span class="iconfont icon-icmore"></span>
+              </div>
+            </template>
+            <Menu
+              :list="menuList"
+              @click="onMenuClick($event, scope.row)"
+            ></Menu>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" prop="type" width="120">
         <template #default="scope">
           <span>{{ getFileTypeName(scope.row.type) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" prop="createAt" />
-      <el-table-column label="更新时间" prop="updateAt" />
-      <el-table-column label="操作" width="80">
+      <el-table-column label="创建时间" prop="createAt" width="200">
         <template #default="scope">
-          <div class="h-full flex items-center" @click.stop>
-            <el-dropdown @command="handleCommand($event, scope.row)">
-              <div
-                class="iconBox rounded-[4px] bg-[rgba(0,0,0,.3)] w-[22px] h-[16px] flex justify-center items-center cursor-pointer"
-              >
-                <span
-                  class="text-[18px] text-[#fff] iconfont icon-shenglvehao"
-                ></span>
-              </div>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item command="rename">重命名</el-dropdown-item>
-                  <el-dropdown-item command="clone">克隆</el-dropdown-item>
-                  <el-dropdown-item command="move">移动</el-dropdown-item>
-                  <el-dropdown-item command="delete" :divided="true"
-                    >删除</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
+          <span>{{ formatShowTime(scope.row.createAt) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" prop="updateAt" width="200">
+        <template #default="scope">
+          <span>{{ formatShowTime(scope.row.updateAt) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -53,29 +73,79 @@
 </template>
 
 <script setup>
-import { getFileTypeIcon, getFileTypeName } from '@/utils'
+import { computed, reactive, ref } from 'vue'
+import {
+  getFileTypeIcon,
+  getFileTypeName,
+  getFileTypeConfig,
+  formatShowTime
+} from '@/utils'
+import Menu from '../common/Menu.vue'
 
 const props = defineProps({
-  list: {
+  folderList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  fileList: {
     type: Array,
     default() {
       return []
     }
   }
 })
-const emits = defineEmits(['fileClick', 'operationClick'])
+const emits = defineEmits(['folderClick', 'fileClick', 'actionClick'])
+
+const list = computed(() => {
+  return [
+    ...props.folderList.map(item => {
+      return {
+        ...item,
+        type: 'folder'
+      }
+    }),
+    ...props.fileList
+  ]
+})
+const menuList = reactive([
+  {
+    name: '重命名',
+    value: 'rename',
+    icon: 'icon-zhongmingming'
+  },
+  {
+    name: '复制/移动',
+    value: 'copyOrMove',
+    icon: 'icon-a-yidong2'
+  },
+  {
+    name: '删除',
+    value: 'delete',
+    icon: 'icon-shanchu'
+  }
+])
 
 // 表格行点击
 const onTableRowClick = row => {
-  emits('fileClick', row)
+  if (row.type === 'folder') {
+    emits('folderClick', row)
+  } else {
+    emits('fileClick', row)
+  }
 }
 
-// 操作
-const handleCommand = (command, item) => {
-  emits('operationClick', {
-    command,
-    item
-  })
+// 操作点击
+const onMenuClick = (action, data) => {
+  emits(
+    'actionClick',
+    {
+      action: action.value,
+      data
+    },
+    data.type === 'folder' ? 'folder' : 'file'
+  )
 }
 </script>
 
@@ -83,9 +153,35 @@ const handleCommand = (command, item) => {
 .listViewContainer {
   width: 100%;
 
-  .icon {
-    margin-right: 5px;
-    font-size: 16px;
+  .fileNameBox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .checkBox {
+    }
+
+    .icon {
+      margin-right: 5px;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .name {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .actionTriggerBtn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

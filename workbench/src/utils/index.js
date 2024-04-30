@@ -55,3 +55,24 @@ export const getFileTypeConfig = type => {
     return item.value === type
   })
 }
+
+// 格式化时间
+export const formatShowTime = t => {
+  if (!t) return t
+  let now = Date.now()
+  let time = new Date(t).getTime()
+  let hour = Math.floor((now - time) / 1000 / 60 / 60)
+  let min = Math.floor((now - time) / 1000 / 60)
+  let day = Math.floor(hour / 24)
+  if (min <= 0) {
+    return '刚刚'
+  } else if (hour < 1) {
+    return min + '分钟前'
+  } else if (hour <= 24) {
+    return hour + '小时前'
+  } else if (hour <= 24 * 5) {
+    return day + '天前'
+  } else {
+    return t
+  }
+}

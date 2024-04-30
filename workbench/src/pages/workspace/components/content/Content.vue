@@ -16,7 +16,30 @@
     <div class="content">
       <div class="contentHeader">
         <div class="left">
-          <div class="folderPath">
+          <!-- 多选操作 -->
+          <div class="selectActionBox" v-if="checkedFileList.length > 0">
+            <el-checkbox
+              v-model="isCheckAll"
+              :indeterminate="isIndeterminate"
+              label="全选"
+              size="large"
+              @change="onCheckAllChange"
+            />
+            <div class="actionBtn" @click="copyOrMoveFiles">
+              <span class="iconfont icon-a-yidong2"></span>
+              <span class="text">移动/复制</span>
+            </div>
+            <div class="actionBtn delete" @click="deleteFiles">
+              <span class="iconfont icon-shanchu"></span>
+              <span class="text">删除</span>
+            </div>
+            <div class="actionBtn" @click="exitSelect">
+              <span class="iconfont icon-guanbi"></span>
+              <span class="text">取消批量操作</span>
+            </div>
+          </div>
+          <!-- 文件夹路径 -->
+          <div class="folderPath" v-else>
             <div
               class="folderItem"
               v-for="item in currentFolderPath"
@@ -32,6 +55,7 @@
           </div>
         </div>
         <div class="right">
+          <!-- 操作按钮 -->
           <el-button class="marginRight" @click="createFolder"
             >新建文件夹</el-button
           >
@@ -64,51 +88,18 @@
         </div>
       </div>
       <div class="contentBody" @contextmenu="onContextMenu">
-        <!-- 文件夹列表 -->
-        <div class="listHeader" v-if="!isLoading && folderList.length > 0">
-          <div class="title">文件夹</div>
-        </div>
-        <GridView
-          type="folder"
-          :list="folderList"
-          @click="onFolderClick"
-          @renamed="getFolderAndFileList"
-          @moved="getFolderAndFileList"
-          @deleted="getFolderAndFileList"
-        ></GridView>
-        <!-- 文件列表 -->
-        <div class="listHeader" v-if="!isLoading && fileList.length > 0">
-          <div class="title">文件</div>
-          <div class="selectActionBox" v-if="checkedFileList.length > 0">
-            <el-checkbox
-              v-model="isCheckAll"
-              :indeterminate="isIndeterminate"
-              label="全选"
-              size="large"
-              @change="onCheckAllChange"
-            />
-            <div class="actionBtn" @click="copyOrMoveFiles">
-              <span class="iconfont icon-a-yidong2"></span>
-              <span class="text">移动/复制</span>
-            </div>
-            <div class="actionBtn delete" @click="deleteFiles">
-              <span class="iconfont icon-shanchu"></span>
-              <span class="text">删除</span>
-            </div>
-            <div class="actionBtn" @click="exitSelect">
-              <span class="iconfont icon-guanbi"></span>
-              <span class="text">取消批量操作</span>
-            </div>
-          </div>
-        </div>
-        <GridView
-          type="file"
-          :list="fileList"
+        <!-- 视图 -->
+        <View
+          :view="currentLayoutType"
+          :fileList="fileList"
+          :folderList="folderList"
+          :isLoading="isLoading"
           :isSelectMode="checkedFileList.length > 0"
+          @folderClick="onFolderClick"
           @renamed="getFolderAndFileList"
           @moved="getFolderAndFileList"
           @deleted="getFolderAndFileList"
-        ></GridView>
+        ></View>
         <!-- 无数据 -->
         <NoData
           v-if="!isLoading && folderList.length <= 0 && fileList.length <= 0"
@@ -137,6 +128,7 @@ import emitter from '@/utils/eventBus'
 import IconBtn from '../common/IconBtn.vue'
 import TypeFilter from './TypeFilter.vue'
 import Sort from './Sort.vue'
+import View from './View.vue'
 
 const store = useStore()
 
@@ -381,8 +373,42 @@ const toggleLayoutType = async () => {
       padding: 0 24px;
 
       .left {
+        .selectActionBox {
+          display: flex;
+          align-items: center;
+
+          .actionBtn {
+            display: flex;
+            align-items: center;
+            color: var(--theme-color);
+            margin-left: 15px;
+            cursor: pointer;
+            user-select: none;
+
+            &:first-of-type {
+              margin-left: 20px;
+            }
+
+            &:hover {
+              &.delete {
+                color: #f56c6c;
+              }
+            }
+
+            .iconfont {
+            }
+
+            .text {
+              font-size: 14px;
+            }
+          }
+        }
+
         .folderPath {
           display: flex;
+          height: 40px;
+          display: flex;
+          align-items: center;
 
           .folderItem {
             color: #9aa5b8;
@@ -427,51 +453,6 @@ const toggleLayoutType = async () => {
       height: 100%;
       overflow-y: auto;
       padding: 0 14px;
-
-      .listHeader {
-        display: flex;
-        align-items: center;
-        height: 40px;
-
-        .title {
-          font-size: 12px;
-          color: #9aa5b8;
-          height: 20px;
-          line-height: 20px;
-          padding: 0 10px;
-        }
-
-        .selectActionBox {
-          display: flex;
-          align-items: center;
-
-          .actionBtn {
-            display: flex;
-            align-items: center;
-            color: var(--theme-color);
-            margin-left: 15px;
-            cursor: pointer;
-            user-select: none;
-
-            &:first-of-type {
-              margin-left: 20px;
-            }
-
-            &:hover {
-              &.delete {
-                color: #f56c6c;
-              }
-            }
-
-            .iconfont {
-            }
-
-            .text {
-              font-size: 14px;
-            }
-          }
-        }
-      }
     }
   }
 }

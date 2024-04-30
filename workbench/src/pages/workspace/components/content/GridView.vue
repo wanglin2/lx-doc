@@ -12,9 +12,7 @@
       }"
       v-bind="$attrs"
       @click="onClick(item)"
-      @renamed="onRenamed(item)"
-      @moved="onMoved(item)"
-      @deleted="onDeleted(item)"
+      @actionClick="onActionClick($event, item)"
     ></component>
   </div>
 </template>
@@ -36,20 +34,22 @@ const props = defineProps({
     }
   }
 })
-const emits = defineEmits(['click', 'renamed', 'moved', 'deleted'])
+const emits = defineEmits(['click', 'actionClick'])
 
 const comp = computed(() => {
   return props.type === 'folder' ? FolderCard : FileCard
 })
+// 计算尺寸
 const gridViewRef = ref(null)
 const cardWidth = ref(0)
 const margin = ref(10)
 const minWidth = 120
 const maxWidth = 200
 
+// 更新尺寸信息
 const updateSize = () => {
   if (!gridViewRef.value) return
-  const width = gridViewRef.value.getBoundingClientRect().width - 4// 4是滚动条宽度
+  const width = gridViewRef.value.getBoundingClientRect().width - 4 // 4是滚动条宽度
   let num = 2
   let _cardWidth = 0
   while (num <= 10) {
@@ -62,26 +62,23 @@ const updateSize = () => {
   cardWidth.value = Math.max(_cardWidth, minWidth)
 }
 
+// 监听窗口大小改变事件
 const onResize = () => {
   updateSize()
 }
-
 window.addEventListener('resize', onResize)
 
-const onClick = (...args) => {
-  emits('click', ...args)
+// 点击事件
+const onClick = item => {
+  emits('click', item)
 }
 
-const onRenamed = (...args) => {
-  emits('renamed', ...args)
-}
-
-const onMoved = (...args) => {
-  emits('moved', ...args)
-}
-
-const onDeleted = (...args) => {
-  emits('deleted', ...args)
+// 操作点击事件
+const onActionClick = (action, data) => {
+  emits('actionClick', {
+    action,
+    data
+  })
 }
 
 onMounted(() => {

@@ -32,8 +32,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import Menu from '../common/Menu.vue'
-import emitter from '@/utils/eventBus'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import api from '@/api'
 import { useStore } from '@/store'
 
@@ -49,7 +48,7 @@ const props = defineProps({
     default: 0
   }
 })
-const emits = defineEmits(['click', 'renamed', 'moved', 'deleted'])
+const emits = defineEmits(['click', 'actionClick', 'moved'])
 const store = useStore()
 
 const menuList = reactive([
@@ -75,51 +74,7 @@ const onClick = () => {
 }
 
 const onMenuClick = item => {
-  if (item.value === 'rename') {
-    // 重命名
-    emitter.emit('show_name_edit_dialog', {
-      type: 'folder',
-      id: props.data.id,
-      name: props.data.name,
-      callback: () => {
-        emits('renamed')
-      }
-    })
-  } else if (item.value === 'copyOrMove') {
-    // 复制/移动
-    emitter.emit('show_move_dialog', {
-      type: 'folder',
-      name: props.data.name,
-      ids: [props.data.id],
-      callback: () => {
-        emits('moved')
-      }
-    })
-  } else if (item.value === 'delete') {
-    // 删除
-    deleteFolder()
-  }
-}
-
-// 删除文件夹
-const deleteFolder = async () => {
-  ElMessageBox.confirm(`是否确认删除【${props.data.name}】`, '删除文件夹', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      const id = props.data.id
-      await api.deleteFolder({
-        id
-      })
-      emits('deleted')
-      emitter.emit('delete_folder_success', id)
-      ElMessage.success('删除成功')
-    } catch (error) {
-      console.log(error)
-    }
-  })
+  emits('actionClick', item.value)
 }
 
 // 移动文件或文件夹
@@ -151,15 +106,12 @@ const onDrop = async () => {
     console.log(error)
   }
 }
-
 const onDragenter = e => {
   isOnDragOver.value = true
 }
-
 const onDragleave = e => {
   isOnDragOver.value = false
 }
-
 // 开始拖拽
 const onDragstart = () => {
   store.setCurrentDragData({
@@ -167,7 +119,6 @@ const onDragstart = () => {
     data: props.data
   })
 }
-
 const onDragend = () => {
   store.setCurrentDragData(null)
 }

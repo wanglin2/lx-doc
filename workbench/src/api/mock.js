@@ -18,9 +18,9 @@ const createFileList = () => {
         Math.random() > 0.5
           ? 'https://img2.baidu.com/it/u=2842168711,3751422993&fm=253&fmt=auto&app=120&f=JPEG?w=576&h=500'
           : '',
-      createAt: '2024-04-25 16:55:55',
-      updateAt: '2024-04-25 16:55:55'
-    }
+      createAt: '2024-04-29 16:55:55',
+      updateAt: '2024-04-20 16:55:55'
+    } 
   })
 }
 
@@ -33,7 +33,7 @@ const mockData = {
       'https://img0.baidu.com/it/u=3438909157,109984304&fm=253&fmt=auto&app=138&f=JPEG?w=530&h=500'
   },
   getUserConfig: {
-    layoutType: 'list'
+    layoutType: 'grid'
   },
   getFolderTree: ({ folderId }) => {
     switch (folderId) {
@@ -116,11 +116,15 @@ const mockData = {
           folderList: [
             {
               name: '思维导图',
-              id: '1'
+              id: '1',
+              createAt: '2024-04-25 16:55:55',
+              updateAt: '2024-04-25 16:55:55'
             },
             {
               name: '流程图',
-              id: '2'
+              id: '2',
+              createAt: '2024-04-25 16:55:55',
+              updateAt: '2024-04-25 16:55:55'
             }
           ],
           fileList: createFileList()

@@ -49,10 +49,6 @@
 import { getFileTypeIcon, getFileTypeConfig } from '@/utils'
 import Menu from '../common/Menu.vue'
 import { reactive } from 'vue'
-import useFileHandle from '@/hooks/useFileHandle'
-import emitter from '@/utils/eventBus'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import api from '@/api'
 import { useStore } from '@/store'
 
 const props = defineProps({
@@ -71,8 +67,7 @@ const props = defineProps({
     default: false
   }
 })
-const emits = defineEmits([])
-const fileHandle = useFileHandle()
+const emits = defineEmits(['click', 'actionClick'])
 const store = useStore()
 
 const menuList = reactive([
@@ -103,59 +98,12 @@ const onClick = () => {
     // 切换选中
     props.data.checked = !props.data.checked
   } else {
-    // 打开编辑页面
-    fileHandle.openEditPage(props.data.type, props.data.id)
+    emits('click')
   }
 }
 
 const onMenuClick = item => {
-  if (item.value === 'rename') {
-    // 重命名
-    emitter.emit('show_name_edit_dialog', {
-      type: 'file',
-      id: props.data.id,
-      name: props.data.name,
-      callback: () => {
-        emits('renamed')
-      }
-    })
-  } else if (item.value === 'copyOrMove') {
-    // 复制/移动
-    emitter.emit('show_move_dialog', {
-      type: 'file',
-      name: props.data.name,
-      ids: [props.data.id],
-      callback: () => {
-        emits('moved')
-      }
-    })
-  } else if (item.value === 'delete') {
-    // 删除
-    deleteFile()
-  }
-}
-
-// 删除文件夹
-const deleteFile = async () => {
-  ElMessageBox.confirm(`是否确认删除【${props.data.name}】`, '删除文件', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      const id = props.data.id
-      await api.deleteFile({
-        ids: [id]
-      })
-      emits('deleted')
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  })
+  emits('actionClick', item.value)
 }
 
 // 开始拖拽
@@ -165,7 +113,6 @@ const onDragstart = () => {
     data: props.data
   })
 }
-
 const onDragend = () => {
   store.setCurrentDragData(null)
 }
