@@ -7,29 +7,53 @@
         </span>
         <span class="title">{{ config.name }}</span>
       </div>
-      <img class="illustration" src="@/assets/img/login.png" alt="" />
+      <img class="illustration" src="@/assets/img/login.svg" alt="" />
     </div>
     <div class="formBox">
       <div class="formWrap">
-        <div class="title">欢迎使用{{ config.name }}</div>
-        <!-- 登录 -->
-        <el-form :model="loginForm">
-          <el-form-item label="">
+        <div class="title">
+          {{ isRegister ? '注册新账号' : `欢迎使用${config.name}` }}
+        </div>
+        <!-- 登录/注册 -->
+        <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
+          <el-form-item label="" prop="account">
             <el-input
-              v-model="loginForm.name"
+              v-model="loginForm.account"
               placeholder="请输入用户名"
               style="height: 50px"
             />
           </el-form-item>
-          <el-form-item label="">
+          <el-form-item label="" prop="password">
             <el-input
               v-model="loginForm.password"
               placeholder="请输入密码"
               style="height: 50px"
+              show-password
+            />
+          </el-form-item>
+          <el-form-item label="" prop="password2" v-if="isRegister">
+            <el-input
+              v-model="loginForm.password2"
+              placeholder="请再次输入密码"
+              style="height: 50px"
+              show-password
             />
           </el-form-item>
         </el-form>
-        <el-button type="primary" style="width: 100%; height: 50px">登录</el-button>
+        <el-button
+          type="primary"
+          style="width: 100%; height: 50px"
+          @click="confirm"
+          >{{ isRegister ? '注册' : '登录' }}</el-button
+        >
+        <div class="btnBox">
+          <div class="registerBtn" @click="changeToLogin" v-if="isRegister">
+            已有账号？点此登录
+          </div>
+          <div class="registerBtn" @click="changeToRegister" v-else>
+            没有账号？点此注册
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -38,13 +62,124 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import config from '@/config'
+import api from '@/api'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
-const currentTab = ref('login')
+const router = useRouter()
 
+const validateAccount = (rule, value, callback) => {
+  value = value.trim()
+  if (value === '') {
+    callback(new Error('请输入用户名'))
+  } else if (!/^[a-zA-Z0-9]{2,20}/.test(value)) {
+    callback(new Error('用户名长度2-20位，只能包含数字和字母'))
+  } else {
+    callback()
+  }
+}
+
+const validatePassword = (rule, value, callback) => {
+  value = value.trim()
+  if (value === '') {
+    callback(new Error('请输入密码'))
+  } else if (
+    !/^(?![\da-z]+$)(?![\dA-Z]+$)(?![\d.!#$%^&*]+$)(?![a-zA-Z]+$)(?![a-z.!#$%^&*]+$)(?![A-Z.!#$%^&*]+$)[\da-zA-z.!#$%^&*]{8,16}/.test(
+      value
+    )
+  ) {
+    callback(
+      new Error(
+        '密码长度8-16位，必须包含数字、大写字母、小写字母、特殊字符（!#$%^&*）其中3种'
+      )
+    )
+  } else {
+    callback()
+  }
+}
+
+const validatePassword2 = (rule, value, callback) => {
+  value = value.trim()
+  if (value === '') {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== loginForm.password.trim()) {
+    callback(new Error('两次密码不一致'))
+  } else {
+    callback()
+  }
+}
+
+const loginFormRef = ref(null)
 const loginForm = reactive({
   account: '',
-  password: ''
+  password: '',
+  password2: ''
 })
+const loginRules = reactive({
+  account: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { validator: validateAccount, trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { validator: validatePassword, trigger: 'blur' }
+  ],
+  password2: [
+    { required: true, message: '请再次输入密码', trigger: 'blur' },
+    { validator: validatePassword2, trigger: 'blur' }
+  ]
+})
+const isRegister = ref(false)
+
+const login = async () => {
+  await api.login({
+    account: loginForm.account.trim(),
+    password: loginForm.password.trim()
+  })
+  ElMessage.success('登录成功')
+  router.push({
+    name: 'List'
+  })
+}
+
+const register = async () => {
+  await api.register({
+    account: loginForm.account.trim(),
+    password: loginForm.password.trim()
+  })
+  ElMessage.success('注册成功')
+  changeToLogin()
+}
+
+const resetForm = () => {
+  loginFormRef.value.resetFields()
+}
+
+const confirm = () => {
+  loginFormRef.value.validate(async valid => {
+    if (valid) {
+      try {
+        if (isRegister.value) {
+          await register()
+        } else {
+          await login()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+}
+
+const changeToRegister = () => {
+  isRegister.value = true
+  resetForm()
+}
+
+const changeToLogin = () => {
+  isRegister.value = false
+  resetForm()
+}
 </script>
 
 <style lang="less" scoped>
@@ -68,6 +203,7 @@ const loginForm = reactive({
       align-items: center;
       height: 100px;
       justify-content: center;
+      margin-bottom: 20px;
 
       .logo {
         width: 60px;
@@ -100,10 +236,24 @@ const loginForm = reactive({
     .formWrap {
       width: 400px;
 
+      /deep/ .el-form-item__error {
+        white-space: nowrap;
+      }
+
       .title {
         font-size: 30px;
         color: #212930;
         margin-bottom: 40px;
+      }
+
+      .btnBox {
+        margin-top: 12px;
+
+        .registerBtn {
+          font-size: 12px;
+          cursor: pointer;
+          user-select: none;
+        }
       }
     }
   }

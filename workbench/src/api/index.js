@@ -13,6 +13,22 @@ export default {
     return http.get('/logout')
   },
 
+  // 登录
+  login(data) {
+    if (useMock) {
+      return getMockData('login', data)
+    }
+    return http.post('/login', data)
+  },
+
+  // 注册
+  register(data) {
+    if (useMock) {
+      return getMockData('register', data)
+    }
+    return http.post('/register', data)
+  },
+
   // 获取用户信息
   getUserInfo() {
     if (useMock) {
