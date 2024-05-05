@@ -6,8 +6,8 @@
     </div>
     <div class="navList" v-if="showHideControl">
       <div class="navGroup">
-        <div class="navItem">
-          <a href="" class="navItemContent">个人主页</a>
+        <div class="navItem" @click="toHomepage">
+          <a href="" @click.prevent class="navItemContent">个人主页</a>
         </div>
       </div>
       <div class="navGroup">
@@ -23,12 +23,20 @@
 import { computed, onUnmounted, ref } from 'vue'
 import { useStore } from '@/store'
 import api from '@/api'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
 const userAvatar = computed(() => {
   return store.userInfo?.avatar
 })
+
+const toHomepage = () => {
+  router.push({
+    name: 'Homepage'
+  })
+}
 
 // 退出登录
 const logout = async () => {
@@ -105,7 +113,7 @@ onUnmounted(() => {
     right: 0;
     margin-top: 15px;
     list-style: none;
-    width: 168px;
+    width: 120px;
     font-size: 15px;
     color: #909090;
     white-space: nowrap;

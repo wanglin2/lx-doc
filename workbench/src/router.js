@@ -25,6 +25,11 @@ const routes = [
         name: 'Recycle',
         path: 'recycle',
         component: () => import('@/pages/workspace/Recycle.vue')
+      },
+      {
+        name: 'Homepage',
+        path: 'homepage',
+        component: () => import('@/pages/workspace/Homepage.vue')
       }
     ]
   },
@@ -36,7 +41,7 @@ const routes = [
   {
     name: 'Error',
     path: '/error',
-    component: () => import('@/pages/Error/Index.vue')
+    component: () => import('@/pages/error/Index.vue')
   }
 ]
 
