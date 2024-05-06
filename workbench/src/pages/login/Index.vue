@@ -65,55 +65,22 @@ import config from '@/config'
 import api from '@/api'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import {
+  validateAccount,
+  validatePassword,
+  getValidatePassword2Fn
+} from '@/utils'
 
 const router = useRouter()
-
-const validateAccount = (rule, value, callback) => {
-  value = value.trim()
-  if (value === '') {
-    callback(new Error('请输入用户名'))
-  } else if (!/^[a-zA-Z0-9]{2,20}/.test(value)) {
-    callback(new Error('用户名长度2-20位，只能包含数字和字母'))
-  } else {
-    callback()
-  }
-}
-
-const validatePassword = (rule, value, callback) => {
-  value = value.trim()
-  if (value === '') {
-    callback(new Error('请输入密码'))
-  } else if (
-    !/^(?![\da-z]+$)(?![\dA-Z]+$)(?![\d.!#$%^&*]+$)(?![a-zA-Z]+$)(?![a-z.!#$%^&*]+$)(?![A-Z.!#$%^&*]+$)[\da-zA-z.!#$%^&*]{8,16}/.test(
-      value
-    )
-  ) {
-    callback(
-      new Error(
-        '密码长度8-16位，必须包含数字、大写字母、小写字母、特殊字符（!#$%^&*）其中3种'
-      )
-    )
-  } else {
-    callback()
-  }
-}
-
-const validatePassword2 = (rule, value, callback) => {
-  value = value.trim()
-  if (value === '') {
-    callback(new Error('请再次输入密码'))
-  } else if (value !== loginForm.password.trim()) {
-    callback(new Error('两次密码不一致'))
-  } else {
-    callback()
-  }
-}
 
 const loginFormRef = ref(null)
 const loginForm = reactive({
   account: '',
   password: '',
   password2: ''
+})
+const validatePassword2 = getValidatePassword2Fn(() => {
+  return loginForm.password.trim()
 })
 const loginRules = reactive({
   account: [

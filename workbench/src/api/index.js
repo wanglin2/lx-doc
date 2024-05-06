@@ -5,6 +5,14 @@ const isDev = process.env.NODE_ENV === 'development'
 const useMock = import.meta.env.MODE === 'mock'
 
 export default {
+  // 上传文件
+  uploadFiles(data) {
+    if (useMock) {
+      return getMockData('uploadFiles', data)
+    }
+    return http.post('/uploadFiles', data)
+  },
+
   // 退出登录---------------------------
   logout() {
     if (useMock) {
@@ -35,6 +43,22 @@ export default {
       return getMockData('getUserInfo')
     }
     return http.get('/getUserInfo')
+  },
+
+  // 更新用户信息
+  updateUserInfo(data) {
+    if (useMock) {
+      return getMockData('updateUserInfo', data)
+    }
+    return http.post('/updateUserInfo', data)
+  },
+
+  // 修改密码
+  changePassword(data) {
+    if (useMock) {
+      return getMockData('changePassword', data)
+    }
+    return http.post('/changePassword', data)
   },
 
   // 获取用户配置
@@ -162,11 +186,13 @@ export default {
   },
 
   // 获取收藏的文件列表---------------------
-  getCollectFileList(data) {
+  getCollectFileList(params) {
     if (useMock) {
-      return getMockData('getCollectFileList', data)
+      return getMockData('getCollectFileList', params)
     }
-    return http.post('/getCollectFileList', data)
+    return http.get('/getCollectFileList', {
+      params
+    })
   },
 
   // 取消收藏
@@ -186,11 +212,13 @@ export default {
   },
 
   // 获取回收站列表-------------------------------------
-  getRecycleFolderAndFileList(data) {
+  getRecycleFolderAndFileList(params) {
     if (useMock) {
-      return getMockData('getRecycleFolderAndFileList', data)
+      return getMockData('getRecycleFolderAndFileList', params)
     }
-    return http.post('/getRecycleFolderAndFileList', data)
+    return http.get('/getRecycleFolderAndFileList', {
+      params
+    })
   },
 
   // 从回收站恢复文件夹或文件

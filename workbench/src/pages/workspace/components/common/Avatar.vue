@@ -9,6 +9,9 @@
         <div class="navItem" @click="toHomepage">
           <a href="" @click.prevent class="navItemContent">个人主页</a>
         </div>
+        <div class="navItem" @click="changePassword">
+          <a href="" @click.prevent class="navItemContent">修改密码</a>
+        </div>
       </div>
       <div class="navGroup">
         <div class="navItem" @click="logout">
@@ -16,14 +19,59 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      v-model="changePasswordDialogVisible"
+      :align-center="true"
+      title="修改密码"
+      width="400"
+    >
+      <el-form
+        ref="changePasswordFormRef"
+        :model="changePasswordForm"
+        :rules="changePasswordFormRules"
+        label-position="top"
+      >
+        <el-form-item label="原密码" prop="oldPassword">
+          <el-input
+            v-model="changePasswordForm.oldPassword"
+            placeholder="请输入原密码"
+            show-password
+          />
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input
+            v-model="changePasswordForm.newPassword"
+            placeholder="请输入新密码"
+            show-password
+          />
+        </el-form-item>
+        <el-form-item label="再次输入新密码" prop="newPassword2">
+          <el-input
+            v-model="changePasswordForm.newPassword2"
+            placeholder="请再次输入新密码"
+            show-password
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialogFooter">
+          <el-button @click="cancelChangePassword">取消</el-button>
+          <el-button type="primary" @click="confirmChangePassword"
+            >确定</el-button
+          >
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, reactive, ref } from 'vue'
 import { useStore } from '@/store'
 import api from '@/api'
 import { useRouter } from 'vue-router'
+import { validatePassword, getValidatePassword2Fn } from '@/utils'
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
 const router = useRouter()
@@ -32,6 +80,7 @@ const userAvatar = computed(() => {
   return store.userInfo?.avatar
 })
 
+// 去我的主页
 const toHomepage = () => {
   router.push({
     name: 'Homepage'
@@ -71,6 +120,60 @@ const useDropdown = () => {
 }
 
 const { showHideControl, onHideClick, showControl, unbindEvent } = useDropdown()
+
+// 修改密码
+const changePasswordFormRef = ref(null)
+const changePasswordDialogVisible = ref(false)
+const changePasswordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  newPassword2: ''
+})
+const validatePassword2 = getValidatePassword2Fn(() => {
+  return changePasswordForm.newPassword.trim()
+})
+const changePasswordFormRules = reactive({
+  oldPassword: [
+    { required: true, message: '请输入原密码', trigger: 'blur' },
+    { validator: validatePassword, trigger: 'blur' }
+  ],
+  newPassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { validator: validatePassword, trigger: 'blur' }
+  ],
+  newPassword2: [
+    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    { validator: validatePassword2, trigger: 'blur' }
+  ]
+})
+const changePassword = () => {
+  changePasswordDialogVisible.value = true
+}
+const confirmChangePassword = () => {
+  changePasswordFormRef.value.validate(async valid => {
+    if (valid) {
+      try {
+        await api.changePassword({
+          oldPassword: changePasswordForm.oldPassword.trim(),
+          newPassword: changePasswordForm.newPassword.trim()
+        })
+        ElMessage.success('修改成功，请重新登录')
+        await api.logout()
+        router.push({
+          name: 'Login'
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+}
+
+const cancelChangePassword = () => {
+  changePasswordDialogVisible.value = false
+  changePasswordFormRef.value.resetFields()
+}
+
 onUnmounted(() => {
   unbindEvent()
 })
