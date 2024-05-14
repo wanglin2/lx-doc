@@ -38,7 +38,7 @@ const useFileHandle = () => {
         break
       case 'mindMap':
         localStorage.removeItem('SIMPLE_MIND_MAP_DATA')
-        url = (isDev ? `http://${ip}:8080/#/` : '../mind-map/#/') + uid
+        url = (isDev ? `http://${ip}:9091/` : '../mind-map/') + uid
         break
       case 'process':
         url =
