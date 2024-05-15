@@ -6,7 +6,7 @@ import emitter from '@/utils/eventBus'
 const useFileHandle = () => {
   const store = useStore()
   const isDev = process.env.NODE_ENV === 'development'
-  const ip = '192.168.3.143'
+  const ip = 'localhost'
 
   // 创建并打开新文件
   const createAndOpenNewFile = async type => {
@@ -31,40 +31,41 @@ const useFileHandle = () => {
   const openEditPage = (type, uid) => {
     let url = ''
     switch (type) {
-      case 'whiteboard':
-        localStorage.removeItem('excalidraw-state')
-        localStorage.removeItem('excalidraw')
-        url = (isDev ? `http://${ip}:3000/` : '../whiteboard/') + '?uid=' + uid
-        break
       case 'mindMap':
         localStorage.removeItem('SIMPLE_MIND_MAP_DATA')
         url = (isDev ? `http://${ip}:9091/` : '../mind-map/') + uid
         break
-      case 'process':
-        url =
-          (isDev ? `http://${ip}:8086/index.html` : '../flowchart/') +
-          '?uid=' +
-          uid
-        break
       case 'markdown':
         url =
-          (isDev ? `http://${ip}:3000/` : '../markdown-nice/') + '?uid=' + uid
+          (isDev ? `http://${ip}:9092/` : '../markdown/') + uid
         break
-      case 'doc':
-        url = (isDev ? `http://${ip}:8085/` : '../docs/') + '?uid=' + uid
-        break
-      case 'sheet':
-        url = (isDev ? `http://${ip}:8083/` : '../sheet/') + '?uid=' + uid
-        break
-      case 'ppt':
-        url = (isDev ? `http://${ip}:8084/` : '../PPTist/') + '?uid=' + uid
-        break
-      case 'bpmn':
-        url = (isDev ? `http://${ip}:8082/#/bpmn/` : '../process/#/bpmn/') + uid
-        break
-      case 'resume':
-        url = (isDev ? `http://${ip}:8088/` : '../resume/') + '?uid=' + uid
-        break
+      // case 'whiteboard':
+      //   localStorage.removeItem('excalidraw-state')
+      //   localStorage.removeItem('excalidraw')
+      //   url = (isDev ? `http://${ip}:3000/` : '../whiteboard/') + '?uid=' + uid
+      //   break
+      // case 'process':
+      //   url =
+      //     (isDev ? `http://${ip}:8086/index.html` : '../flowchart/') +
+      //     '?uid=' +
+      //     uid
+      //   break
+
+      // case 'doc':
+      //   url = (isDev ? `http://${ip}:8085/` : '../docs/') + '?uid=' + uid
+      //   break
+      // case 'sheet':
+      //   url = (isDev ? `http://${ip}:8083/` : '../sheet/') + '?uid=' + uid
+      //   break
+      // case 'ppt':
+      //   url = (isDev ? `http://${ip}:8084/` : '../PPTist/') + '?uid=' + uid
+      //   break
+      // case 'bpmn':
+      //   url = (isDev ? `http://${ip}:8082/#/bpmn/` : '../process/#/bpmn/') + uid
+      //   break
+      // case 'resume':
+      //   url = (isDev ? `http://${ip}:8088/` : '../resume/') + '?uid=' + uid
+      //   break
       default:
         break
     }

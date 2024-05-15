@@ -211,7 +211,7 @@ const getFolderAndFileList = async () => {
     isLoading.value = true
     const { data } = await api.getFolderAndFileList({
       folderId: currentFolder.value ? currentFolder.value.id : '',
-      type: currentFilterType.value === 'all' ? '' : currentFilterType.value,
+      fileType: currentFilterType.value === 'all' ? '' : currentFilterType.value,
       sortField: currentSortField.value,
       sortType: currentSortType.value
     })

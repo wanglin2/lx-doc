@@ -61,5 +61,9 @@ export default {
       icon: 'icon-resume-line',
       color: '#ffc038'
     }
-  ]
+  ],
+  // 用户配置业务标志
+  configType: 'workbench',
+  // 根目录的名称
+  rootFolderName: '我的文件'
 }

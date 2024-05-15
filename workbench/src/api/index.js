@@ -1,5 +1,6 @@
 import http from './httpInstance'
 import getMockData from './mock'
+import config from '@/config'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useMock = import.meta.env.MODE === 'mock'
@@ -62,11 +63,13 @@ export default {
   },
 
   // 获取用户配置
-  getUserConfig() {
+  getUserConfig(params) {
     if (useMock) {
-      return getMockData('getUserConfig')
+      return getMockData('getUserConfig', params)
     }
-    return http.get('/getUserConfig')
+    return http.get('/getUserConfig', {
+      params
+    })
   },
 
   // 更新用户配置
@@ -78,13 +81,26 @@ export default {
   },
 
   // 获取文件夹树，异步树---------------------------
-  getFolderTree(params) {
+  async getFolderTree(params) {
     if (useMock) {
       return getMockData('getFolderTree', params)
     }
-    return http.get('/getFolderTree', {
+    const { data } = await http.get('/getFolderTree', {
       params
     })
+    // 如果没有根节点，那么就创建一个
+    if (params.folderId === '' && data.length <= 0) {
+      const res = await this.crateFolder({
+        name: config.rootFolderName,
+        parentFolderId: ''
+      })
+      return [{
+        ...res.data,
+        leaf: true
+      }]
+    } else {
+      return data
+    }
   },
 
   // 获取某个文件夹下的文件夹列表和文件列表

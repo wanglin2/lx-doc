@@ -27,7 +27,9 @@ const createFileList = () => {
 
 const mockData = {
   noData: null,
-  uploadFiles: ['https://img0.baidu.com/it/u=1451419006,2097577836&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500'],
+  uploadFiles: [
+    'https://img0.baidu.com/it/u=1451419006,2097577836&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500'
+  ],
   getUserInfo: {
     userName: '街角小林',
     account: 'wanglin',
@@ -37,12 +39,23 @@ const mockData = {
         ? ''
         : 'https://img0.baidu.com/it/u=3438909157,109984304&fm=253&fmt=auto&app=138&f=JPEG?w=530&h=500'
   },
-  getUserConfig: {
-    layoutType: 'grid'
-  },
+  getUserConfig: JSON.stringify({
+    layoutType: 'grid',
+    other: '123'
+  }),
   getFolderTree: ({ folderId }) => {
     switch (folderId) {
       case '':
+        return [
+          {
+            ...mockData.crateFolder({
+              name: '我的文件',
+              parentFolderId: ''
+            }),
+            id: '0',
+            leaf: false
+          }
+        ]
         return [
           {
             name: '我的文件',

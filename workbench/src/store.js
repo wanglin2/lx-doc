@@ -1,5 +1,6 @@
 import { createPinia, defineStore } from 'pinia'
 import api from './api'
+import config from '@/config'
 
 export const pinia = createPinia()
 
@@ -34,9 +35,11 @@ export const useStore = defineStore('main', {
       if (this.userConfig) {
         return this.userConfig
       }
-      const { data } = await api.getUserConfig()
-      this.userConfig = data
-      return data
+      const { data } = await api.getUserConfig({
+        configType: config.configType
+      })
+      this.userConfig = data ? JSON.parse(data) : {}
+      return this.userConfig
     },
 
     // 更新用户配置
@@ -45,7 +48,10 @@ export const useStore = defineStore('main', {
         ...this.userConfig,
         ...data
       }
-      await api.updateUserConfig(newConfig)
+      await api.updateUserConfig({
+        configType: config.configType,
+        configContent: JSON.stringify(newConfig)
+      })
       this.userConfig = newConfig
     },
 
