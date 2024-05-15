@@ -41,3 +41,6 @@
 - 思维导图：[mind-map](https://github.com/wanglin2/mind-map)
 
 - Markdown：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
+
+# 开源协议
+
