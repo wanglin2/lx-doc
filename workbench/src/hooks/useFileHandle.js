@@ -33,11 +33,11 @@ const useFileHandle = () => {
     switch (type) {
       case 'mindMap':
         localStorage.removeItem('SIMPLE_MIND_MAP_DATA')
-        url = (isDev ? `http://${ip}:9091/` : '../mind-map/') + uid
+        url = (isDev ? `http://${ip}:9091/` : '/mind-map/') + uid
         break
       case 'markdown':
         url =
-          (isDev ? `http://${ip}:9092/` : '../markdown/') + uid
+          (isDev ? `http://${ip}:9092/` : '/markdown/') + uid
         break
       // case 'whiteboard':
       //   localStorage.removeItem('excalidraw-state')

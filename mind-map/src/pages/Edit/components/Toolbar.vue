@@ -3,7 +3,7 @@
     <div class="toolbar" ref="toolbarRef">
       <!-- 保存 -->
       <div class="toolbarBlock">
-        <div class="backBtn">
+        <div class="backBtn" @click="onBack">
           <span class="el-icon-arrow-left"></span>
         </div>
         <div class="saveInfoBox">
@@ -146,6 +146,8 @@ export default {
           return 'el-icon-circle-close'
         case 'success':
           return 'el-icon-circle-check'
+        default:
+          return ''
       }
     },
     saveTip() {
@@ -158,6 +160,8 @@ export default {
           return '保存失败'
         case 'success':
           return '保存成功'
+        default:
+          return ''
       }
     }
   },
@@ -184,6 +188,11 @@ export default {
   },
   methods: {
     ...mapActions(['storeFileInfo']),
+
+    // 返回工作台页面
+    onBack() {
+      this.$router.push('/')
+    },
 
     // 生成封面
     saveCover() {
