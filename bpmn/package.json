@@ -1,0 +1,33 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^1.1.4",
+    "@logicflow/core": "^1.1.11",
+    "@logicflow/extension": "^1.1.11",
+    "axios": "^0.26.1",
+    "bpmn-js": "^9.0.3",
+    "bpmn-js-embedded-comments": "^0.6.1",
+    "bpmn-js-properties-panel": "^0.46.0",
+    "camunda-bpmn-moddle": "^6.1.2",
+    "diagram-js-minimap": "^2.1.1",
+    "element-plus": "^2.1.8",
+    "eventemitter3": "^4.0.7",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.13",
+    "save-svg-as-png": "^1.4.17",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.0",
+    "less": "^4.1.2",
+    "vite": "^2.9.0"
+  }
+}
