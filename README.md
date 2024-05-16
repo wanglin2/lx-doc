@@ -22,6 +22,8 @@
 
 - `doc`: 文档项目，提供文档的编辑功能；
 
+- `sheet`：电子表格项目，提供电子表格的编辑功能；
+
 # 部署
 
 每个目录都为一个单独的项目，需要单独部署，部署的路径规则如下：
@@ -34,6 +36,8 @@
 
 - `doc`：路径`/doc/`
 
+- `sheet`：路径`/sheet/`
+
 每个项目的部署成果物需要自行打包构建，如果您不愿自己动手，那么可以联系我们，我们提供付费服务。
 
 联系我们：前端[wanglin2](https://github.com/wanglin2)、后端[yomea](https://github.com/yomea)。
@@ -45,6 +49,8 @@
 - Markdown：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
 
 - Doc: [wangEditor](https://github.com/wangeditor-team/wangEditor)
+
+- Sheet: [Luckysheet](https://github.com/dream-num/Luckysheet)
 
 # 开源协议
 

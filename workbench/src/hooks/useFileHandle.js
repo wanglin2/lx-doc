@@ -41,6 +41,9 @@ const useFileHandle = () => {
       case 'doc':
         url = (isDev ? `http://${ip}:9093/` : '/doc/') + uid
         break
+      case 'sheet':
+        url = (isDev ? `http://${ip}:9094/` : '/sheet/') + uid
+        break
 
       // case 'whiteboard':
       //   localStorage.removeItem('excalidraw-state')
@@ -54,9 +57,6 @@ const useFileHandle = () => {
       //     uid
       //   break
 
-      // case 'sheet':
-      //   url = (isDev ? `http://${ip}:8083/` : '../sheet/') + '?uid=' + uid
-      //   break
       // case 'ppt':
       //   url = (isDev ? `http://${ip}:8084/` : '../PPTist/') + '?uid=' + uid
       //   break

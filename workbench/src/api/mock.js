@@ -117,6 +117,22 @@ const mockData = {
         ]
     }
   },
+  getFolderPath: ({ folderId }) => {
+    return [
+      {
+        name: '我的文件',
+        id: '0'
+      },
+      {
+        name: '思维导图',
+        id: '1'
+      },
+      {
+        name: '学习',
+        id: folderId
+      }
+    ]
+  },
   getFolderAndFileList: ({ folderId }) => {
     switch (folderId) {
       case '':
@@ -206,32 +222,12 @@ const mockData = {
         {
           name: '思维导图',
           id: '1',
-          path: [
-            {
-              name: '我的文件',
-              id: '0'
-            }
-          ],
           createAt: '2024-04-25 16:55:55',
           updateAt: '2024-04-25 16:55:55'
         },
         {
           name: '前端学习',
           id: '1-1-1',
-          path: [
-            {
-              name: '我的文件',
-              id: '0'
-            },
-            {
-              name: '思维导图',
-              id: '1'
-            },
-            {
-              name: '学习',
-              id: '1-1'
-            }
-          ],
           createAt: '2024-04-25 16:55:55',
           updateAt: '2024-04-25 16:55:55'
         }

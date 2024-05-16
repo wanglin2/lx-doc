@@ -94,13 +94,25 @@ export default {
         name: config.rootFolderName,
         parentFolderId: ''
       })
-      return [{
-        ...res.data,
-        leaf: true
-      }]
+      return [
+        {
+          ...res.data,
+          leaf: true
+        }
+      ]
     } else {
       return data
     }
+  },
+
+  // 获取某个文件夹的路径
+  getFolderPath(params) {
+    if (useMock) {
+      return getMockData('getFolderPath', params)
+    }
+    return http.get('/getFolderPath', {
+      params
+    })
   },
 
   // 获取某个文件夹下的文件夹列表和文件列表

@@ -211,7 +211,8 @@ const getFolderAndFileList = async () => {
     isLoading.value = true
     const { data } = await api.getFolderAndFileList({
       folderId: currentFolder.value ? currentFolder.value.id : '',
-      fileType: currentFilterType.value === 'all' ? '' : currentFilterType.value,
+      fileType:
+        currentFilterType.value === 'all' ? '' : currentFilterType.value,
       sortField: currentSortField.value,
       sortType: currentSortType.value
     })
@@ -280,12 +281,22 @@ const onFolderPathClick = folder => {
 }
 
 // 文件夹点击
-const onFolderClick = folder => {
-  store.setCurrentFolder(folder)
-  store.setCurrentFolderPath([
-    ...(isSearch.value ? folder.path : currentFolderPath.value),
-    folder
-  ])
+const onFolderClick = async folder => {
+  try {
+    let path = []
+    if (isSearch.value) {
+      const { data } = await api.getFolderPath({
+        folderId: folder.id
+      })
+      path = data
+    }
+    store.setCurrentFolder(folder)
+    store.setCurrentFolderPath(
+      isSearch.value ? path : [...currentFolderPath.value, folder]
+    )
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 // 清空当前所在的文件夹信息
