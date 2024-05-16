@@ -83,7 +83,7 @@
 import { useStore } from '../../store'
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref, watch } from 'vue'
-import { MdEditor } from 'md-editor-v3'
+import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import {
   ArrowLeft,
@@ -93,11 +93,23 @@ import {
   Loading
 } from '@element-plus/icons-vue'
 import api from '@/api'
+import { codeCss } from '@/config/md'
 import { Emoji } from '@vavt/v3-extension'
 import '@vavt/v3-extension/lib/asset/Emoji.css'
 import { ExportPDF } from '@vavt/v3-extension'
 import '@vavt/v3-extension/lib/asset/ExportPDF.css'
 import { ElMessage } from 'element-plus'
+import screenfull from 'screenfull'
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.css'
+import mermaid from 'mermaid'
+import highlight from 'highlight.js'
+import 'highlight.js/styles/atom-one-dark.css'
+import * as prettier from 'prettier'
+import parserMarkdown from 'prettier/plugins/markdown'
+import '@/assets/iconfont/iconfont.js'
 
 const store = useStore()
 const route = useRoute()
@@ -106,6 +118,33 @@ const router = useRouter()
 const onBack = () => {
   router.push('/')
 }
+
+config({
+  editorExtensions: {
+    prettier: {
+      prettierInstance: prettier,
+      parserMarkdownInstance: parserMarkdown
+    },
+    highlight: {
+      instance: highlight,
+      css: codeCss
+    },
+    screenfull: {
+      instance: screenfull
+    },
+    katex: {
+      instance: katex
+    },
+    cropper: {
+      instance: Cropper
+    },
+    mermaid: {
+      js: '',
+      instance: mermaid
+    },
+    iconfont: ''
+  }
+})
 
 const toolbars = [
   'bold',
