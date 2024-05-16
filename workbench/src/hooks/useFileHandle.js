@@ -36,9 +36,12 @@ const useFileHandle = () => {
         url = (isDev ? `http://${ip}:9091/` : '/mind-map/') + uid
         break
       case 'markdown':
-        url =
-          (isDev ? `http://${ip}:9092/` : '/markdown/') + uid
+        url = (isDev ? `http://${ip}:9092/` : '/markdown/') + uid
         break
+      case 'doc':
+        url = (isDev ? `http://${ip}:9093/` : '/doc/') + uid
+        break
+
       // case 'whiteboard':
       //   localStorage.removeItem('excalidraw-state')
       //   localStorage.removeItem('excalidraw')
@@ -51,9 +54,6 @@ const useFileHandle = () => {
       //     uid
       //   break
 
-      // case 'doc':
-      //   url = (isDev ? `http://${ip}:8085/` : '../docs/') + '?uid=' + uid
-      //   break
       // case 'sheet':
       //   url = (isDev ? `http://${ip}:8083/` : '../sheet/') + '?uid=' + uid
       //   break

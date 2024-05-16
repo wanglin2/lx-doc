@@ -34,13 +34,14 @@
 
 联系我们：前端[wanglin2](https://github.com/wanglin2)、后端[yomea](https://github.com/yomea)。
 
-# 本项目基于以下开源项目构建
-
-完整依赖请查看各个项目下的 package.json 文件。
+# 本项目编辑器部分基于以下开源项目
 
 - 思维导图：[mind-map](https://github.com/wanglin2/mind-map)
 
 - Markdown：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
 
+- Doc: [wangEditor](https://github.com/wangeditor-team/wangEditor)
+
 # 开源协议
 
+MIT
