@@ -30,6 +30,8 @@
 
 - `whiteboard`: 白板项目，提供白板的编辑功能；
 
+- `flowchart`: 流程图项目，提供流程图的编辑功能；
+
 - `bpmn`: BPMN 项目，提供 BPMN 的编辑功能；
 
 # 部署
@@ -52,6 +54,8 @@
 
 - `bpmn`: 路径`/bpmn/`
 
+- `flowchart`：路径`/flowchart/`
+
 每个项目的部署成果物需要自行打包构建，如果您不愿自己动手，那么可以联系我们通过付费的方式获取成果物。
 
 联系我们：前端[wanglin2](https://github.com/wanglin2)、后端[yomea](https://github.com/yomea)。
@@ -70,9 +74,11 @@
 
 - 电子表格（MIT 协议）：[Luckysheet](https://github.com/dream-num/Luckysheet)
 
-- 幻灯片（AGPL-3.0）：[PPTist](https://github.com/pipipi-pikachu/PPTist)
+- 幻灯片（AGPL-3.0 协议）：[PPTist](https://github.com/pipipi-pikachu/PPTist)
 
 - 白板（MIT 协议）: [excalidraw](https://github.com/excalidraw/excalidraw)
+
+- 流程图（Apache-2.0 协议）: [drawio](https://github.com/jgraph/drawio)
 
 - BPMN（自有协议）：[bpmn-js](https://github.com/bpmn-io/bpmn-js)
 
