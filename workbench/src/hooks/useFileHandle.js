@@ -44,24 +44,19 @@ const useFileHandle = () => {
       case 'sheet':
         url = (isDev ? `http://${ip}:9094/` : '/sheet/') + uid
         break
-
-      // case 'whiteboard':
-      //   localStorage.removeItem('excalidraw-state')
-      //   localStorage.removeItem('excalidraw')
-      //   url = (isDev ? `http://${ip}:3000/` : '../whiteboard/') + '?uid=' + uid
-      //   break
+      case 'whiteboard':
+        localStorage.removeItem('excalidraw-state')
+        localStorage.removeItem('excalidraw')
+        url = (isDev ? `http://${ip}:9095/` : '/whiteboard/') + uid
+        break
+      case 'ppt':
+        url = (isDev ? `http://${ip}:9096/` : '/ppt/') + uid
+        break
       // case 'process':
       //   url =
       //     (isDev ? `http://${ip}:8086/index.html` : '../flowchart/') +
       //     '?uid=' +
       //     uid
-      //   break
-
-      // case 'ppt':
-      //   url = (isDev ? `http://${ip}:8084/` : '../PPTist/') + '?uid=' + uid
-      //   break
-      // case 'bpmn':
-      //   url = (isDev ? `http://${ip}:8082/#/bpmn/` : '../process/#/bpmn/') + uid
       //   break
       // case 'resume':
       //   url = (isDev ? `http://${ip}:8088/` : '../resume/') + '?uid=' + uid

@@ -26,6 +26,8 @@
 
 - `ppt`: 幻灯片项目，提供幻灯片的编辑功能；
 
+- `whiteboard`: 白板项目，提供白板的编辑功能；
+
 # 部署
 
 每个目录都为一个单独的项目，需要单独部署，部署的路径规则如下：
@@ -42,6 +44,8 @@
 
 - `ppt`: 路径`/ppt/`
 
+- `whiteboard`: 路径`/whiteboard/`
+
 每个项目的部署成果物需要自行打包构建，如果您不愿自己动手，那么可以联系我们通过付费的方式获取成果物。
 
 联系我们：前端[wanglin2](https://github.com/wanglin2)、后端[yomea](https://github.com/yomea)。
@@ -57,6 +61,8 @@
 - 电子表格：[Luckysheet](https://github.com/dream-num/Luckysheet)
 
 - 幻灯片：[PPTist](https://github.com/pipipi-pikachu/PPTist)
+
+- 白板: [excalidraw](https://github.com/excalidraw/excalidraw)
 
 # 开源协议
 
