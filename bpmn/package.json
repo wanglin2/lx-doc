@@ -18,7 +18,6 @@
     "camunda-bpmn-moddle": "^6.1.2",
     "diagram-js-minimap": "^2.1.1",
     "element-plus": "^2.1.8",
-    "eventemitter3": "^4.0.7",
     "mitt": "^3.0.0",
     "pinia": "^2.0.13",
     "save-svg-as-png": "^1.4.17",

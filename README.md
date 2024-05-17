@@ -1,10 +1,10 @@
 # 理想文档
 
-定位于个人和小团队的云文档。
+定位于个人和小团队的云文档。我们倡导私有化部署，数据掌握在自己手里，不用受制于人。
 
 > 本仓库为前端仓库，后端代码仓库请移步：[yomea/lx-doc](https://github.com/yomea/lx-doc)。
 
-重要提示：
+重要提示！！！：
 
 1.不支持协同编辑；
 
@@ -52,18 +52,28 @@
 
 # 本项目编辑器部分基于以下开源项目
 
-- 思维导图: [mind-map](https://github.com/wanglin2/mind-map)
+- 思维导图（MIT协议）: [mind-map](https://github.com/wanglin2/mind-map)
 
-- Markdown：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
+- Markdown（MIT协议）：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
 
-- 文档：[wangEditor](https://github.com/wangeditor-team/wangEditor)
+- 文档（MIT协议）：[wangEditor](https://github.com/wangeditor-team/wangEditor)
 
-- 电子表格：[Luckysheet](https://github.com/dream-num/Luckysheet)
+- 电子表格（MIT协议）：[Luckysheet](https://github.com/dream-num/Luckysheet)
 
-- 幻灯片：[PPTist](https://github.com/pipipi-pikachu/PPTist)
+- 幻灯片（AGPL-3.0）：[PPTist](https://github.com/pipipi-pikachu/PPTist)
 
-- 白板: [excalidraw](https://github.com/excalidraw/excalidraw)
+- 白板（MIT协议）: [excalidraw](https://github.com/excalidraw/excalidraw)
+
+我们做了什么？
+
+> 我们开发了工作台项目，用于管理文件夹和文件，并提供登录注册的功能。
+>
+> 然后在以上优秀的开源项目基础上添加了数据云存储的功能。
 
 # 开源协议
 
 [AGPL-3.0 License](./LICENSE)
+
+本项目的开源协议为`AGPL-3.0`，简要描述就是您可以商用，但必须保留所使用开源项目的版权，并且源码也必须开源。当然，如果您不想开源，可以联系我们。
+
+不过您也需要关注本项目所使用的项目的开源协议。
