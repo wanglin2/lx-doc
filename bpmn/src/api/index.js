@@ -13,6 +13,14 @@ export default {
     return http.post('/uploadFiles', data)
   },
 
+  // 上传图片
+  uploadImg(data) {
+    if (useMock) {
+      return getMockData('uploadImg', data)
+    }
+    return http.post('/uploadImg', data)
+  },
+
   // 获取用户信息
   getUserInfo() {
     if (useMock) {

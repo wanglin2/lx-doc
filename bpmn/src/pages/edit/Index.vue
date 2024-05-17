@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, shallowRef } from 'vue'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import 'bpmn-js/dist/assets/diagram-js.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
@@ -17,18 +17,43 @@ import translate from './translate'
 import defaultXmlStr from './example'
 import minimapModule from 'diagram-js-minimap'
 import ToolBar from './components/ToolBar.vue'
-import Save from '@/components/Save.vue'
-import { useRoute } from 'vue-router'
+import Save from './components/Save.vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store'
-import api from '@/api'
 import bus from '@/utils/eventBus'
 
-const canvas = ref(null)
-const modeler = ref(null)
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
 
+// 编辑器
+const canvas = ref(null)
+const modeler = shallowRef(null)
+
+// 保存
+const autoSaveTimer = ref(null)
+const save = () => {
+  if (!modeler.value) return
+  modeler.value.saveXML({ format: true }, (err, xml) => {
+    if (!err) {
+      store.updateFileData({
+        content: xml
+      })
+    }
+  })
+}
+const autoSave = () => {
+  store.setAutoSaveStatus('wait')
+  clearTimeout(autoSaveTimer.value)
+  autoSaveTimer.value = setTimeout(() => {
+    save()
+  }, 3000)
+}
+bus.on('MANUAL_SAVE', save)
+
+// 初始化编辑器
 const initBpmn = data => {
-  data = data || defaultXmlStr
   modeler.value = new BpmnModeler({
     container: canvas.value,
     additionalModules: [
@@ -38,30 +63,13 @@ const initBpmn = data => {
       minimapModule
     ]
   })
-  modeler.value.importXML(data)
+  modeler.value.importXML(data || defaultXmlStr)
   modeler.value.get('minimap').open()
-  modeler.value.on('commandStack.changed', () => {
-    modeler.value.saveXML({ format: true }, function (err, xml) {
-      if (!err) {
-        saveToUserFile(xml)
-      }
-    })
-  })
-  bus.on('MANUAL_SAVE', () => {
-    modeler.value.saveXML({ format: true }, function (err, xml) {
-      if (!err) {
-        saveToUserFile(xml)
-      }
-    })
-  })
-  modeler.value.on('element.changed', event => {
-    const element = event.element
-  })
+  modeler.value.on('commandStack.changed', autoSave)
 }
 
+// 页面初始化
 const show = ref(false)
-const route = useRoute()
-const store = useStore()
 const init = async () => {
   try {
     if (!route.params.id) {
@@ -71,20 +79,22 @@ const init = async () => {
       })
       return
     }
-    let userInfo = await store.getUserInfo()
+    const userInfo = await store.getUserInfo()
     if (userInfo) {
-      let fileData = await store.getUserFileData(route.params.id)
+      const fileData = await store.getFileData(route.params.id)
       show.value = true
       nextTick(() => {
-        initBpmn(fileData.data)
+        initBpmn(fileData.content)
       })
     } else {
       ElMessage.warning({
-        message: '请先登录！',
+        message: '未登录',
         duration: 0
       })
+      router.push('/login')
     }
   } catch (e) {
+    console.log(e)
     ElMessage.warning({
       message: '页面初始化失败，请重试！',
       duration: 0

@@ -8,9 +8,11 @@
 
 1.不支持协同编辑；
 
-2.不支持手机端、客户端；
+2.不支持预览功能；
 
-3.不提供在线服务，只做私有化部署；
+3.不支持手机端、客户端；
+
+4.不提供在线服务，只做私有化部署；
 
 # 目录结构
 
@@ -27,6 +29,8 @@
 - `ppt`: 幻灯片项目，提供幻灯片的编辑功能；
 
 - `whiteboard`: 白板项目，提供白板的编辑功能；
+
+- `bpmn`: BPMN 项目，提供 BPMN 的编辑功能；
 
 # 部署
 
@@ -46,23 +50,31 @@
 
 - `whiteboard`: 路径`/whiteboard/`
 
+- `bpmn`: 路径`/bpmn/`
+
 每个项目的部署成果物需要自行打包构建，如果您不愿自己动手，那么可以联系我们通过付费的方式获取成果物。
 
 联系我们：前端[wanglin2](https://github.com/wanglin2)、后端[yomea](https://github.com/yomea)。
 
+## 关于图片、文件
+
+项目中的图片和文件均存储在服务器上，如果您需要存储到 OSS，可以自行修改，或联系我们。
+
 # 本项目编辑器部分基于以下开源项目
 
-- 思维导图（MIT协议）: [mind-map](https://github.com/wanglin2/mind-map)
+- 思维导图（MIT 协议）: [mind-map](https://github.com/wanglin2/mind-map)
 
-- Markdown（MIT协议）：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
+- Markdown（MIT 协议）：[md-editor-v3](https://github.com/imzbf/md-editor-v3)
 
-- 文档（MIT协议）：[wangEditor](https://github.com/wangeditor-team/wangEditor)
+- 文档（MIT 协议）：[wangEditor](https://github.com/wangeditor-team/wangEditor)
 
-- 电子表格（MIT协议）：[Luckysheet](https://github.com/dream-num/Luckysheet)
+- 电子表格（MIT 协议）：[Luckysheet](https://github.com/dream-num/Luckysheet)
 
 - 幻灯片（AGPL-3.0）：[PPTist](https://github.com/pipipi-pikachu/PPTist)
 
-- 白板（MIT协议）: [excalidraw](https://github.com/excalidraw/excalidraw)
+- 白板（MIT 协议）: [excalidraw](https://github.com/excalidraw/excalidraw)
+
+- BPMN（自有协议）：[bpmn-js](https://github.com/bpmn-io/bpmn-js)
 
 我们做了什么？
 

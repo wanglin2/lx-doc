@@ -2,7 +2,7 @@
   <div class="toolbarContainer">
     <div>
       <!-- 导入 -->
-      <el-tooltip effect="dark" content="导入dpmn文件" placement="top">
+      <el-tooltip effect="dark" content="导入bpmn文件" placement="top">
         <el-button
           :icon="FolderOpened"
           circle
@@ -142,7 +142,7 @@ const handleDownloadCommand = async type => {
       const { err, xml } = await props.modeler.saveXML()
       // 读取异常时抛出异常
       if (err) {
-        console.error(`[警告 ]: ${err.message || err}`)
+        console.error(`[警告]: ${err.message || err}`)
       }
       let { href, filename } = setEncoded(type, name, xml)
       downloadFunc(href, filename)
@@ -164,7 +164,7 @@ const handleDownloadCommand = async type => {
       downloadFunc(imgData, name)
     }
   } catch (e) {
-    console.error(`[警告 ]: ${e.message || e}`)
+    console.error(`[警告]: ${e.message || e}`)
   }
 }
 
@@ -180,9 +180,7 @@ props.modeler.on('canvas.viewbox.changed', ({ viewbox }) => {
 const processZoomIn = (zoomStep = 0.1) => {
   let newZoom = Math.floor(defaultZoom.value * 100 + zoomStep * 100) / 100
   if (newZoom > 4) {
-    throw new Error(
-      '[Process Designer Warn ]: The zoom ratio cannot be greater than 4'
-    )
+    throw new Error('[警告]: 缩放比例不能大于4')
   }
   defaultZoom.value = newZoom
   props.modeler.get('canvas').zoom(defaultZoom.value)
@@ -190,9 +188,7 @@ const processZoomIn = (zoomStep = 0.1) => {
 const processZoomOut = (zoomStep = 0.1) => {
   let newZoom = Math.floor(defaultZoom.value * 100 - zoomStep * 100) / 100
   if (newZoom < 0.2) {
-    throw new Error(
-      '[Process Designer Warn ]: The zoom ratio cannot be less than 0.2'
-    )
+    throw new Error('[警告]: 缩放比例不能小于0.2')
   }
   defaultZoom.value = newZoom
   props.modeler.get('canvas').zoom(defaultZoom.value)
@@ -211,9 +207,8 @@ EventBus.on('commandStack.changed', async event => {
   try {
     recoverable.value = props.modeler.get('commandStack').canRedo()
     revocable.value = props.modeler.get('commandStack').canUndo()
-    let { xml } = await props.modeler.saveXML({ format: true })
   } catch (e) {
-    console.error(`[Process Designer Warn]: ${e.message || e}`)
+    console.error(`[警告]: ${e.message || e}`)
   }
 })
 

@@ -8,6 +8,8 @@ const mockData = {
     'https://img0.baidu.com/it/u=1451419006,2097577836&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
     'https://img2.baidu.com/it/u=1446701745,1520263386&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=889'
   ],
+  uploadImg:
+    'https://img0.baidu.com/it/u=1451419006,2097577836&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
   getUserInfo: {
     userName: '街角小林',
     account: 'wanglin',
@@ -21,7 +23,7 @@ const mockData = {
   getFileContent: {
     id: '123',
     name: '我的bpmn文件',
-    content: ''
+    content: ``
   }
 }
 

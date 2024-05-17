@@ -1,21 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Approval from './pages/Approval/Index.vue'
-import Bpmn from './pages/Bpmn/Index.vue'
 
 const routes = [
   {
-    path: '/',
-    redirect: '/approval'
-  },
-  {
-    name: 'Approval',
-    path: '/approval',
-    component: Approval
-  },
-  {
-    name: 'Bpmn',
-    path: '/bpmn/:id',
-    component: Bpmn
+    name: 'Edit',
+    path: '/:id',
+    component: () => import('@/pages/edit/Index.vue')
   }
 ]
 
