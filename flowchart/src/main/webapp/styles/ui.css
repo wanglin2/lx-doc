@@ -1,0 +1,126 @@
+body {
+  overflow: hidden;
+}
+div.picker {
+  z-index: 10007;
+}
+.geSidebarContainer .geTitle input {
+  font-size: 8pt;
+  color: #606060;
+}
+.geBlock {
+  z-index: -3;
+  margin: 100px;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  padding: 20px;
+  text-align: center;
+  min-width: 50%;
+}
+.geBlock h1,
+.geBlock h2 {
+  margin-top: 0px;
+  padding-top: 0px;
+}
+.geEditor *:not(.geScrollable)::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.geEditor ::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 1px;
+}
+.geEditor ::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+.geEditor ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  background-clip: padding-box;
+  border: solid transparent;
+  border-radius: 10px;
+}
+.geEditor ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.geTemplate {
+  border: 1px solid transparent;
+  display: inline-block;
+  _display: inline;
+  vertical-align: top;
+  border-radius: 3px;
+  overflow: hidden;
+  font-size: 14pt;
+  cursor: pointer;
+  margin: 5px;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  width: 100%;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.header * {
+  box-sizing: border-box;
+}
+
+.header .left,
+.header .center,
+.header .right {
+  flex: 1;
+}
+
+.header .icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+  margin-right: 5px;
+}
+
+.header .name input {
+  width: 500px;
+  height: 38px;
+  color: #1d2129;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+.header .right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header .mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+
+.chartWrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}

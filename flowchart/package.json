@@ -1,0 +1,12 @@
+{
+  "name": "flowchart",
+  "version": "1.0.0",
+  "main": "src/main/webapp/index.html",
+  "scripts": {
+    "dev": "cd src/main/webapp && serve -p 9097",
+    "build": "cd etc/build && ant"
+  },
+  "dependencies": {
+    "serve": "^12.0.0"
+  }
+}
