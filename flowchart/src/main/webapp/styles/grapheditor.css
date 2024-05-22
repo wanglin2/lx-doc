@@ -276,7 +276,7 @@ a.geStatus .geStatusMessage {
 .geEditor button:not(.header *), .geEditor select, .geColorBtn {
 	background:#eee;
 }
-.geEditor button:hover:not([disabled], .geBigButton, .geShareBtn),
+.geEditor button:hover:not([disabled], .geBigButton, .geShareBtn, .header *),
 .geEditor select:hover:not([disabled]), .geColorBtn:hover:not([disabled]) {
 	background:#e5e5e5;
 }
@@ -357,16 +357,16 @@ html .geColorBtn:disabled {
 	opacity: 0.5;
 }
 html .gePrimaryBtn {
-	background-color: #4d90fe;
-	background-image: linear-gradient(#4d90fe 0px,#4787ed 100%);
-	border: 1px solid #3079ed;
-	color: #fff;
+	background-color: #4d90fe !important;
+	background-image: linear-gradient(#4d90fe 0px,#4787ed 100%) !important;
+	border: 1px solid #3079ed !important;
+	color: #fff !important;
 }
 html .gePrimaryBtn:hover:not([disabled]), html .gePrimaryBtn:focus {
-	background-color: #357ae8;
-	background-image: linear-gradient(#4d90fe 0px,#357ae8 100%);
-	border: 1px solid #2f5bb7;
-	color: #fff;
+	background-color: #357ae8 !important;
+	background-image: linear-gradient(#4d90fe 0px,#357ae8 100%) !important;
+	border: 1px solid #2f5bb7 !important;
+	color: #fff !important;
 }
 .gePrimaryBtn:disabled {
 	opacity: .5;

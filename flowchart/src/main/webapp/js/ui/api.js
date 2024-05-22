@@ -1,6 +1,7 @@
 const http = axios.create({
   timeout: 10000,
-  withCredentials: true
+  withCredentials: true,
+  baseURL: '/api/'
 })
 
 // 请求拦截器
@@ -28,7 +29,7 @@ http.interceptors.response.use(
   }
 )
 
-const useMock = true
+const useMock = false
 
 window.api = {
   // 上传文件

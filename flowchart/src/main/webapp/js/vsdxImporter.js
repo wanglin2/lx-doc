@@ -27,7 +27,6 @@ function doImport(vsdxBuff, callback, error, file, customParam)
 	EditorUi.prototype.createUi = function(){};
 	EditorUi.prototype.addTrees = function(){};
 	EditorUi.prototype.updateActionStates = function(){};
-	console.log(222)
 	var editorUi = new EditorUi();
 	var blob = file? file : new Blob([vsdxBuff], {type: 'application/octet-stream'});
 

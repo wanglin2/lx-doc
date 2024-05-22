@@ -2071,7 +2071,6 @@ GraphViewer.prototype.showLocalLightbox = function(container)
 	var previousShadowId = Graph.prototype.shadowId;
 	Graph.prototype.shadowId = 'lightboxDropShadow';
 	
-	console.log(11)
 	var ui = new EditorUi(new Editor(true), document.createElement('div'), true);
 
 	if (this.darkMode)

@@ -55,6 +55,15 @@ div.picker {
   margin: 5px;
 }
 
+:root {
+  --theme-color: #1ea59a;
+  --folder-color: #ffb133;
+  --el-color-primary: var(--theme-color);
+  --el-color-primary-light-3: #4bb7ae;
+  --el-color-primary-light-7: #a5dbd7;
+  --el-color-primary-dark-2: #0a392e;
+}
+
 body {
   width: 100%;
   height: 100%;
@@ -107,6 +116,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.header .right .saveTip {
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+  color: #333;
+
+  .text {
+    margin-left: 4px;
+    font-size: 12px;
+  }
 }
 
 .header .mask {

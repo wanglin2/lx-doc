@@ -135,7 +135,6 @@
 
     editorUi.actions.addAction('new...', function (...args) {
       var compact = editorUi.isOffline()
-
       var dlg = new NewDialog(
         editorUi,
         compact,
@@ -170,7 +169,6 @@
           graph.isEnabled() &&
           !graph.isCellLocked(graph.getDefaultParent())
         ) {
-          console.log(777)
           var dlg = new NewDialog(
             editorUi,
             null,
@@ -2257,7 +2255,6 @@
                 if (newValue.charAt(0) != '<') {
                   newValue = Graph.decompress(newValue)
                   mxLog.debug('See console for uncompressed XML')
-                  console.log('xml', newValue)
                 }
 
                 var doc = mxUtils.parseXml(newValue)
@@ -2537,7 +2534,6 @@
         'testCheckPages',
         mxUtils.bind(this, function () {
           var file = editorUi.getCurrentFile()
-          console.log('editorUi', editorUi, 'file', file)
 
           if (file != null && file.isRealtime()) {
             console.log(
@@ -2626,7 +2622,6 @@
       editorUi.actions.addAction(
         'testFixPages',
         mxUtils.bind(this, function () {
-          console.log('editorUi', editorUi)
           var file = editorUi.getCurrentFile()
 
           if (file != null && file.isRealtime() && file.shadowPages != null) {
@@ -3714,16 +3709,16 @@
           this.addMenuItems(menu, ['exportSvg', '-'], parent)
 
           // Redirects export to PDF to print in Chrome App
-          if (editorUi.isOffline() || editorUi.printPdfExport) {
-            this.addMenuItems(menu, ['exportPdf'], parent)
-          }
-          // Disabled for standalone mode in iOS because new tab cannot be closed
-          else if (
-            !editorUi.isOffline() &&
-            (!mxClient.IS_IOS || !navigator.standalone)
-          ) {
-            this.addMenuItems(menu, ['exportPdf'], parent)
-          }
+          // if (editorUi.isOffline() || editorUi.printPdfExport) {
+          //   this.addMenuItems(menu, ['exportPdf'], parent)
+          // }
+          // // Disabled for standalone mode in iOS because new tab cannot be closed
+          // else if (
+          //   !editorUi.isOffline() &&
+          //   (!mxClient.IS_IOS || !navigator.standalone)
+          // ) {
+          //   this.addMenuItems(menu, ['exportPdf'], parent)
+          // }
 
           if (
             !mxClient.IS_IE &&
@@ -3732,11 +3727,11 @@
             this.addMenuItems(menu, ['exportVsdx'], parent)
           }
 
-          this.addMenuItems(
-            menu,
-            ['-', 'exportHtml', 'exportXml', 'exportUrl'],
-            parent
-          )
+          // this.addMenuItems(
+          //   menu,
+          //   ['-', 'exportHtml', 'exportXml', 'exportUrl'],
+          //   parent
+          // )
 
           if (!editorUi.isOffline()) {
             menu.addSeparator(parent)

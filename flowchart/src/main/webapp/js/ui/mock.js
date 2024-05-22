@@ -23,7 +23,7 @@ const mockData = {
   getFileContent: {
     id: '123',
     name: '我的流程图文件',
-    content: ''
+    content: ``
   }
 }
 

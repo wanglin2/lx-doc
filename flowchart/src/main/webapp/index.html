@@ -10,8 +10,8 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="theme-color" content="#d89000" />
-    <link rel="stylesheet" type="text/css" href="styles/ui.css" />
     <link rel="stylesheet" type="text/css" href="js/ui/element-plus.min.css" />
+    <link rel="stylesheet" type="text/css" href="styles/ui.css" />
     <script id="geBootstrap" type="text/javascript">
       var urlParams = (function () {
         var result = new Object()
@@ -246,15 +246,6 @@
           }
         })()
       }
-
-      // Adds basic error handling
-      window.onerror = function () {
-        var status = document.getElementById('geStatus')
-
-        if (status != null) {
-          status.innerHTML = '页面加载失败，请刷新重试'
-        }
-      }
     </script>
     <link rel="stylesheet" type="text/css" href="styles/grapheditor.css" />
     <link
@@ -295,12 +286,17 @@
         </div>
       </div>
       <div class="right">
-        <span class="tip" v-if="showStatus"
-          >{{ successStatus ? '自动保存成功' : '自动保存失败' }}</span
-        >
-        <el-button round>保存</el-button>
+        <span class="saveTip">
+          <el-icon
+            :class="[saveTipIconIsLoading ? 'is-loading' : '']"
+            color="#333"
+            ><component :is="saveTipIcon"></component
+          ></el-icon>
+          <span class="text">{{ saveTip }}</span>
+        </span>
+        <el-button round @click="save">保存</el-button>
       </div>
-	  <div class="mask" v-if="showMask"></div>
+      <div class="mask" v-if="showMask"></div>
     </div>
     <div class="chartWrap" id="chartWrap"></div>
     <script src="js/ui/vue.global.min.js"></script>

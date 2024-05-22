@@ -4053,7 +4053,7 @@ var SaveDialog = function(editorUi, title, saveFn, disabledModes, data, mimeType
 	left = left.cloneNode(false);
 	right = right.cloneNode(false);
 
-	mxUtils.write(left, mxResources.get('where') + ':');
+	// mxUtils.write(left, mxResources.get('where') + ':');
 
 	var storageSelect = document.createElement('select');
 	storageSelect.style.textOverflow = 'ellipsis';
@@ -4356,7 +4356,7 @@ var SaveDialog = function(editorUi, title, saveFn, disabledModes, data, mimeType
 	addStorageEntries();
 	storageChanged();
 
-	right.appendChild(storageSelect);
+	// right.appendChild(storageSelect);
 
 	// Selects last entry
 	if (SaveDialog.lastValue != null && entries[SaveDialog.lastValue] != null)
@@ -11493,16 +11493,16 @@ var CustomDialog = function(editorUi, content, okFn, cancelFn, okButtonText, hel
 		btns.appendChild(buttonsContent);
 	}
 	
-	if (!editorUi.isOffline() && helpLink != null)
-	{
-		var helpBtn = mxUtils.button(mxResources.get('help'), function()
-		{
-			editorUi.openLink(helpLink);
-		});
+	// if (!editorUi.isOffline() && helpLink != null)
+	// {
+	// 	var helpBtn = mxUtils.button(mxResources.get('help'), function()
+	// 	{
+	// 		editorUi.openLink(helpLink);
+	// 	});
 		
-		helpBtn.className = 'geBtn';
-		btns.appendChild(helpBtn);
-	}
+	// 	helpBtn.className = 'geBtn';
+	// 	btns.appendChild(helpBtn);
+	// }
 	
 	var cancelBtn = mxUtils.button(cancelButtonText || mxResources.get('cancel'), function()
 	{
