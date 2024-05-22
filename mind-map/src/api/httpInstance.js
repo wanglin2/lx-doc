@@ -3,7 +3,8 @@ import { ElMessage } from 'element-ui'
 
 const http = axios.create({
   timeout: 10000,
-  withCredentials: true
+  withCredentials: true,
+  baseURL: '/api/'
 })
 
 // 请求拦截器
