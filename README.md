@@ -44,6 +44,8 @@
 
 - `bpmn`: BPMN 项目，提供 BPMN 的编辑功能；
 
+- `note`: 笔记项目，提供笔记的编辑功能；
+
 # 部署
 
 每个目录都为一个单独的项目，需要单独部署，部署的路径规则如下：
@@ -65,6 +67,8 @@
 - `bpmn`: 路径`/bpmn/`
 
 - `flowchart`：路径`/flowchart/`
+
+- `note`: 路径`/note/`
 
 每个项目的部署成果物需要自行打包构建，如果您不愿自己动手，那么可以联系我们通过付费的方式获取成果物。
 
@@ -91,6 +95,8 @@
 - 流程图（Apache-2.0 协议）: [drawio](https://github.com/jgraph/drawio)
 
 - BPMN（自有协议）：[bpmn-js](https://github.com/bpmn-io/bpmn-js)
+
+- 笔记（Apache-2.0 协议）：[editor.js](https://github.com/codex-team/editor.js)
 
 我们做了什么？
 

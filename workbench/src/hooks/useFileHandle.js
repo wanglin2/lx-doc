@@ -59,6 +59,9 @@ const useFileHandle = () => {
       case 'bpmn':
         url = (isDev ? `http://${ip}:9098/` : '/bpmn/') + uid
         break
+      case 'note':
+        url = (isDev ? `http://${ip}:9099/` : '/note/') + uid
+        break
       // case 'resume':
       //   url = (isDev ? `http://${ip}:8088/` : '../resume/') + '?uid=' + uid
       //   break

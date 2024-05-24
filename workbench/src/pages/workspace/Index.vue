@@ -19,8 +19,23 @@ import { useBodyContextmenu } from '@/hooks/useContextMenuEvent'
 const store = useStore()
 const router = useRouter()
 
-const init = () => {
-  if (!store.userInfo) {
+const init = async () => {
+  try {
+    // 没有获取到用户信息视为未登陆，跳转到登录页面
+    const userInfo = await store.getUserInfo()
+    if (!userInfo) {
+      router.replace({
+        name: 'Login'
+      })
+      return
+    }
+    try {
+      await store.getUserConfig()
+    } catch (error) {
+      console.log(error)
+    }
+  } catch (error) {
+    console.log(error)
     router.replace({
       name: 'Login'
     })

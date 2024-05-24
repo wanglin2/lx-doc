@@ -1,0 +1,42 @@
+.cdx-codemirror__textarea {
+    min-height: 200px;
+    font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+    color: #41314e;
+    line-height: 1.6em;
+    font-size: 12px;
+    background: #f8f7fa;
+    border: 1px solid #f1f1f4;
+    box-shadow: none;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+    resize: vertical;
+}
+
+.CodeMirror {
+    font-size: 15px;
+}
+
+.cdx-codemirror__language {
+    width: 100%;
+    cursor: pointer;
+    padding-right: 2em;
+    border: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
+
+.cdx-codemirror__language:focus {
+    border: 0;
+    outline: 0;;
+}
+
+.cdx-codemirror__language:active {
+    border: 0;
+    outline: 0;;
+}

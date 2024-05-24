@@ -70,8 +70,25 @@ import {
   validatePassword,
   getValidatePassword2Fn
 } from '@/utils'
+import { useStore } from '../../store'
 
+const store = useStore()
 const router = useRouter()
+
+const init = async () => {
+  try {
+    // 获取到用户信息则视为已登陆，跳转到工作台页面
+    const userInfo = await store.getUserInfo()
+    if (userInfo) {
+      router.replace('/')
+      return
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+init()
 
 const loginFormRef = ref(null)
 const loginForm = reactive({

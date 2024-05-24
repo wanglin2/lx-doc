@@ -1,0 +1,45 @@
+{
+  "name": "note",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "mockDev": "vite --mode mock",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/delimiter": "^1.4.0",
+    "@editorjs/editorjs": "^2.28.2",
+    "@editorjs/embed": "^2.7.2",
+    "@editorjs/header": "^2.8.1",
+    "@editorjs/image": "^2.9.0",
+    "@editorjs/inline-code": "^1.5.0",
+    "@editorjs/list": "^1.9.0",
+    "@editorjs/marker": "^1.4.0",
+    "@editorjs/quote": "^2.6.0",
+    "@editorjs/table": "^2.3.0",
+    "@editorjs/underline": "^1.1.0",
+    "@editorjs/warning": "^1.4.0",
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.6.8",
+    "codemirror": "^5.65.16",
+    "editorjs-drag-drop": "^1.1.14",
+    "editorjs-latex": "^1.0.5",
+    "editorjs-text-color-plugin": "^2.0.4",
+    "editorjs-undo": "^2.0.28",
+    "element-plus": "^2.7.1",
+    "highlight.js": "^11.9.0",
+    "mitt": "^3.0.1",
+    "pinia": "^2.1.7",
+    "remark": "^13.0.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.2.0",
+    "less": "^4.1.2",
+    "vite": "^2.8.0"
+  }
+}

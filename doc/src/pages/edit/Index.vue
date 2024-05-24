@@ -38,7 +38,7 @@
         <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" />
       </div>
       <div class="editorWrap">
-        <div class="editorContent" ref="editorContentRef" id="editorContent">
+        <div class="editorContent" ref="editorContentRef">
           <div
             class="titleContainer"
             :contenteditable="true"
@@ -46,11 +46,6 @@
             @input="onTitleInputChange"
             @paste="onTitleInputPaste"
           >
-            <!-- <input
-              placeholder="标题..."
-              v-model="fileName"
-              @blur="onFileNameBlur"
-            /> -->
             {{ fileName }}
           </div>
           <div class="editorContainer" @click="onEditorContainerClick">
@@ -394,14 +389,7 @@ onBeforeUnmount(() => {
           font-size: 30px;
           outline: none;
           width: 100%;
-
-          input {
-            font-size: 30px;
-            border: none;
-            outline: none;
-            width: 100%;
-            line-height: 1;
-          }
+          text-align: center;
         }
 
         .editorContainer {

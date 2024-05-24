@@ -21,8 +21,12 @@ http.interceptors.request.use(
 // 响应拦截器
 http.interceptors.response.use(
   function (response) {
-    if (response.data.code !== 0) {
-      ElMessage.error(response.data.message)
+    const { code, message } = response.data
+    if (code === 401) {
+      // 登录过期，跳转到登录页
+      location.href = '/login'
+    } else if (code !== 0) {
+      ElMessage.error(message)
       return Promise.reject(response)
     }
     return response

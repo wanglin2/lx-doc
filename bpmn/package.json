@@ -1,7 +1,7 @@
 {
   "name": "bpmn",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite --host",
     "mockDev": "vite --mode mock",

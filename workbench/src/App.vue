@@ -2,26 +2,7 @@
   <router-view></router-view>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router'
-import { useStore } from './store'
-
-const store = useStore()
-const router = useRouter()
-
-const init = async () => {
-  try {
-    const taskList = [store.getUserInfo(), store.getUserConfig()]
-    await Promise.all(taskList)
-  } catch (error) {
-    router.push({
-      name: 'Error'
-    })
-  }
-}
-
-init()
-</script>
+<script setup></script>
 
 <style lang="less">
 ::-webkit-scrollbar {
