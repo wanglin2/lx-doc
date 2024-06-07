@@ -115,7 +115,8 @@ const initEditor = initialData => {
     holder: editorContainerRef.value,
     data: initialData,
     minHeight: 50,
-    autofocus: true,
+    // readOnly: true,
+    // autofocus: true,
     tools: toolsConfig,
     i18n: i18nConfig,
     onReady: () => {

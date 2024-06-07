@@ -24,7 +24,7 @@ const mockData = {
   getFileContent: {
     id: '123',
     name: '我的note文件',
-    content: ``
+    content: `{"time":1717671321903,"blocks":[{"id":"8bqCISZunH","type":"link","data":{"url":"http://10.16.83.11:9099/123","text":"理想文档"}},{"id":"2Lj4R-ODJ7","type":"paragraph","data":{"text":"理想青年实验室"}},{"id":"pFDWXxIq4c","type":"link","data":{"url":"http://10.16.83.11:9099/123","text":"超链接"}}],"version":"2.28.2"}`
   }
 }
 

@@ -1,0 +1,44 @@
+.link-wrapper a {
+  color: #409eff;
+}
+
+.link-wrapper .add-link {
+  box-shadow: rgba(201, 201, 204, 0.48) 0px 0px 0px 1px;
+  width: 40px;
+  height: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.link-wrapper .add-link:hover {
+  background: #eff2f5;
+}
+
+.link-wrapper .link-container .link-container-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.link-wrapper .link-container .link-container-row .link-label {
+  font-size: 12px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.link-wrapper .link-container .link-container-row .link-field {
+  width: 100%;
+  height: 30px;
+  border: 1px solid rgba(201, 201, 204, 0.48);
+  line-height: 28px;
+  padding: 0 12px;
+}
+
+.link-wrapper .link-inserted {
+  line-height: 1.6em;
+}

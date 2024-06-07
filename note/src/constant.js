@@ -1,6 +1,4 @@
 import ColorPlugin from 'editorjs-text-color-plugin'
-import CodeTool from '@/plugins/code2'
-import { MDImporter, MDParser } from '@/plugins/markdown-parser'
 import Header from '@editorjs/header'
 import Image from '@editorjs/image'
 import List from '@editorjs/list'
@@ -14,6 +12,9 @@ import Table from '@editorjs/table'
 import Embed from '@editorjs/embed'
 import EJLaTeX from 'editorjs-latex'
 import 'editorjs-latex/dist/editorjs-latex.bundle.css'
+import CodeTool from '@/plugins/code2'
+import LinkTool from '@/plugins/link'
+import { MDImporter, MDParser } from '@/plugins/markdown-parser'
 import api from '@/api'
 
 export const toolsConfig = {
@@ -49,6 +50,7 @@ export const toolsConfig = {
   },
   list: List,
   checklist: Checklist,
+  link: LinkTool,
   quote: {
     class: Quote,
     inlineToolbar: true,
@@ -161,7 +163,10 @@ export const i18nConfig = {
         Message: '信息'
       },
       link: {
-        'Add a link': '添加一个链接'
+        'Edit label': '编辑1',
+        'Url label': '地址1',
+        'Text label': '名称1',
+        'Confirm label': '确定1'
       },
       stub: {
         'The block can not be displayed correctly.': '块无法正确显示。'
