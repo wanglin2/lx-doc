@@ -82,7 +82,7 @@ import Export from './Export'
 import Import from './Import'
 import { mapState, mapActions } from 'vuex'
 import ToolbarNodeBtnList from './ToolbarNodeBtnList.vue'
-import { throttle } from 'simple-mind-map/src/utils/index'
+import { throttle, isMobile } from 'simple-mind-map/src/utils/index'
 
 /**
  * @Author: 王林
@@ -103,6 +103,7 @@ export default {
   },
   data() {
     return {
+      isMobile: isMobile(),
       list: [
         'back',
         'forward',
@@ -117,8 +118,9 @@ export default {
         'tag',
         'summary',
         'associativeLine',
-        'formula'
-        // 'attachment'
+        'formula',
+        // 'attachment',
+        'annotation'
       ],
       horizontalList: [],
       verticalList: [],
@@ -213,7 +215,6 @@ export default {
     save() {
       this.$bus.$emit('manualSave')
     },
-
     // 计算工具按钮如何显示
     computeToolbarShow() {
       const windowWidth = window.innerWidth - 40

@@ -696,6 +696,16 @@
             >
           </div>
         </div>
+        <!-- 是否在节点下方 -->
+        <div class="row">
+          <div class="rowItem">
+            <el-checkbox
+              v-model="watermarkConfig.belowNode"
+              @change="updateWatermarkConfig"
+              >{{ $t('baseStyle.belowNode') }}</el-checkbox
+            >
+          </div>
+        </div>
         <!-- 水印文字 -->
         <div class="row">
           <div class="rowItem">
@@ -924,7 +934,7 @@
         </div>
       </div>
       <!-- 是否开启手绘风格 -->
-      <!-- <div class="row">
+      <div class="row" v-if="supportHandDrawnLikeStyle">
         <div class="rowItem">
           <el-checkbox
             v-model="localConfigs.isUseHandDrawnLikeStyle"
@@ -932,7 +942,7 @@
             >{{ $t('baseStyle.isUseHandDrawnLikeStyle') }}</el-checkbox
           >
         </div>
-      </div> -->
+      </div>
     </div>
   </Sidebar>
 </template>
@@ -952,6 +962,7 @@ import {
   lineStyleMap
 } from '@/config'
 import ImgUpload from '@/components/ImgUpload'
+import { storeConfig } from '@/api'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {
   supportLineStyleLayoutsMap,
@@ -1054,7 +1065,8 @@ export default {
     ...mapState({
       activeSidebar: state => state.activeSidebar,
       localConfig: state => state.localConfig,
-      isDark: state => state.localConfig.isDark
+      isDark: state => state.localConfig.isDark,
+      supportHandDrawnLikeStyle: state => state.supportHandDrawnLikeStyle
     }),
     lineStyleList() {
       return lineStyleList[this.$i18n.locale] || lineStyleList.zh

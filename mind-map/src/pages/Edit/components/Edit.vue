@@ -69,8 +69,12 @@ import Formula from 'simple-mind-map/src/plugins/Formula.js'
 import RainbowLines from 'simple-mind-map/src/plugins/RainbowLines.js'
 import Demonstrate from 'simple-mind-map/src/plugins/Demonstrate.js'
 import { loadImage } from 'simple-mind-map/src/utils'
+// 协同编辑插件
+// import Cooperate from 'simple-mind-map/src/plugins/Cooperate.js'
 // 手绘风格插件，该插件为付费插件，详情请查看开发文档
 // import HandDrawnLikeStyle from 'simple-mind-map-plugin-handdrawnlikestyle'
+// 标记插件，该插件为付费插件，详情请查看开发文档
+// import Notation from 'simple-mind-map-plugin-notation'
 import OutlineSidebar from './OutlineSidebar'
 import Style from './Style'
 import BaseStyle from './BaseStyle'
@@ -213,10 +217,7 @@ export default {
       this.$bus.$on('setData', this.setData)
       this.$bus.$on('startTextEdit', this.handleStartTextEdit)
       this.$bus.$on('endTextEdit', this.handleEndTextEdit)
-      this.$bus.$on(
-        'createAssociativeLine',
-        this.handleCreateLineFromActiveNode
-      )
+      this.$bus.$on('createAssociativeLine', this.handleCreateLineFromActiveNode)
       this.$bus.$on('startPainter', this.handleStartPainter)
       this.$bus.$on('node_tree_render_end', this.handleHideLoading)
       this.$bus.$on('showLoading', this.handleShowLoading)
@@ -430,6 +431,13 @@ export default {
       if (this.openNodeRichText) this.addRichTextPlugin()
       if (this.isShowScrollbar) this.addScrollbarPlugin()
       if (this.isUseHandDrawnLikeStyle) this.addHandDrawnLikeStylePlugin()
+      if (typeof HandDrawnLikeStyle !== 'undefined') {
+        this.$store.commit('setSupportHandDrawnLikeStyle', true)
+      }
+      if (typeof Notation !== 'undefined') {
+        this.mindMap.addPlugin(Notation)
+        this.$store.commit('setSupportMark', true)
+      }
       this.mindMap.keyCommand.addShortcut('Control+s', () => {
         this.manualSave()
       })

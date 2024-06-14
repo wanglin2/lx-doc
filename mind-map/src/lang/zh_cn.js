@@ -38,6 +38,7 @@ export default {
     watermarkAngle: '旋转角度',
     watermarkTextOpacity: '文字透明度',
     watermarkTextFontSize: '文字字号',
+    belowNode: '显示在节点下方',
     isEnableNodeRichText: '是否开启节点富文本编辑',
     mousewheelAction: '鼠标滚轮行为',
     zoomView: '缩放视图',
@@ -149,7 +150,8 @@ export default {
     notSelectTip: '请选择要导入的文件',
     fileContentError: '文件内容有误',
     importSuccess: '导入成功',
-    fileParsingFailed: '文件解析失败'
+    fileParsingFailed: '文件解析失败',
+    xmindCanvasSelectDialogTitle: '选择要导入的画布'
   },
   navigatorToolbar: {
     openMiniMap: '开启小地图',
@@ -271,7 +273,9 @@ export default {
     fileOpenFailed: '文件打开失败',
     defaultFileName: '思维导图',
     creatingTip: '正在创建文件',
-    directory: '目录'
+    directory: '目录',
+    newFileTip: '新建文件前请先导出当前编辑的文件，否则内容会丢失',
+    openFileTip: '打开文件前请先导出当前编辑的文件，否则内容会丢'
   },
   edit: {
     newFeatureNoticeTitle: '新特性提醒',
@@ -323,7 +327,8 @@ export default {
     loading: '正在加载，请稍后...'
   },
   sourceCodeEdit: {
-    sourceCodeTip: '富文本模式下不建议修改样式，因为需要同步修改数据及html结构。',
+    sourceCodeTip:
+      '富文本模式下不建议修改样式，因为需要同步修改数据及html结构。',
     format: '格式化',
     copy: '复制',
     confirm: '完成',
@@ -335,5 +340,14 @@ export default {
   attachment: {
     deleteAttachment: '删除附件',
     tip: '附件功能仅在客户端可用'
+  },
+  annotation: {
+    mark: '标记',
+    show: '显示标记',
+    type: '类型',
+    color: '颜色',
+    lineWidth: '线宽',
+    padding: '内边距',
+    animate: '开启动画'
   }
 }
