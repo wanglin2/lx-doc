@@ -14,7 +14,7 @@ const init = async () => {
     const taskList = [store.getUserInfo(), store.getUserConfig()]
     await Promise.all(taskList)
   } catch (error) {
-    router.push('/error')
+    router.push('/login')
   }
 }
 

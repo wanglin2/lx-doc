@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
+import router from './router'
 
 import '@icon-park/vue-next/styles/index.css'
 import 'prosemirror-view/style/prosemirror.css'
@@ -13,6 +14,7 @@ import Icon from '@/plugins/icon'
 import Directive from '@/plugins/directive'
 
 const app = createApp(App)
+app.use(router)
 app.use(Icon)
 app.use(Directive)
 app.use(createPinia())

@@ -1,6 +1,7 @@
 <template>
   <div class="editor-header">
     <div class="left">
+      <div class="menu-item" @click="onBack"><IconLeft class="icon" /></div>
       <Popover trigger="click" placement="bottom-start" v-model:value="mainMenuVisible">
         <template #content>
           <FileInput accept=".pptist"  @change="files => {
@@ -17,8 +18,6 @@
           </FileInput>
           <PopoverMenuItem @click="setDialogForExport('pptx')">导出文件</PopoverMenuItem>
           <PopoverMenuItem @click="resetSlides(); mainMenuVisible = false">重置幻灯片</PopoverMenuItem>
-          <PopoverMenuItem @click="goLink('https://github.com/pipipi-pikachu/PPTist/issues')">意见反馈</PopoverMenuItem>
-          <PopoverMenuItem @click="goLink('https://github.com/pipipi-pikachu/PPTist/blob/master/doc/Q&A.md')">常见问题</PopoverMenuItem>
           <PopoverMenuItem @click="mainMenuVisible = false; hotkeyDrawerVisible = true">快捷键</PopoverMenuItem>
         </template>
         <div class="menu-item"><IconHamburgerButton class="icon" /></div>
@@ -35,9 +34,9 @@
         <div 
           class="title-text"
           @click="startEditTitle()"
-          :title="title"
+          :title="fileName"
           v-else
-        >{{ title }}</div>
+        >{{ fileName }}</div>
       </div>
     </div>
 
@@ -57,9 +56,6 @@
       <div class="menu-item" v-tooltip="'导出'" @click="setDialogForExport('pptx')">
         <IconDownload class="icon" />
       </div>
-      <a class="github-link" v-tooltip="'Copyright © 2020-PRESENT pipipi-pikachu'" href="https://github.com/pipipi-pikachu/PPTist" target="_blank">
-        <div class="menu-item"><IconGithub class="icon" /></div>
-      </a>
     </div>
 
     <Drawer
@@ -75,13 +71,13 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMainStore, useSlidesStore } from '@/store'
+import { nextTick, ref, watch } from 'vue'
+import { useMainStore } from '@/store'
 import useScreening from '@/hooks/useScreening'
 import useImport from '@/hooks/useImport'
 import useSlideHandler from '@/hooks/useSlideHandler'
 import type { DialogForExportTypes } from '@/types/export'
+import { useRoute, useRouter } from 'vue-router'
 
 import HotkeyDoc from './HotkeyDoc.vue'
 import FileInput from '@/components/FileInput.vue'
@@ -91,9 +87,9 @@ import Input from '@/components/Input.vue'
 import Popover from '@/components/Popover.vue'
 import PopoverMenuItem from '@/components/PopoverMenuItem.vue'
 
+const route = useRoute()
+const router = useRouter()
 const mainStore = useMainStore()
-const slidesStore = useSlidesStore()
-const { title } = storeToRefs(slidesStore)
 const { enterScreening, enterScreeningFromStart } = useScreening()
 const { importSpecificFile, importPPTXFile, exporting } = useImport()
 const { resetSlides } = useSlideHandler()
@@ -104,14 +100,39 @@ const editingTitle = ref(false)
 const titleInputRef = ref<InstanceType<typeof Input>>()
 const titleValue = ref('')
 
+const onBack = () => {
+  router.push('/')
+}
+
+const fileName = ref('')
+watch(
+  () => {
+    return mainStore.fileData
+  },
+  val => {
+    if (val && val.name) {
+      fileName.value = val.name
+    }
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
+
 const startEditTitle = () => {
-  titleValue.value = title.value
+  titleValue.value = fileName.value
   editingTitle.value = true
   nextTick(() => titleInputRef.value?.focus())
 }
 
 const handleUpdateTitle = () => {
-  slidesStore.setTitle(titleValue.value)
+  const text = fileName.value.trim()
+  if (text) {
+    mainStore.updateFileData({
+      name: text
+    })
+  }
   editingTitle.value = false
 }
 

@@ -5,7 +5,7 @@ import type { PPTElementOutline } from '@/types/slides'
 export default (outline: Ref<PPTElementOutline | undefined>) => {
   const outlineWidth = computed(() => outline.value?.width ?? 0)
   const outlineStyle = computed(() => outline.value?.style || 'solid')
-  const outlineColor = computed(() => outline.value?.color || '#d14424')
+  const outlineColor = computed(() => outline.value?.color || '#1ea59a')
 
   const strokeDashArray = computed(() => {
     if (outlineStyle.value !== 'dashed') return '0 0'

@@ -1,11 +1,17 @@
 import { customAlphabet } from 'nanoid'
 import { defineStore } from 'pinia'
 import { ToolbarStates } from '@/types/toolbar'
-import type { CreatingElement, ShapeFormatPainter, TextFormatPainter } from '@/types/edit'
+import type {
+  CreatingElement,
+  ShapeFormatPainter,
+  TextFormatPainter
+} from '@/types/edit'
 import type { DialogForExportTypes } from '@/types/export'
 import { type TextAttrs, defaultRichTextAttrs } from '@/utils/prosemirror/utils'
 import { SYS_FONTS } from '@/configs/font'
 import { isSupportFont } from '@/utils/font'
+import api from '@/api'
+import config from '@/configs/user'
 
 import { useSlidesStore } from './slides'
 
@@ -38,9 +44,15 @@ export interface MainState {
   showSelectPanel: boolean
   showSearchPanel: boolean
   showNotesPanel: boolean
+  userInfo: any
+  userConfig: any
+  fileData: any
+  autoSaveStatus: any
 }
 
-const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+const nanoid = customAlphabet(
+  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+)
 export const databaseId = nanoid(10)
 
 export const useMainStore = defineStore('main', {
@@ -61,7 +73,7 @@ export const useMainStore = defineStore('main', {
     creatingCustomShape: false, // 正在绘制任意多边形
     availableFonts: SYS_FONTS, // 当前环境可用字体
     toolbarState: ToolbarStates.SLIDE_DESIGN, // 右侧工具栏状态
-    clipingImageElementId: '', // 当前正在裁剪的图片ID  
+    clipingImageElementId: '', // 当前正在裁剪的图片ID
     richTextAttrs: defaultRichTextAttrs, // 富文本状态
     selectedTableCells: [], // 选中的表格单元格
     isScaling: false, // 正在进行元素缩放
@@ -73,6 +85,14 @@ export const useMainStore = defineStore('main', {
     showSelectPanel: false, // 打开选择面板
     showSearchPanel: false, // 打开查找替换面板
     showNotesPanel: false, // 打开批注面板
+    // 用户信息
+    userInfo: null,
+    // 用户配置
+    userConfig: null,
+    // 文件数据
+    fileData: null,
+    // 自动保存状态，wait（有操作未保存）、ing（正在保存）、fail（保存失败）、success（保存成功）
+    autoSaveStatus: 'success'
   }),
 
   getters: {
@@ -80,101 +100,177 @@ export const useMainStore = defineStore('main', {
       const slidesStore = useSlidesStore()
       const currentSlide = slidesStore.currentSlide
       if (!currentSlide || !currentSlide.elements) return []
-      return currentSlide.elements.filter(element => state.activeElementIdList.includes(element.id))
+      return currentSlide.elements.filter(element =>
+        state.activeElementIdList.includes(element.id)
+      )
     },
-  
+
     handleElement(state) {
       const slidesStore = useSlidesStore()
       const currentSlide = slidesStore.currentSlide
       if (!currentSlide || !currentSlide.elements) return null
-      return currentSlide.elements.find(element => state.handleElementId === element.id) || null
-    },
+      return (
+        currentSlide.elements.find(
+          element => state.handleElementId === element.id
+        ) || null
+      )
+    }
   },
 
   actions: {
+    // 设置当前自动保存状态
+    setAutoSaveStatus(data: any) {
+      this.autoSaveStatus = data
+    },
+
+    // 获取用户信息
+    async getUserInfo() {
+      if (this.userInfo) {
+        return this.userInfo
+      }
+      const { data } = await api.getUserInfo()
+      this.userInfo = data
+      return data
+    },
+
+    // 获取用户配置
+    async getUserConfig() {
+      if (this.userConfig) {
+        return this.userConfig
+      }
+      const { data } = await api.getUserConfig({
+        configType: config.configType
+      })
+      this.userConfig = data ? JSON.parse(data) : {}
+      return this.userConfig
+    },
+
+    // 更新用户配置
+    async updateUserConfig(data: any) {
+      const newConfig = {
+        ...this.userConfig,
+        ...data
+      }
+      await api.updateUserConfig({
+        configType: config.configType,
+        configContent: JSON.stringify(newConfig)
+      })
+      this.userConfig = newConfig
+    },
+
+    // 获取文件数据
+    async getFileData(id: string) {
+      const { data } = await api.getFileContent({
+        id
+      })
+      this.fileData = data
+      return data
+    },
+
+    // 更新文件数据
+    async updateFileData(data: any) {
+      try {
+        this.setAutoSaveStatus('ing')
+        this.fileData = {
+          ...this.fileData,
+          ...data
+        }
+        console.log('updateFileData', this.fileData)
+        await api.updateFile({
+          id: this.fileData.id,
+          ...data
+        })
+        this.setAutoSaveStatus('success')
+      } catch (error) {
+        console.log(error)
+        this.setAutoSaveStatus('fail')
+      }
+    },
+
     setActiveElementIdList(activeElementIdList: string[]) {
-      if (activeElementIdList.length === 1) this.handleElementId = activeElementIdList[0]
+      if (activeElementIdList.length === 1)
+        this.handleElementId = activeElementIdList[0]
       else this.handleElementId = ''
-      
+
       this.activeElementIdList = activeElementIdList
     },
-    
+
     setHandleElementId(handleElementId: string) {
       this.handleElementId = handleElementId
     },
-    
+
     setActiveGroupElementId(activeGroupElementId: string) {
       this.activeGroupElementId = activeGroupElementId
     },
-    
+
     setHiddenElementIdList(hiddenElementIdList: string[]) {
       this.hiddenElementIdList = hiddenElementIdList
     },
-  
+
     setCanvasPercentage(percentage: number) {
       this.canvasPercentage = percentage
     },
-  
+
     setCanvasScale(scale: number) {
       this.canvasScale = scale
     },
-  
+
     setCanvasDragged(isDragged: boolean) {
       this.canvasDragged = isDragged
     },
-  
+
     setThumbnailsFocus(isFocus: boolean) {
       this.thumbnailsFocus = isFocus
     },
-  
+
     setEditorareaFocus(isFocus: boolean) {
       this.editorAreaFocus = isFocus
     },
-  
+
     setDisableHotkeysState(disable: boolean) {
       this.disableHotkeys = disable
     },
-  
+
     setGridLineSize(size: number) {
       this.gridLineSize = size
     },
-  
+
     setRulerState(show: boolean) {
       this.showRuler = show
     },
-  
+
     setCreatingElement(element: CreatingElement | null) {
       this.creatingElement = element
     },
-  
+
     setCreatingCustomShapeState(state: boolean) {
       this.creatingCustomShape = state
     },
-  
+
     setAvailableFonts() {
       this.availableFonts = SYS_FONTS.filter(font => isSupportFont(font.value))
     },
-  
+
     setToolbarState(toolbarState: ToolbarStates) {
       this.toolbarState = toolbarState
     },
-  
+
     setClipingImageElementId(elId: string) {
       this.clipingImageElementId = elId
     },
-  
+
     setRichtextAttrs(attrs: TextAttrs) {
       this.richTextAttrs = attrs
     },
-  
+
     setSelectedTableCells(cells: string[]) {
       this.selectedTableCells = cells
     },
-  
+
     setScalingState(isScaling: boolean) {
       this.isScaling = isScaling
     },
-    
+
     updateSelectedSlidesIndex(selectedSlidesIndex: number[]) {
       this.selectedSlidesIndex = selectedSlidesIndex
     },
@@ -201,6 +297,6 @@ export const useMainStore = defineStore('main', {
 
     setNotesPanelState(show: boolean) {
       this.showNotesPanel = show
-    },
-  },
+    }
+  }
 })
