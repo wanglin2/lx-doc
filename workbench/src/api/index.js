@@ -105,6 +105,33 @@ export default {
     }
   },
 
+  // 获取文件夹树（同步树）
+  async getAllFolderTree(params) {
+    if (useMock) {
+      return getMockData('getAllFolderTree', params)
+    }
+    const { data } = await http.get('/getAllFolderTree', {
+      params
+    })
+    // 如果没有根节点，那么就创建一个
+    if (data.length <= 0) {
+      const res = await this.crateFolder({
+        name: config.rootFolderName,
+        parentFolderId: ''
+      })
+      return [
+        {
+          ...res.data,
+          leaf: true,
+          type: 'folder',
+          children: []
+        }
+      ]
+    } else {
+      return data
+    }
+  },
+
   // 获取某个文件夹的路径
   getFolderPath(params) {
     if (useMock) {
