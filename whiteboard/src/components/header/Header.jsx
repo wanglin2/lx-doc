@@ -17,6 +17,10 @@ import {
 } from '@excalidraw/excalidraw'
 import api from '@/api'
 
+const uploadFilesMap = {}
+let isSaving = false
+let hasWaitSaveTask = false
+
 function Header({ excalidrawAPI }) {
   // 返回工作台
   const onBack = () => {
@@ -38,13 +42,47 @@ function Header({ excalidrawAPI }) {
   }
 
   // 文件内容
-  const save = () => {
-    store.methods.updateFileData({
+  const save = async () => {
+    if (isSaving) {
+      hasWaitSaveTask = true
+      return
+    }
+    isSaving = true
+    const files = excalidrawAPI?.getFiles()
+    const tasks = []
+    Object.keys(files).forEach(id => {
+      const url = files[id].dataURL
+      if (/^data:/.test(url)) {
+        if (uploadFilesMap[id]) {
+          files[id].dataURL = uploadFilesMap[id]
+        } else {
+          const task = new Promise(async resolve => {
+            try {
+              const { data } = await api.uploadImg(url)
+              uploadFilesMap[id] = data
+              files[id].dataURL = data
+              resolve()
+            } catch (err) {
+              console.log(err)
+              resolve()
+            }
+          })
+          tasks.push(task)
+        }
+      }
+    })
+    await Promise.all(tasks)
+    await store.methods.updateFileData({
       content: JSON.stringify({
         elements: excalidrawAPI?.getSceneElements(),
-        files: excalidrawAPI?.getFiles()
+        files
       })
     })
+    isSaving = false
+    if (hasWaitSaveTask) {
+      hasWaitSaveTask = false
+      save()
+    }
   }
 
   // 生成封面
