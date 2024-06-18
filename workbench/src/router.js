@@ -30,6 +30,11 @@ const routes = [
         name: 'Homepage',
         path: 'homepage',
         component: () => import('@/pages/workspace/Homepage.vue')
+      },
+      {
+        name: 'Panorama',
+        path: 'panorama',
+        component: () => import('@/pages/workspace/Panorama.vue')
       }
     ]
   },

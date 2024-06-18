@@ -63,7 +63,7 @@ export default {
       containerId: '6sVDp9mCGQTomD9Cg5w1b',
       originalText: 'Hello World!!!\n\nSticky notes :)',
       lineHeight: 1.25,
-      baseline: 118
+      baseline: 121
     },
     {
       type: 'diamond',
@@ -93,12 +93,42 @@ export default {
       locked: false
     },
     {
-      id: '8xg_4IeKezLO6GtzbWW0W',
       type: 'image',
+      version: 4,
+      versionNonce: 10853357,
+      isDeleted: false,
+      id: '8xg_4IeKezLO6GtzbWW0W',
+      fillStyle: 'solid',
+      strokeWidth: 2,
+      strokeStyle: 'solid',
+      roughness: 1,
+      opacity: 100,
+      angle: 0,
       x: 733.4264696218795,
       y: -821.14465625,
+      strokeColor: 'transparent',
+      backgroundColor: 'transparent',
       width: 400,
       height: 400,
+      seed: 1723917517,
+      groupIds: [],
+      frameId: null,
+      roundness: null,
+      boundElements: [],
+      updated: 1716456011450,
+      link: null,
+      locked: false,
+      status: 'pending',
+      fileId: 'INEyaSreRYUdpq-go-BtEbuKmpb5V0TIBnXmhJrK',
+      scale: [1, 1]
+    },
+    {
+      id: 'jYmNi9eAYZ1cd8x7VnlOh',
+      type: 'image',
+      x: -337.26528081406025,
+      y: -502.01959375,
+      width: 1336,
+      height: 298,
       angle: 0,
       strokeColor: 'transparent',
       backgroundColor: 'transparent',
@@ -110,20 +140,19 @@ export default {
       groupIds: [],
       frameId: null,
       roundness: null,
-      seed: 1723917517,
+      seed: 667024564,
       version: 4,
-      versionNonce: 10853357,
+      versionNonce: 585845044,
       isDeleted: false,
       boundElements: null,
-      updated: 1716456011450,
+      updated: 1718592107059,
       link: null,
       locked: false,
       status: 'pending',
-      fileId: 'INEyaSreRYUdpq-go-BtEbuKmpb5V0TIBnXmhJrK',
+      fileId: '0wWT6fdFoITZVMK0P06Igl1rE652ZPHcrjVr21E9',
       scale: [1, 1]
     }
   ],
-  appState: {},
   files: {
     'INEyaSreRYUdpq-go-BtEbuKmpb5V0TIBnXmhJrK': {
       mimeType: 'image/jpeg',
@@ -132,7 +161,14 @@ export default {
         'https://img0.baidu.com/it/u=3438909157,109984304&fm=253&fmt=auto&app=138&f=JPEG?w=530&h=500',
       created: 1716456010860,
       lastRetrieved: 1716456010860
+    },
+    '0wWT6fdFoITZVMK0P06Igl1rE652ZPHcrjVr21E9': {
+      mimeType: 'image/png',
+      id: '0wWT6fdFoITZVMK0P06Igl1rE652ZPHcrjVr21E9',
+      dataURL:
+        'https://img0.baidu.com/it/u=1451419006,2097577836&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+      created: 1718592106222,
+      lastRetrieved: 1718592106222
     }
-  },
-  libraryItems: []
+  }
 }

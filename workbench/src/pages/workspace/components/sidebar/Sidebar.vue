@@ -56,6 +56,14 @@
           @currentChange="onCurrentChange"
         ></FolderTree>
       </div>
+      <div
+        class="menuItem"
+        :class="{ isActive: route.name === 'Panorama' }"
+        @click="toPanorama"
+      >
+        <span class="iconfont icon-siweidaotu1"></span>
+        <span class="text">文件全景图</span>
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +105,14 @@ const toRecycle = () => {
   clearCurrentNode()
   router.push({
     name: 'Recycle'
+  })
+}
+
+// 进入文件全景图页面
+const toPanorama = () => {
+  clearCurrentNode()
+  router.push({
+    name: 'Panorama'
   })
 }
 
