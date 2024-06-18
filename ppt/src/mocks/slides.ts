@@ -52,7 +52,7 @@ export const slides: Slide[] = [
         top: 253.25,
         width: 585,
         height: 56,
-        content: '<p><span style=\'font-size:  24px\'>基于 Vue 3.x + TypeScript 的在线演示文稿应用</span></p>',
+        content: '<p><span style=\'font-size:  24px\'>理想文档 - 在线演示文稿应用</span></p>',
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333'

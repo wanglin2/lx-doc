@@ -7,8 +7,6 @@ import type {
   PPTElement,
   PPTAnimation
 } from '@/types/slides'
-// import { slides } from '@/mocks/slides'
-// import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
 
 interface RemoveElementPropData {
@@ -36,7 +34,7 @@ export interface SlidesState {
 
 export const useSlidesStore = defineStore('slides', {
   state: (): SlidesState => ({
-    theme: null, // 主题样式
+    theme: {}, // 主题样式
     slides: [], // 幻灯片页面数据
     slideIndex: 0, // 当前页面索引
     viewportRatio: 0.5625 // 可视区域比例，默认16:9

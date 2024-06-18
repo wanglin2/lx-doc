@@ -106,6 +106,7 @@ import type { LinePoolItem } from '@/configs/lines'
 import useScaleCanvas from '@/hooks/useScaleCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCreateElement from '@/hooks/useCreateElement'
+import api from '@/api'
 
 import ShapePool from './ShapePool.vue'
 import LinePool from './LinePool.vue'
@@ -149,10 +150,18 @@ const {
   createAudioElement,
 } = useCreateElement()
 
-const insertImageElement = (files: FileList) => {
+const insertImageElement = async (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
-  getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
+  try {
+    const formData = new FormData()
+    formData.append('file', imageFile)
+    const { data } = await api.uploadFiles(formData)
+    createImageElement(data[0])
+  } catch (error) {
+    console.log(error)
+  }
+  // getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
 }
 
 const shapePoolVisible = ref(false)
