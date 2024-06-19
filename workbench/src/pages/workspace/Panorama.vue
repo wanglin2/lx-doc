@@ -7,7 +7,6 @@
       </div>
     </div>
     <div class="content">
-      <div class="contentHeader"></div>
       <div class="contentBody" ref="contentBodyRef"></div>
       <div class="toolsBtn">
         <div class="btn" @click="reset">
@@ -19,6 +18,7 @@
         <div class="btn" @click="zoomIn">
           <el-icon color="#212930"><ZoomIn /></el-icon>
         </div>
+        
       </div>
     </div>
     <ImgPreview ref="ImgPreviewRef"></ImgPreview>
@@ -43,6 +43,14 @@ import api from '@/api'
 import MindMap from 'simple-mind-map'
 import { getFileTypeIcon, getFileTypeConfig } from '@/utils'
 import ImgPreview from './components/common/ImgPreview.vue'
+import useFileHandle from '@/hooks/useFileHandle'
+import Drag from 'simple-mind-map/src/plugins/Drag.js'
+import Select from 'simple-mind-map/src/plugins/Select.js'
+
+MindMap.usePlugin(Drag)
+MindMap.usePlugin(Select)
+
+const fileHandle = useFileHandle()
 
 const getAllFolderTree = async () => {
   try {
@@ -56,6 +64,7 @@ const getAllFolderTree = async () => {
 const contentBodyRef = ref(null)
 let mindMap = null
 const ImgPreviewRef = ref(null)
+let beingDragNode = null
 const initChart = data => {
   data = transformData(data)
   mindMap = new MindMap({
@@ -68,7 +77,6 @@ const initChart = data => {
     resetScaleOnMoveNodeToCenter: true,
     createNodePrefixContent: node => {
       const data = node.getData('_data')
-      console.log(data)
       if (!data || data.isFolder) {
         return null
       }
@@ -90,11 +98,100 @@ const initChart = data => {
         width: 25,
         height: 25
       }
+    },
+    createNodePostfixContent: node => {
+      const data = node.getData('_data')
+      if (!data || data.isFolder) {
+        return null
+      }
+      const el = document.createElement('div')
+      // 编辑按钮
+      const toEditIcon = document.createElement('span')
+      toEditIcon.className = `iconfont icon-zhongmingming`
+      toEditIcon.style.color = '#1ea59a'
+      toEditIcon.style.fontSize = '16px'
+      toEditIcon.addEventListener('click', () => {
+        fileHandle.openEditPage(data.type, data.id)
+      })
+      el.style.cssText = `
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        `
+      el.appendChild(toEditIcon)
+
+      return {
+        el,
+        width: 25,
+        height: 25
+      }
+    },
+    enableCtrlKeyNodeSelection: false,
+    beforeDragEnd: async ({ overlapNodeUid, prevNodeUid, nextNodeUid }) => {
+      console.log(overlapNodeUid, prevNodeUid, nextNodeUid)
+      try {
+        if (beingDragNode && (overlapNodeUid || prevNodeUid || nextNodeUid)) {
+          let parentId = ''
+          if (overlapNodeUid) {
+            // 作为子节点
+            const targetNode = mindMap.renderer.findNodeByUid(overlapNodeUid)
+            const targetNodeData = targetNode.getData('_data')
+            if (targetNodeData.isFolder) {
+              parentId = targetNodeData.id
+            } else {
+              ElMessage.warning('无法移动到文件下')
+              return true
+            }
+          } else if (prevNodeUid || nextNodeUid) {
+            // 作为兄弟节点
+            const targetNode = mindMap.renderer.findNodeByUid(
+              prevNodeUid || nextNodeUid
+            )
+            const parentNode = targetNode.parent
+            if (parentNode) {
+              parentId = parentNode.getData('_data').id
+            }
+          }
+          if (parentId) {
+            const beingDragNodeData = beingDragNode.getData('_data')
+            if (beingDragNodeData.isFolder) {
+              // 移动文件夹
+              await api.moveFolder({
+                id: beingDragNodeData.id,
+                newFolderId: parentId
+              })
+              ElMessage.success('文件夹移动成功')
+            } else {
+              // 移动文件
+              await api.moveFile({
+                ids: [beingDragNodeData.id],
+                newFolderId: parentId
+              })
+              ElMessage.success('文件移动成功')
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        return true
+      }
     }
   })
+  mindMap.select.unBindEvent()
   mindMap.keyCommand.removeShortcut('Tab')
   mindMap.keyCommand.removeShortcut('Enter')
   mindMap.keyCommand.removeShortcut('Del|Backspace')
+  mindMap.on('node_dragging', node => {
+    if (!beingDragNode) {
+      beingDragNode = node
+    }
+  })
+  mindMap.on('node_dragend', node => {
+    beingDragNode = null
+  })
   mindMap.on('data_change_detail', arr => {
     arr.forEach(async item => {
       if (item.action === 'update') {
@@ -200,7 +297,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
 
   .header {
-    height: 100px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -220,14 +317,8 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    padding-top: 0;
     position: relative;
-
-    .contentHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
 
     .contentBody {
       width: 100%;
