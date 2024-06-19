@@ -24,7 +24,7 @@ const mockData = {
   getFileContent: {
     id: '123',
     name: '我的ppt文件',
-    content: ``
+    content: ''
   }
 }
 

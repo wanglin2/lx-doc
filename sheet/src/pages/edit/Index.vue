@@ -97,7 +97,7 @@ const saveTipIcon = computed(() => {
   }
 })
 const saveTipIconIsLoading = computed(() => {
-  return store.autoSaveStatus === 'wait'
+  return store.autoSaveStatus === 'ing'
 })
 const saveTip = computed(() => {
   switch (store.autoSaveStatus) {
