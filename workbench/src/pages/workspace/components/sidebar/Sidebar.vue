@@ -167,6 +167,7 @@ const reloadTree = () => {
     isLoadTree.value = true
   })
 }
+emitter.on('reload_sidebar_tree', reloadTree)
 emitter.on('move_folder_success', reloadTree)
 emitter.on('copy_folder_success', reloadTree)
 
@@ -195,8 +196,11 @@ const refreshNode = id => {
 emitter.on('create_folder_success', refreshNode)
 
 onUnmounted(() => {
+  emitter.off('reload_sidebar_tree', reloadTree)
   emitter.off('move_folder_success', reloadTree)
+  emitter.off('copy_folder_success', reloadTree)
   emitter.off('delete_folder_success', refreshParentNode)
+  emitter.off('update_folder_success', refreshParentNode)
   emitter.off('create_folder_success', refreshNode)
 })
 </script>

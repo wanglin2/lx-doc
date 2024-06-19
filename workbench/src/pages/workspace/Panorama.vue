@@ -18,7 +18,23 @@
         <div class="btn" @click="zoomIn">
           <el-icon color="#212930"><ZoomIn /></el-icon>
         </div>
-        
+        <el-popover placement="top" :width="200" trigger="click">
+          <template #reference>
+            <div class="btn">
+              <el-icon color="#212930"><QuestionFilled /></el-icon>
+            </div>
+          </template>
+          <div class="helpList">
+            <div
+              class="helpItem"
+              v-for="(item, index) in panoramaHelpList"
+              :key="index"
+            >
+              <div class="title">{{ index + 1 }}.{{ item.title }}</div>
+              <div class="desc">{{ item.desc }}</div>
+            </div>
+          </div>
+        </el-popover>
       </div>
     </div>
     <ImgPreview ref="ImgPreviewRef"></ImgPreview>
@@ -26,18 +42,9 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  watch,
-  reactive,
-  onUnmounted,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
-import { Search, Aim, ZoomOut, ZoomIn } from '@element-plus/icons-vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { Aim, ZoomOut, ZoomIn, QuestionFilled } from '@element-plus/icons-vue'
 import Avatar from './components/common/Avatar.vue'
-import { useStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
 import MindMap from 'simple-mind-map'
@@ -46,6 +53,8 @@ import ImgPreview from './components/common/ImgPreview.vue'
 import useFileHandle from '@/hooks/useFileHandle'
 import Drag from 'simple-mind-map/src/plugins/Drag.js'
 import Select from 'simple-mind-map/src/plugins/Select.js'
+import { panoramaHelpList } from '@/constant'
+import emitter from '@/utils/eventBus'
 
 MindMap.usePlugin(Drag)
 MindMap.usePlugin(Select)
@@ -59,6 +68,10 @@ const getAllFolderTree = async () => {
   } catch (error) {
     console.log(error)
   }
+}
+
+const reloadSidebarTree = () => {
+  emitter.emit('reload_sidebar_tree')
 }
 
 const contentBodyRef = ref(null)
@@ -75,6 +88,12 @@ const initChart = data => {
     },
     initRootNodePosition: ['20%', 'center'],
     resetScaleOnMoveNodeToCenter: true,
+    beforeTextEdit: node => {
+      if (node.isRoot) {
+        return false
+      }
+      return true
+    },
     createNodePrefixContent: node => {
       const data = node.getData('_data')
       if (!data || data.isFolder) {
@@ -122,7 +141,6 @@ const initChart = data => {
         cursor: pointer;
         `
       el.appendChild(toEditIcon)
-
       return {
         el,
         width: 25,
@@ -131,7 +149,6 @@ const initChart = data => {
     },
     enableCtrlKeyNodeSelection: false,
     beforeDragEnd: async ({ overlapNodeUid, prevNodeUid, nextNodeUid }) => {
-      console.log(overlapNodeUid, prevNodeUid, nextNodeUid)
       try {
         if (beingDragNode && (overlapNodeUid || prevNodeUid || nextNodeUid)) {
           let parentId = ''
@@ -157,33 +174,81 @@ const initChart = data => {
           }
           if (parentId) {
             const beingDragNodeData = beingDragNode.getData('_data')
+            let tip = ''
             if (beingDragNodeData.isFolder) {
               // 移动文件夹
               await api.moveFolder({
                 id: beingDragNodeData.id,
                 newFolderId: parentId
               })
-              ElMessage.success('文件夹移动成功')
+              tip = '文件夹移动成功'
             } else {
               // 移动文件
               await api.moveFile({
                 ids: [beingDragNodeData.id],
                 newFolderId: parentId
               })
-              ElMessage.success('文件移动成功')
+              tip = '文件移动成功'
             }
+            ElMessage.success(tip)
+            reloadSidebarTree()
           }
         }
       } catch (error) {
         console.log(error)
         return true
       }
-    }
+    },
+    beforeShortcutRun: (key, activeNodes) => {
+      if (key === 'Control+v') {
+        const node = activeNodes[0]
+        if (node) {
+          const { isFolder } = node.getData('_data')
+          if (!isFolder) {
+            return true
+          }
+        }
+      }
+    },
+    disabledPasteUserClipboardData: true
   })
   mindMap.select.unBindEvent()
   mindMap.keyCommand.removeShortcut('Tab')
   mindMap.keyCommand.removeShortcut('Enter')
   mindMap.keyCommand.removeShortcut('Del|Backspace')
+  mindMap.keyCommand.addShortcut('Del|Backspace', () => {
+    const activeNodes = mindMap.renderer.activeNodeList
+    if (activeNodes.length > 0) {
+      const node = activeNodes[0]
+      const { id, name, isFolder } = node.getData('_data')
+      ElMessageBox.confirm(
+        `是否确认删除【${name}】？`,
+        `删除文件${isFolder ? '夹' : ''}`,
+        {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(async () => {
+        try {
+          if (isFolder) {
+            await api.deleteFolder({
+              id
+            })
+          } else {
+            await api.deleteFile({
+              ids: [id]
+            })
+          }
+          mindMap.execCommand('REMOVE_NODE')
+          reloadSidebarTree()
+          ElMessage.success('删除成功')
+        } catch (error) {
+          console.log(error)
+        }
+      })
+    }
+  })
   mindMap.on('node_dragging', node => {
     if (!beingDragNode) {
       beingDragNode = node
@@ -193,10 +258,12 @@ const initChart = data => {
     beingDragNode = null
   })
   mindMap.on('data_change_detail', arr => {
+    const moveOrCreateList = []
+    const createUidList = []
     arr.forEach(async item => {
       if (item.action === 'update') {
+        // 修改名称
         if (item.oldData.data.text !== item.data.data.text) {
-          // 修改了名称
           const name = item.data.data.text.trim()
           const { id, isFolder } = item.data.data._data
           let tip = ''
@@ -214,7 +281,49 @@ const initChart = data => {
             })
           }
           ElMessage.success(tip)
+          reloadSidebarTree()
         }
+        // 复制
+        const newChildrenLength = item.data.children.length
+        const lengthOffset = newChildrenLength - item.oldData.children.length
+        if (lengthOffset > 0) {
+          const newNodeData = item.data.children[newChildrenLength - 1]
+          const { id, isFolder } = newNodeData.data._data
+          moveOrCreateList.push({
+            uid: newNodeData.data.uid,
+            folderId: item.data.data._data.id,
+            info: {
+              id,
+              isFolder
+            }
+          })
+        }
+      } else if (item.action === 'create') {
+        createUidList.push(item.data.data.uid)
+      }
+    })
+    if (createUidList.length <= 0) return
+    moveOrCreateList.forEach(async item => {
+      if (!createUidList.includes(item.uid)) {
+        return
+      }
+      try {
+        const { id, isFolder } = item.info
+        if (isFolder) {
+          await api.copyFolder({
+            id,
+            folderId: item.folderId
+          })
+        } else {
+          await api.copyFile({
+            ids: [id],
+            folderId: item.folderId
+          })
+        }
+        ElMessage.success('复制成功')
+        reloadSidebarTree()
+      } catch (error) {
+        console.log(error)
       }
     })
   })
@@ -351,6 +460,20 @@ onBeforeUnmount(() => {
           background: #f3f5f9;
         }
       }
+    }
+  }
+}
+
+.helpList {
+  .helpItem {
+    margin-bottom: 12px;
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .desc {
     }
   }
 }
