@@ -122,30 +122,25 @@ const mockData = {
       {
         name: '我的文件',
         id: '0',
-        leaf: false, // 是否是叶子节点
         isFolder: true, // 是否是文件夹
         children: [
           {
             name: '思维导图',
             id: '1',
-            leaf: false,
             isFolder: true,
             children: [
               {
                 name: '学习',
                 id: '1-1',
-                leaf: false,
                 isFolder: true,
                 children: [
                   {
                     name: '前端学习',
                     id: '1-1-1',
-                    leaf: false,
                     isFolder: true,
                     children: createFileList().map(item => {
                       return {
                         ...item,
-                        leaf: true,
                         isFolder: false
                       }
                     })
@@ -153,7 +148,6 @@ const mockData = {
                   {
                     name: '后端学习',
                     id: '1-1-2',
-                    leaf: true,
                     isFolder: true,
                   }
                 ]
@@ -161,7 +155,6 @@ const mockData = {
               {
                 name: '周末计划',
                 id: '1-2',
-                leaf: true,
                 isFolder: true,
                 children: []
               }
@@ -170,18 +163,15 @@ const mockData = {
           {
             name: '流程图',
             id: '2',
-            leaf: false,
             isFolder: true,
             children: [
               {
                 name: '杭州旅行',
                 id: '2-1',
-                leaf: false,
                 isFolder: true,
                 children: createFileList().map(item => {
                   return {
                     ...item,
-                    leaf: true,
                     isFolder: false
                   }
                 })
@@ -189,7 +179,6 @@ const mockData = {
               {
                 name: '南京游玩',
                 id: '2-2',
-                leaf: true,
                 isFolder: true
               }
             ]
