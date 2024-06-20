@@ -7,10 +7,8 @@
       urlParams['dev'] != '1' &&
       typeof document.createElement('canvas').getContext === 'function'
     ) {
-      window.addEventListener('load', function () {
-        mxWinLoaded = true
-        checkAllLoaded()
-      })
+      mxWinLoaded = true
+      checkAllLoaded()
     } else {
       App.main(app => {
         editorApp = app
@@ -22,6 +20,7 @@
   const vueApp = {
     data() {
       return {
+        showHeader: false,
         showMask: true,
         Back: Vue.markRaw(ElementPlusIconsVue.Back),
         id: urlParams['id'],
@@ -90,6 +89,7 @@
           const { data } = await window.api.getUserInfo()
           this.userInfo = data
           this.getUserFileData()
+          this.showHeader = true
         } catch (error) {
           console.log(error)
           ElementPlus.ElMessage.warning('获取登录信息失败')

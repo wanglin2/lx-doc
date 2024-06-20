@@ -23,7 +23,7 @@ http.interceptors.response.use(
       // 登录过期，跳转到登录页
       location.href = '/login'
     } else if (code !== 0) {
-      ElementPlus.ElMessage.error(message)
+      ElementPlus.ElMessage.error(message || '系统错误')
       return Promise.reject(response)
     }
     return response

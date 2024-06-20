@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="js/ui/element-plus.min.css" />
     <link rel="stylesheet" type="text/css" href="styles/ui.css" />
     <script id="geBootstrap" type="text/javascript">
+      window.alert = () => {}
+
       var urlParams = (function () {
         var result = new Object()
         var params = window.location.search.slice(1).split('&')
@@ -257,7 +259,7 @@
   </head>
   <body class="geEditor">
     <div class="header" id="header">
-      <div class="left">
+      <div class="left" v-if="showHeader">
         <el-button
           :icon="Back"
           circle
@@ -274,7 +276,7 @@
           >
         </el-tooltip>
       </div>
-      <div class="center">
+      <div class="center" v-if="showHeader">
         <div class="name">
           <input
             type="text"
@@ -285,7 +287,7 @@
           />
         </div>
       </div>
-      <div class="right">
+      <div class="right" v-if="showHeader">
         <span class="saveTip">
           <el-icon
             :class="[saveTipIconIsLoading ? 'is-loading' : '']"
