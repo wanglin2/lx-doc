@@ -14,8 +14,7 @@ const render = () => {
 }
 
 const init = async () => {
-  const match = location.pathname.match(/^\/([^/]+)$/)
-  console.log(match)
+  const match = location.pathname.match(/^\/whiteboard\/([^/]+)$/)
   if (!match) {
     message.error('页面参数有误')
     return

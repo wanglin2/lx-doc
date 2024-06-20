@@ -3,7 +3,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const isLibrary = process.env.NODE_ENV === 'library'
 
 module.exports = {
-  publicPath: './',
+  publicPath: '/mind-map/',
   lintOnSave: false,
   productionSourceMap: false,
   filenameHashing: false,

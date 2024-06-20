@@ -7,6 +7,7 @@ export default defineConfig(({ command, mode }) => {
   // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
   const env = loadEnv(mode, process.cwd(), '')
   return {
+    base: '/whiteboard/',
     // vite 配置
     define: {
       'process.env': `${JSON.stringify(env)}`
