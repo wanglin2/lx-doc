@@ -210,7 +210,7 @@ const initChart = data => {
         }
       }
     },
-    disabledPasteUserClipboardData: true
+    disabledClipboard: true
   })
   mindMap.select.unBindEvent()
   mindMap.keyCommand.removeShortcut('Tab')
