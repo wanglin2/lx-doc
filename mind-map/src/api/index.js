@@ -5,8 +5,8 @@ import { simpleDeepClone } from 'simple-mind-map/src/utils/index'
 const SIMPLE_MIND_MAP_LANG = 'SIMPLE_MIND_MAP_LANG'
 const SIMPLE_MIND_MAP_LOCAL_CONFIG = 'SIMPLE_MIND_MAP_LOCAL_CONFIG'
 
-const isDev = process.env.NODE_ENV === 'development'
-const useMock = isDev
+const isDev = process.env.NODE_ENV !== 'production'
+const useMock = process.env.NODE_ENV === 'mock'
 
 // 上传文件
 export const uploadFiles = data => {

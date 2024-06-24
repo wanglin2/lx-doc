@@ -131,7 +131,11 @@ const titleInputRef = ref<InstanceType<typeof Input>>()
 const titleValue = ref('')
 
 const onBack = () => {
-  router.push('/')
+  if (process.env.NODE_ENV === 'production') {
+    location.href = '/'
+  } else {
+    location.href = 'http://' + location.hostname + ':9090'
+  }
 }
 
 const fileName = ref('')

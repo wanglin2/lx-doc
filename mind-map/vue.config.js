@@ -1,5 +1,5 @@
 const path = require('path')
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV !== 'production'
 const isLibrary = process.env.NODE_ENV === 'library'
 
 module.exports = {

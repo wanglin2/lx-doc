@@ -1,7 +1,7 @@
 import http from './httpInstance'
 import getMockData from './mock'
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV !== 'production'
 const useMock = import.meta.env.MODE === 'mock'
 console.log('useMock', useMock)
 

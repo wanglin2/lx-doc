@@ -59,6 +59,9 @@ const store = {
       const { data } = await api.getFileContent({
         id
       })
+      if (data.content) {
+        data.content = data.content ? JSON.parse(data.content) : null
+      }
       store.data.fileData = data
       return data
     },

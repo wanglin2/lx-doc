@@ -193,7 +193,11 @@ export default {
 
     // 返回工作台页面
     onBack() {
-      this.$router.push('/')
+      if (process.env.NODE_ENV === 'production') {
+        location.href = '/'
+      } else {
+        location.href = 'http://' + location.hostname + ':9090'
+      }
     },
 
     // 生成封面

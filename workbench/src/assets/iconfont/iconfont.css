@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4522907 */
-  src: url('iconfont.woff2?t=1718592753024') format('woff2'),
-       url('iconfont.woff?t=1718592753024') format('woff'),
-       url('iconfont.ttf?t=1718592753024') format('truetype');
+  src: url('iconfont.woff2?t=1719219093542') format('woff2'),
+       url('iconfont.woff?t=1719219093542') format('woff'),
+       url('iconfont.ttf?t=1719219093542') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-jibiji:before {
+  content: "\e60a";
 }
 
 .icon-siweidaotu1:before {

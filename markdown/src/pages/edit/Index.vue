@@ -116,7 +116,11 @@ const route = useRoute()
 const router = useRouter()
 
 const onBack = () => {
-  router.push('/')
+  if (process.env.NODE_ENV === 'production') {
+    location.href = '/'
+  } else {
+    location.href = 'http://' + location.hostname + ':9090'
+  }
 }
 
 config({

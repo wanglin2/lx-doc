@@ -61,7 +61,11 @@ const props = defineProps({
 
 // 返回工作台
 const back = () => {
-  router.push('/')
+  if (process.env.NODE_ENV === 'production') {
+    location.href = '/'
+  } else {
+    location.href = 'http://' + location.hostname + ':9090'
+  }
 }
 
 // 文件名
@@ -134,7 +138,9 @@ const saveCover = async () => {
       return console.error(err)
     }
     const imgData = await svgToPng(svg)
-    const { data } = await api.uploadImg(imgData)
+    const { data } = await api.uploadImg({
+      imgData
+    })
     store.updateFileData({
       img: data
     })

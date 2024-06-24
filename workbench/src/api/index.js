@@ -2,7 +2,7 @@ import http from './httpInstance'
 import getMockData from './mock'
 import config from '@/config'
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV !== 'production'
 const useMock = import.meta.env.MODE === 'mock'
 
 export default {

@@ -28,13 +28,12 @@ function App() {
 
   // 数据回显
   const initialData = store.data.fileData.content
-    ? { ...JSON.parse(store.data.fileData.content), scrollToContent: true }
+    ? { ...store.data.fileData.content, scrollToContent: true }
     : null
 
   // 数据改变
   let autoSaveTimer = null
   const onDataChange = (elements, state) => {
-    console.log(elements, state)
     store.methods.setAutoSaveStatus('wait')
     clearTimeout(autoSaveTimer)
     autoSaveTimer = setTimeout(() => {

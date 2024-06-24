@@ -50,6 +50,12 @@ export default {
       color: '#f17b77'
     },
     {
+      name: '笔记',
+      value: 'note',
+      icon: 'icon-jibiji',
+      color: '#f17b77'
+    },
+    {
       name: 'BPMN',
       value: 'bpmn',
       icon: 'icon-icon',
