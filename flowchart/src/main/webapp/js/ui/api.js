@@ -21,12 +21,16 @@ http.interceptors.response.use(
     const { code, message } = response.data
     if (code === 401) {
       // 登录过期，跳转到登录页
-      location.href = '/login'
+      if (/^\/login/.test(location.pathname)) {
+        return Promise.reject(response)
+      } else {
+        location.href = '/login'
+      }
     } else if (code !== 0) {
       ElementPlus.ElMessage.error(message || '系统错误')
       return Promise.reject(response)
     }
-    return response
+    return response.data
   },
   function (error) {
     return Promise.reject(error)

@@ -104,7 +104,7 @@ const copyFile = async () => {
   try {
     await api.copyFile({
       ids: editData.value.ids,
-      folderId: currentNodeData.value.id
+      newFolderId: currentNodeData.value.id
     })
     if (editData.value.callback) editData.value.callback()
     onClose()

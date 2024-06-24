@@ -13,6 +13,7 @@
       :rules="editFormRule"
       label-width="120px"
       label-position="top"
+      @submit.native.stop.prevent
     >
       <el-form-item label="名称" prop="name">
         <el-input v-model="editForm.name" />

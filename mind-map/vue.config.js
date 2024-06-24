@@ -9,7 +9,17 @@ module.exports = {
   filenameHashing: false,
   transpileDependencies: ['yjs', 'lib0'],
   devServer: {
-    port: '9091'
+    port: '9091',
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:9222/',
+        changeOrigin: true
+      },
+      '^/static': {
+        target: 'http://localhost:9222/',
+        changeOrigin: true
+      }
+    }
   },
   chainWebpack: config => {
     // 移除 preload 插件

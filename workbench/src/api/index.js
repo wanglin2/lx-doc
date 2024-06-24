@@ -94,14 +94,18 @@ export default {
         name: config.rootFolderName,
         parentFolderId: ''
       })
-      return [
-        {
-          ...res.data,
-          leaf: true
-        }
-      ]
+      return {
+        data: [
+          {
+            ...res.data,
+            leaf: true
+          }
+        ]
+      }
     } else {
-      return data
+      return {
+        data
+      }
     }
   },
 
@@ -119,16 +123,20 @@ export default {
         name: config.rootFolderName,
         parentFolderId: ''
       })
-      return [
-        {
-          ...res.data,
-          leaf: true,
-          type: 'folder',
-          children: []
-        }
-      ]
+      return {
+        data: [
+          {
+            ...res.data,
+            leaf: true,
+            type: 'folder',
+            children: []
+          }
+        ]
+      }
     } else {
-      return data
+      return {
+        data
+      }
     }
   },
 

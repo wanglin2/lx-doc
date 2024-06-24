@@ -96,7 +96,7 @@ const initChart = data => {
     },
     createNodePrefixContent: node => {
       const data = node.getData('_data')
-      if (!data || data.isFolder) {
+      if (!data || data.folder) {
         return null
       }
       const el = document.createElement('div')
@@ -120,7 +120,7 @@ const initChart = data => {
     },
     createNodePostfixContent: node => {
       const data = node.getData('_data')
-      if (!data || data.isFolder) {
+      if (!data || data.folder) {
         return null
       }
       const el = document.createElement('div')
@@ -156,7 +156,7 @@ const initChart = data => {
             // 作为子节点
             const targetNode = mindMap.renderer.findNodeByUid(overlapNodeUid)
             const targetNodeData = targetNode.getData('_data')
-            if (targetNodeData.isFolder) {
+            if (targetNodeData.folder) {
               parentId = targetNodeData.id
             } else {
               ElMessage.warning('无法移动到文件下')
@@ -175,7 +175,7 @@ const initChart = data => {
           if (parentId) {
             const beingDragNodeData = beingDragNode.getData('_data')
             let tip = ''
-            if (beingDragNodeData.isFolder) {
+            if (beingDragNodeData.folder) {
               // 移动文件夹
               await api.moveFolder({
                 id: beingDragNodeData.id,
@@ -203,8 +203,8 @@ const initChart = data => {
       if (key === 'Control+v') {
         const node = activeNodes[0]
         if (node) {
-          const { isFolder } = node.getData('_data')
-          if (!isFolder) {
+          const { folder } = node.getData('_data')
+          if (!folder) {
             return true
           }
         }
@@ -220,10 +220,10 @@ const initChart = data => {
     const activeNodes = mindMap.renderer.activeNodeList
     if (activeNodes.length > 0) {
       const node = activeNodes[0]
-      const { id, name, isFolder } = node.getData('_data')
+      const { id, name, folder } = node.getData('_data')
       ElMessageBox.confirm(
         `是否确认删除【${name}】？`,
-        `删除文件${isFolder ? '夹' : ''}`,
+        `删除文件${folder ? '夹' : ''}`,
         {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
@@ -231,7 +231,7 @@ const initChart = data => {
         }
       ).then(async () => {
         try {
-          if (isFolder) {
+          if (folder) {
             await api.deleteFolder({
               id
             })
@@ -265,9 +265,9 @@ const initChart = data => {
         // 修改名称
         if (item.oldData.data.text !== item.data.data.text) {
           const name = item.data.data.text.trim()
-          const { id, isFolder } = item.data.data._data
+          const { id, folder } = item.data.data._data
           let tip = ''
-          if (isFolder) {
+          if (folder) {
             tip = '文件夹名称修改成功'
             await api.updateFolder({
               id,
@@ -288,13 +288,13 @@ const initChart = data => {
         const lengthOffset = newChildrenLength - item.oldData.children.length
         if (lengthOffset > 0) {
           const newNodeData = item.data.children[newChildrenLength - 1]
-          const { id, isFolder } = newNodeData.data._data
+          const { id, folder } = newNodeData.data._data
           moveOrCreateList.push({
             uid: newNodeData.data.uid,
             folderId: item.data.data._data.id,
             info: {
               id,
-              isFolder
+              folder
             }
           })
         }
@@ -308,8 +308,8 @@ const initChart = data => {
         return
       }
       try {
-        const { id, isFolder } = item.info
-        if (isFolder) {
+        const { id, folder } = item.info
+        if (folder) {
           await api.copyFolder({
             id,
             folderId: item.folderId
@@ -317,7 +317,7 @@ const initChart = data => {
         } else {
           await api.copyFile({
             ids: [id],
-            folderId: item.folderId
+            newFolderId: item.folderId
           })
         }
         ElMessage.success('复制成功')
@@ -368,7 +368,7 @@ const transformData = data => {
           height: 100
         }
       }
-      if (item.isFolder) {
+      if (item.folder) {
         newItem.data.tag = ['文件夹']
         if (!isRoot) {
           newItem.data.borderWidth = 1

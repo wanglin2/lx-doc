@@ -26,6 +26,16 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 9096
+    port: 9096,
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:9222/',
+        changeOrigin: true
+      },
+      '^/static': {
+        target: 'http://localhost:9222/',
+        changeOrigin: true
+      }
+    }
   }
 })
