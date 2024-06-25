@@ -386,6 +386,14 @@ const transformData = data => {
   return copyTree(data, true)
 }
 
+// 大小调整
+const onResize = () => {
+  if (mindMap) {
+    mindMap.resize()
+  }
+}
+window.addEventListener('resize', onResize)
+
 onMounted(() => {
   getAllFolderTree()
 })
@@ -394,6 +402,7 @@ onBeforeUnmount(() => {
   if (mindMap) {
     mindMap.destroy()
   }
+  window.removeEventListener('resize', onResize)
 })
 </script>
 
