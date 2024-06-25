@@ -121,7 +121,6 @@ const onChangeAvatar = () => {
   avatarUploadDialogVisible.value = true
 }
 const onImgSelectSuccess = async res => {
-  console.log(res)
   const img = new Image()
   img.src = res.dataURL
   document.body.appendChild(img)

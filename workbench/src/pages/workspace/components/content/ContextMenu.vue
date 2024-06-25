@@ -15,11 +15,13 @@
           :key="item.value"
           @click="onClick(item.value)"
         >
-          <span
-            class="iconfont"
-            :class="[item.icon]"
-            :style="{ color: item.color }"
-          ></span>
+          <span class="iconBox">
+            <span
+              class="iconfont"
+              :class="[item.icon]"
+              :style="{ color: item.color }"
+            ></span>
+          </span>
           <span class="name">{{ item.name }}</span>
         </div>
       </template>
@@ -142,8 +144,16 @@ defineExpose({
       background: #f3f5f9;
     }
 
-    .iconfont {
-      font-size: 20px;
+    .iconBox {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .iconfont {
+        font-size: 20px;
+      }
     }
 
     .name {

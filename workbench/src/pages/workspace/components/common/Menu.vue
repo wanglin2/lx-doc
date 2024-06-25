@@ -85,6 +85,9 @@ const onClick = item => {
       height: 24px;
       color: #212930;
       margin-right: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .menuText {

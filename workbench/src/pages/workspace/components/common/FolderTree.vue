@@ -48,7 +48,7 @@ const folderTreeProps = ref({
 // 加载树节点
 const loadFolderTreeNode = async (node, resolve) => {
   try {
-    const { data } = await api.getFolderTree({
+    let { data } = await api.getFolderTree({
       folderId: node.level === 0 ? '' : node.data.id
     })
     // 初始选中根节点
@@ -84,7 +84,7 @@ const setCurrentKey = id => {
 }
 
 // 更新指定id的节点
-const updateNodeById = async id => {
+const updateNodeById = async (id, callback) => {
   try {
     const { data } = await api.getFolderTree({
       folderId: id
@@ -93,11 +93,11 @@ const updateNodeById = async id => {
       id,
       data.map(item => {
         return {
-          ...item,
-          // name: item.name + '111'
+          ...item
         }
       })
     )
+    callback && callback()
   } catch (error) {
     console.log(error)
   }
@@ -121,13 +121,20 @@ defineExpose({
     align-items: center;
     font-size: 16px;
     color: #212930;
+    width: 100%;
+    overflow: hidden;
 
     .iconfont {
       font-size: 18px;
+      flex-shrink: 0;
     }
 
     .text {
       margin-left: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
     }
   }
 }

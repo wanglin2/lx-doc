@@ -177,7 +177,7 @@ const refreshParentNode = id => {
   const node = tree.getNode(id)
   if (node) {
     const parent = node.parent
-    if (parent.expanded) {
+    if (parent.loaded) {
       FolderTreeRef.value.updateNodeById(parent.data.id)
     }
   }
@@ -190,7 +190,27 @@ const refreshNode = id => {
   const tree = FolderTreeRef.value.getTree()
   const node = tree.getNode(id)
   if (node) {
-    FolderTreeRef.value.updateNodeById(id)
+    // 如果之前没有子节点，那么需要修改是否是叶子节点状态
+    if (node.isLeaf) {
+      node.isLeaf = false
+      node.isLeafByUser = false
+      node.data.leaf = false
+    }
+    // 如果该节点还没有加载过，那么直接返回
+    if (!node.loaded) return
+    // 如果已经加载过了，那么就更新子节点
+    FolderTreeRef.value.updateNodeById(id, () => {
+      nextTick(() => {
+        if (!node.expanded) {
+          node.expanded = true
+        }
+        nextTick(() => {
+          FolderTreeRef.value.setCurrentKey(
+            currentFolder.value ? currentFolder.value.id : null
+          )
+        })
+      })
+    })
   }
 }
 emitter.on('create_folder_success', refreshNode)
@@ -212,12 +232,16 @@ onUnmounted(() => {
   background-color: #fff;
   border-right: 1px solid #e9edf2;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 12px;
 
   .header {
     display: flex;
     align-items: center;
     height: 100px;
     justify-content: center;
+    flex-shrink: 0;
 
     .logo {
       width: 50px;
@@ -240,6 +264,7 @@ onUnmounted(() => {
     padding: 0 12px;
     position: relative;
     z-index: 2;
+    flex-shrink: 0;
 
     .createBtn {
       height: 35px;
@@ -315,6 +340,8 @@ onUnmounted(() => {
 
   .menuList {
     margin-top: 20px;
+    height: 100%;
+    overflow-y: auto;
 
     .menuItem {
       height: 32px;

@@ -38,6 +38,7 @@ import api from '@/api'
 import { useStore } from '@/store'
 import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
 import { RESOURCE_TYPES } from '@/constant'
+import emitter from '@/utils/eventBus'
 
 const props = defineProps({
   // 是否允许拖拽
@@ -120,6 +121,7 @@ const onDrop = async () => {
             newFolderId: props.data.id
           })
           ElMessage.success('移动成功')
+          emitter.emit('move_folder_success')
           emits('moved')
         }
       }
