@@ -42,12 +42,13 @@
         :style="{ color: getFileTypeConfig(data.type).color }"
       ></span>
       <span class="text" :title="data.name">{{ data.name }}</span>
-      <span
-        class="collectBtn iconfont"
-        :class="[data.collected ? 'collected icon-shoucang1' : 'icon-shoucang']"
+      <div
+        class="collectBtnBox"
+        :class="{ collected: data.collected }"
         v-if="showCollectBtn"
-        @click.stop="toggleCollect"
-      ></span>
+      >
+        <CollectBtn :data="data"></CollectBtn>
+      </div>
     </div>
   </div>
 </template>
@@ -57,11 +58,9 @@ import { getFileTypeIcon, getFileTypeConfig } from '@/utils'
 import Menu from '../common/Menu.vue'
 import { computed, onUnmounted } from 'vue'
 import { useStore } from '@/store'
-import api from '@/api'
-import { ElMessage } from 'element-plus'
-import emitter from '@/utils/eventBus'
 import { useCardContextMenu } from '@/hooks/useContextMenuEvent'
 import { RESOURCE_TYPES } from '@/constant'
+import CollectBtn from '../common/CollectBtn.vue'
 
 const props = defineProps({
   // 是否显示多选框
@@ -167,30 +166,6 @@ const onDragend = () => {
   store.setCurrentDragData(null)
 }
 
-// 切换收藏状态
-const toggleCollect = async () => {
-  try {
-    const { collected, id } = props.data
-    const newCollected = !collected
-    if (collected) {
-      // 取消收藏
-      await api.cancelCollect({
-        id
-      })
-    } else {
-      // 收藏
-      await api.collect({
-        id
-      })
-    }
-    props.data.collected = newCollected
-    ElMessage.success((newCollected ? '' : '取消') + `收藏成功`)
-    emitter.emit('toggle_collect_success')
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 // 右键显示菜单
 const { onContextmenu, menuListVisible, unBindContextmenuEvent } =
   useCardContextMenu()
@@ -220,7 +195,7 @@ onUnmounted(() => {
       visibility: visible;
     }
     .infoBox {
-      .collectBtn {
+      .collectBtnBox {
         visibility: visible;
       }
     }
@@ -313,19 +288,11 @@ onUnmounted(() => {
       font-size: 14px;
     }
 
-    .collectBtn {
-      font-size: 16px;
-      color: #a6b9cd;
-      margin-left: 6px;
+    .collectBtnBox {
       visibility: hidden;
-
-      &:hover {
-        color: #f93;
-      }
 
       &.collected {
         visibility: visible;
-        color: #ff9933;
       }
     }
   }

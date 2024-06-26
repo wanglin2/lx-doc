@@ -41,6 +41,10 @@
             <span class="name" :title="scope.row.name">{{
               scope.row.name
             }}</span>
+            <CollectBtn
+              v-if="showCollectBtn && scope.row.type !== RESOURCE_TYPES.FOLDER"
+              :data="scope.row"
+            ></CollectBtn>
           </div>
         </template>
       </el-table-column>
@@ -94,6 +98,7 @@ import {
 import Menu from '../common/Menu.vue'
 import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
 import { RESOURCE_TYPES } from '@/constant'
+import CollectBtn from '../common/CollectBtn.vue'
 
 const props = defineProps({
   // 是否显示多选框
@@ -125,6 +130,24 @@ const props = defineProps({
     default() {
       return []
     }
+  },
+  // 附加的菜单列表
+  fileAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  folderAdditionalMenuList: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  // 是否显示收藏按钮
+  showCollectBtn: {
+    type: Boolean,
+    default: true
   }
 })
 const emits = defineEmits(['folderClick', 'fileClick', 'actionClick'])
@@ -159,13 +182,19 @@ const menuList = [
 ]
 const getMenuList = row => {
   if (row.type === RESOURCE_TYPES.FOLDER) {
-    return props.coverFolderMenuList.length > 0
-      ? [...props.coverFolderMenuList]
-      : [...menuList]
+    return [
+      ...(props.coverFolderMenuList.length > 0
+        ? [...props.coverFolderMenuList]
+        : [...menuList]),
+      ...props.folderAdditionalMenuList
+    ]
   } else {
-    return props.coverFileMenuList.length > 0
-      ? [...props.coverFileMenuList]
-      : [...menuList]
+    return [
+      ...(props.coverFileMenuList.length > 0
+        ? [...props.coverFileMenuList]
+        : [...menuList]),
+      ...props.fileAdditionalMenuList
+    ]
   }
 }
 
@@ -180,7 +209,10 @@ const onTableRowClick = row => {
 
 // 操作点击
 const onMenuClick = (action, data) => {
-  const resourceType = data.type === RESOURCE_TYPES.FOLDER ? RESOURCE_TYPES.FOLDER : RESOURCE_TYPES.FILE
+  const resourceType =
+    data.type === RESOURCE_TYPES.FOLDER
+      ? RESOURCE_TYPES.FOLDER
+      : RESOURCE_TYPES.FILE
   emits(
     'actionClick',
     {

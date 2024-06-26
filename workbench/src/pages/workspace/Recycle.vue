@@ -56,6 +56,7 @@
           :coverFileMenuList="menuList"
           :coverFolderMenuList="menuList"
           :showCollectBtn="false"
+          :disabledFileEdit="true"
         ></View>
         <!-- 无数据 -->
         <NoData
@@ -165,6 +166,7 @@ const restore = async (item, type) => {
         message: '恢复成功'
       })
       getRecycleFolderAndFileList()
+      emitter.emit('reload_sidebar_tree')
     } catch (error) {
       console.log(error)
     }

@@ -102,6 +102,7 @@
           :folderList="folderList"
           :isLoading="isLoading"
           :isSelectMode="checkedFileList.length > 0"
+          :fileAdditionalMenuList="fileAdditionalMenuList"
           @folderClick="onFolderClick"
           @renamed="reloadList"
           @moved="reloadList"
@@ -156,6 +157,22 @@ const reloadList = () => {
 const isSearch = ref(false)
 const searchText = ref('')
 const currentSearchText = ref('')
+const fileAdditionalMenuList = computed(() => {
+  return isSearch.value
+    ? [
+        {
+          name: '打开所在文件夹',
+          value: 'locationFolder',
+          icon: 'icon-wenjianjia1',
+          onClick: item => {
+            console.log(item)
+            onFolderClick(item, true)
+          }
+        }
+      ]
+    : []
+})
+
 const onSearch = () => {
   const text = searchText.value.trim()
   if (text) {
@@ -281,14 +298,19 @@ const onFolderPathClick = folder => {
 }
 
 // 文件夹点击
-const onFolderClick = async folder => {
+const onFolderClick = async (folder, isFile = false) => {
   try {
     let path = []
     if (isSearch.value) {
       const { data } = await api.getFolderPath({
         folderId: folder.id
       })
-      path = data
+      if (isFile) {
+        path = data.slice(0, -1)
+        folder = path[path.length - 1]
+      } else {
+        path = data
+      }
     }
     store.setCurrentFolder(folder)
     store.setCurrentFolderPath(

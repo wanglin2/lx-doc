@@ -45,6 +45,8 @@
       :showCheckbox="showCheckbox"
       :coverFolderMenuList="coverFolderMenuList"
       :coverFileMenuList="coverFileMenuList"
+      :fileAdditionalMenuList="fileAdditionalMenuList"
+      :showCollectBtn="showCollectBtn"
       @folderClick="onFolderClick"
       @fileClick="onFileClick"
       @actionClick="onActionClick"
@@ -130,6 +132,11 @@ const props = defineProps({
   showCollectBtn: {
     type: Boolean,
     default: true
+  },
+  // 禁用文件编辑，即跳转到编辑页面
+  disabledFileEdit: {
+    type: Boolean,
+    default: false
   }
 })
 const emits = defineEmits(['renamed', 'moved', 'deleted', 'folderClick'])
@@ -142,6 +149,7 @@ const onFolderClick = (...args) => {
 
 // 文件点击
 const onFileClick = item => {
+  if (props.disabledFileEdit) return
   fileHandle.openEditPage(item.type, item.id)
 }
 

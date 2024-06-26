@@ -90,7 +90,7 @@ const toHomepage = () => {
 // 退出登录
 const logout = async () => {
   await api.logout()
-  location.reload()
+  location.href = '/login'
 }
 
 // 下拉菜单
