@@ -8,7 +8,9 @@
       typeof document.createElement('canvas').getContext === 'function'
     ) {
       mxWinLoaded = true
-      checkAllLoaded()
+      checkAllLoaded(app => {
+        editorApp = app
+      })
     } else {
       App.main(app => {
         editorApp = app
@@ -23,7 +25,7 @@
         showHeader: false,
         showMask: true,
         Back: Vue.markRaw(ElementPlusIconsVue.Back),
-        id: urlParams['id'],
+        id: '',
         fileName: '',
         userInfo: null,
         fileData: null,
@@ -66,10 +68,18 @@
       }
     },
     created() {
-      if (!this.id) {
+      const res = /^\/flowchart\/([^/]+)/.exec(location.pathname)
+      let id = ''
+      if (res && res[1]) {
+        id = res[1]
+      } else if (urlParams['id']) {
+        id = urlParams['id']
+      }
+      if (!id) {
         ElementPlus.ElMessage.warning('参数有误')
         return
       }
+      this.id = id
       this.getUserInfo()
     },
     mounted() {

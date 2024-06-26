@@ -164,9 +164,9 @@
       var mxScriptsLoaded = false,
         mxWinLoaded = false
 
-      function checkAllLoaded() {
+      function checkAllLoaded(callback = () => {}) {
         if (mxScriptsLoaded && mxWinLoaded) {
-          App.main()
+          App.main(callback)
         }
       }
 

@@ -51,10 +51,7 @@ const useFileHandle = () => {
         url = (isDev ? `http://${ip}:9096/ppt/` : '/ppt/') + uid
         break
       case 'process':
-        url =
-          (isDev ? `http://${ip}:9097/index.html` : '/flowchart/') +
-          '?uid=' +
-          uid
+        url = (isDev ? `http://${ip}:9097/index.html` : '/flowchart/') + uid
         break
       case 'bpmn':
         url = (isDev ? `http://${ip}:9098/bpmn/` : '/bpmn/') + uid
