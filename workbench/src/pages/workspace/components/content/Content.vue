@@ -165,7 +165,6 @@ const fileAdditionalMenuList = computed(() => {
           value: 'locationFolder',
           icon: 'icon-wenjianjia1',
           onClick: item => {
-            console.log(item)
             onFolderClick(item, true)
           }
         }
