@@ -179,6 +179,12 @@ const getFileData = async () => {
   }
 }
 
+window.onbeforeunload = function () {
+  if (store.autoSaveStatus !== 'success') {
+    return '存在未保存的数据'
+  }
+}
+
 onMounted(() => {
   getFileData()
 })

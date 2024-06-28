@@ -21,6 +21,12 @@ import store from '@/store'
 import { message } from 'antd'
 import eventBus from '@/utils/eventBus'
 
+window.onbeforeunload = function () {
+  if (store.data.autoSaveStatus !== 'success') {
+    return '存在未保存的数据'
+  }
+}
+
 function App() {
   const [excalidrawAPI, setExcalidrawAPI] = useState(null)
 

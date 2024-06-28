@@ -179,6 +179,11 @@ export default {
     }
   },
   mounted() {
+    window.onbeforeunload = function() {
+      if (this.autoSaveStatus !== 'success') {
+        return '存在未保存的数据'
+      }
+    }
     this.computeToolbarShow()
     this.computeToolbarShowThrottle = throttle(this.computeToolbarShow, 300)
     window.addEventListener('resize', this.computeToolbarShowThrottle)

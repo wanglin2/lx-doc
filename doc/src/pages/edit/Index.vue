@@ -273,6 +273,12 @@ const print = () => {
   window.print()
 }
 
+window.onbeforeunload = function () {
+  if (store.autoSaveStatus !== 'success') {
+    return '存在未保存的数据'
+  }
+}
+
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value

@@ -264,6 +264,12 @@ const onShowShortcutkeys = () => {
   mainMenuVisible.value = false
   hotkeyDrawerVisible.value = true
 }
+
+window.onbeforeunload = function () {
+  if (mainStore.autoSaveStatus !== 'success') {
+    return '存在未保存的数据'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
