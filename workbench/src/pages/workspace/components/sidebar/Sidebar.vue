@@ -333,6 +333,7 @@ onUnmounted(() => {
           color: #6c7d8f;
           font-size: 12px;
           margin-top: 4px;
+          user-select: none;
         }
       }
     }

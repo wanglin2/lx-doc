@@ -12,7 +12,7 @@ const useFileHandle = () => {
   const createAndOpenNewFile = async type => {
     try {
       if (!store.currentFolder) {
-        ElMessage.warning('获取文件夹信息失败')
+        ElMessage.warning('请先选择文件夹')
         return
       }
       const { data } = await api.createFile({
