@@ -2,6 +2,7 @@ import api from '@/api'
 import { useStore } from '@/store'
 import { ElMessage } from 'element-plus'
 import emitter from '@/utils/eventBus'
+import { openUrl } from '@/utils'
 
 const useFileHandle = () => {
   const store = useStore()
@@ -65,7 +66,7 @@ const useFileHandle = () => {
       default:
         break
     }
-    location.href = url
+    openUrl(url)
   }
 
   return {
