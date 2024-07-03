@@ -1,6 +1,4 @@
 ;(function () {
-  let editorApp = null
-
   // 初始化应用
   const initChart = () => {
     if (
@@ -8,12 +6,10 @@
       typeof document.createElement('canvas').getContext === 'function'
     ) {
       mxWinLoaded = true
-      checkAllLoaded(app => {
-        editorApp = app
-      })
+      checkAllLoaded()
     } else {
       App.main(app => {
-        editorApp = app
+        window.editorApp = app
       })
     }
   }
@@ -132,7 +128,7 @@
             id: this.fileData.id,
             ...data
           })
-          const file = editorApp.getCurrentFile()
+          const file = window.editorApp.getCurrentFile()
           file.setModified(false)
           this.setAutoSaveStatus('success')
         } catch (error) {
@@ -141,7 +137,7 @@
         }
       },
       save() {
-        const fileContent = editorApp.getFileData()
+        const fileContent = window.editorApp.getFileData()
         this.updateFileData({
           content: fileContent
         })
@@ -162,12 +158,12 @@
         await this.updateFileData({
           name: this.fileName.trim()
         })
-        const file = editorApp.getCurrentFile()
+        const file = window.editorApp.getCurrentFile()
         file.rename(this.fileName.trim())
       },
       // 更新封面
       async saveCover() {
-        editorApp.editor.exportToCanvas(
+        window.editorApp.editor.exportToCanvas(
           async canvas => {
             const imgData = canvas.toDataURL('image/png')
             const res = await window.api.uploadImg({

@@ -164,9 +164,13 @@
       var mxScriptsLoaded = false,
         mxWinLoaded = false
 
-      function checkAllLoaded(callback = () => {}) {
+      window.editorApp = null
+
+      function checkAllLoaded() {
         if (mxScriptsLoaded && mxWinLoaded) {
-          App.main(callback)
+          App.main((app) => {
+            window.editorApp = app
+          })
         }
       }
 
