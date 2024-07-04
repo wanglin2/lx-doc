@@ -8,3 +8,9 @@ export const downloadFile = (data, fileName) => {
   // 模拟点击下载
   link.click()
 }
+
+// 设置页面标题
+export const setPageTitle = (title) => {
+  title = title || '文档'
+  document.title = title + '_理想文档'
+}

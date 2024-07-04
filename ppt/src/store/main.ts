@@ -12,6 +12,7 @@ import { SYS_FONTS } from '@/configs/font'
 import { isSupportFont } from '@/utils/font'
 import api from '@/api'
 import config from '@/configs/user'
+import { setPageTitle } from '@/utils/common'
 
 import { useSlidesStore } from './slides'
 
@@ -163,6 +164,7 @@ export const useMainStore = defineStore('main', {
       const { data } = await api.getFileContent({
         id
       })
+      setPageTitle(data.name)
       this.fileData = data
       return data
     },
@@ -179,6 +181,9 @@ export const useMainStore = defineStore('main', {
           id: this.fileData.id,
           ...data
         })
+        if (data.name) {
+          setPageTitle(data.name)
+        }
         this.setAutoSaveStatus('success')
       } catch (error) {
         console.log(error)

@@ -150,19 +150,19 @@ const store = new Vuex.Store({
     },
 
     // 更新文件数据
-    async storeFileInfo(ctx, info) {
+    async storeFileInfo(ctx, data) {
       try {
         ctx.commit('setAutoSaveStatus', 'ing')
         ctx.state.mindMapData = {
           ...ctx.state.mindMapData,
-          ...info
+          ...data
         }
         await updateFile({
           id: ctx.state.mindMapData.id,
-          ...info
+          ...data
         })
-        if (info.name) {
-          setPageTitle(info.name)
+        if (data.name) {
+          setPageTitle(data.name)
         }
         ctx.commit('setAutoSaveStatus', 'success')
       } catch (error) {

@@ -1,5 +1,6 @@
 import api from '@/api'
 import eventBus from '@/utils/eventBus'
+import { setPageTitle } from '@/utils'
 
 const store = {
   data: {
@@ -59,6 +60,7 @@ const store = {
       const { data } = await api.getFileContent({
         id
       })
+      setPageTitle(data.name)
       if (data.content) {
         data.content = data.content ? JSON.parse(data.content) : null
       }
@@ -78,6 +80,9 @@ const store = {
           id: store.data.fileData.id,
           ...data
         })
+        if (data.name) {
+          setPageTitle(data.name)
+        }
         store.methods.setAutoSaveStatus('success')
       } catch (error) {
         console.log(error)

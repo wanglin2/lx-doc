@@ -89,6 +89,11 @@
       setAutoSaveStatus(data) {
         this.autoSaveStatus = data
       },
+      // 设置页面标题
+      setPageTitle(title) {
+        title = title || '流程图'
+        document.title = title + '_理想文档'
+      },
       // 获取用户信息
       async getUserInfo() {
         try {
@@ -110,6 +115,7 @@
           })
           this.fileData = data
           this.fileName = this.fileData.name
+          this.setPageTitle(this.fileName)
           initChart()
         } catch (error) {
           console.log(error)
@@ -128,6 +134,9 @@
             id: this.fileData.id,
             ...data
           })
+          if (data.name) {
+            this.setPageTitle(data.name)
+          }
           const file = window.editorApp.getCurrentFile()
           file.setModified(false)
           this.setAutoSaveStatus('success')

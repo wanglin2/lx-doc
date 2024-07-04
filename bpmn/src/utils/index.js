@@ -55,3 +55,9 @@ export const svgToPng = (str, exportPadding = 0) => {
         img.src = svgUrl
     })
 }
+
+// 设置页面标题
+export const setPageTitle = (title) => {
+    title = title || 'Bpmn'
+    document.title = title + '_理想文档'
+  }

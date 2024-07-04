@@ -1,6 +1,7 @@
 import { createPinia, defineStore } from 'pinia'
 import api from './api'
 import config from '@/config'
+import { setPageTitle } from '@/utils'
 
 export const pinia = createPinia()
 
@@ -63,6 +64,7 @@ export const useStore = defineStore('main', {
       const { data } = await api.getFileContent({
         id
       })
+      setPageTitle(data.name)
       this.fileData = data
       return data
     },
@@ -79,6 +81,9 @@ export const useStore = defineStore('main', {
           id: this.fileData.id,
           ...data
         })
+        if (data.name) {
+          setPageTitle(data.name)
+        }
         this.setAutoSaveStatus('success')
       } catch (error) {
         console.log(error)

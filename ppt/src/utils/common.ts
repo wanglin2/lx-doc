@@ -15,3 +15,9 @@ export const fillDigit = (digit: number, len: number) => {
 export const isPC = () => {
   return !navigator.userAgent.match(/(iPhone|iPod|iPad|Android|Mobile|BlackBerry|Symbian|Windows Phone)/i)
 }
+
+// 设置页面标题
+export const setPageTitle = (title: string) => {
+  title = title || '幻灯片'
+  document.title = title + '_理想文档'
+}

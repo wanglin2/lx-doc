@@ -22,3 +22,9 @@ export const imgToDataURL = src => {
     img.src = src
   })
 }
+
+// 设置页面标题
+export const setPageTitle = title => {
+  title = title || '白板'
+  document.title = title + '_理想文档'
+}
