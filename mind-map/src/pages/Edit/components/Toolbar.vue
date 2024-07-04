@@ -120,6 +120,7 @@ export default {
         'associativeLine',
         'formula',
         // 'attachment',
+        'outerFrame',
         'annotation'
       ],
       horizontalList: [],

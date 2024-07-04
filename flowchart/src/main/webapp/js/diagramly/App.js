@@ -711,13 +711,11 @@ App.main = function (callback, createUi) {
     function doLoad(bundle) {
       // Prefetches asynchronous requests so that below code runs synchronous Loading the correct bundle (one file) via the fallback system in mxResources. The stylesheet is compiled into JS in the build process and is only needed for local development.
       // 预取异步请求，以便下面的代码通过mxResources中的回退系统同步加载正确的捆绑包（一个文件）。样式表在构建过程中被编译成JS，并且仅用于本地开发。
-      console.log(bundle, STYLE_PATH)
       mxUtils.getAll(
         urlParams['dev'] != '1'
           ? [bundle]
           : [bundle, STYLE_PATH + '/default.xml'],
         function (xhr) {
-          console.log(xhr)
           // Adds bundle text to resources
           // 将捆绑文本添加到资源
           mxResources.parse(xhr[0].getText())

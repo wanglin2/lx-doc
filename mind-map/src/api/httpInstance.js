@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-ui'
+import { Message } from 'element-ui'
 
 const http = axios.create({
   timeout: 10000,
@@ -30,7 +30,7 @@ http.interceptors.response.use(
         location.href = '/login'
       }
     } else if (code !== 0) {
-      ElMessage.error(message || '系统错误')
+      Message.error(message || '系统错误')
       return Promise.reject(response)
     }
     return response.data

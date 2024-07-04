@@ -129,11 +129,9 @@ const initEditor = initialData => {
       new DragDrop(editor)
     },
     onChange: (api, event) => {
-      console.log('onChange', api, event)
       onChange()
     }
   })
-  console.log(editor)
 }
 const onEditorContainerClick = e => {
   if (e.target.classList.contains('editorContainer')) {

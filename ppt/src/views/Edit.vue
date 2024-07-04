@@ -35,7 +35,6 @@ onMounted(async () => {
 const getFileData = async () => {
   try {
     const res = await mainStore.getFileData(route.params.id)
-    console.log(res)
     if (res.content) {
       const data = JSON.parse(res.content)
       const { theme, slides } = data

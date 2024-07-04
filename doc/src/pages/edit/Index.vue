@@ -256,9 +256,6 @@ const exportToPdf = () => {
     })
     .from(editorContentRef.value)
     .save()
-    .then(() => {
-      console.log(111)
-    })
     .catch(error => {
       console.error(error)
     })

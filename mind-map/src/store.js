@@ -8,6 +8,7 @@ import {
 } from '@/api'
 import exampleData from 'simple-mind-map/example/exampleData'
 import { simpleDeepClone } from 'simple-mind-map/src/utils/index'
+import { setPageTitle } from '@/utils'
 
 Vue.use(Vuex)
 
@@ -103,6 +104,7 @@ const store = new Vuex.Store({
       const { data } = await getFileContent({
         id
       })
+      setPageTitle(data.name)
       if (data.content) {
         data.content = JSON.parse(data.content)
       } else {
@@ -117,7 +119,6 @@ const store = new Vuex.Store({
       try {
         ctx.commit('setAutoSaveStatus', 'ing')
         ctx.state.mindMapData.content.root = data //copyMindMapTreeData({}, data)
-        console.log('storeData', ctx.state.mindMapData)
         await updateFile({
           id: ctx.state.mindMapData.id,
           content: JSON.stringify(ctx.state.mindMapData.content)
@@ -137,7 +138,6 @@ const store = new Vuex.Store({
           ...ctx.state.mindMapData.content,
           ...config
         }
-        console.log('storeConfig', ctx.state.mindMapData)
         await updateFile({
           id: ctx.state.mindMapData.id,
           content: JSON.stringify(ctx.state.mindMapData.content)
@@ -157,11 +157,13 @@ const store = new Vuex.Store({
           ...ctx.state.mindMapData,
           ...info
         }
-        console.log('storeFileInfo', ctx.state.mindMapData)
         await updateFile({
           id: ctx.state.mindMapData.id,
           ...info
         })
+        if (info.name) {
+          setPageTitle(info.name)
+        }
         ctx.commit('setAutoSaveStatus', 'success')
       } catch (error) {
         console.log(error)

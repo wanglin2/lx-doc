@@ -74,7 +74,6 @@ const store = {
           ...store.data.fileData,
           ...data
         }
-        console.log('updateFileData', store.data.fileData)
         await api.updateFile({
           id: store.data.fileData.id,
           ...data

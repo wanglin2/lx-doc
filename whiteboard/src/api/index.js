@@ -3,7 +3,6 @@ import getMockData from './mock'
 
 const isDev = process.env.NODE_ENV !== 'production'
 const useMock = import.meta.env.MODE === 'mock'
-console.log('useMock', useMock)
 
 export default {
   // 上传文件

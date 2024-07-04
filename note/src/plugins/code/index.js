@@ -215,7 +215,6 @@ class CodeBox {
   }
 
   _highlightCodeArea(event) {
-    console.log('this.data.language', this.data.language)
     this.codeArea.removeAttribute('data-highlighted')
     hljs.highlightElement(this.codeArea, { language: this.data.language })
   }

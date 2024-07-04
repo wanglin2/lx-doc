@@ -12,7 +12,7 @@
       ref="mindMapContainer"
     ></div>
     <Count :mindMap="mindMap" v-if="!isZenMode"></Count>
-    <Navigator :mindMap="mindMap"></Navigator>
+    <Navigator v-if="mindMap" :mindMap="mindMap"></Navigator>
     <NavigatorToolbar :mindMap="mindMap" v-if="!isZenMode"></NavigatorToolbar>
     <OutlineSidebar :mindMap="mindMap"></OutlineSidebar>
     <Style v-if="!isZenMode"></Style>
@@ -36,6 +36,7 @@
     <Scrollbar v-if="isShowScrollbar && mindMap" :mindMap="mindMap"></Scrollbar>
     <FormulaSidebar v-if="mindMap" :mindMap="mindMap"></FormulaSidebar>
     <SourceCodeEdit v-if="mindMap" :mindMap="mindMap"></SourceCodeEdit>
+    <NodeOuterFrame v-if="mindMap" :mindMap="mindMap"></NodeOuterFrame>
     <div
       class="dragMask"
       v-if="showDragMask"
@@ -68,6 +69,7 @@ import ScrollbarPlugin from 'simple-mind-map/src/plugins/Scrollbar.js'
 import Formula from 'simple-mind-map/src/plugins/Formula.js'
 import RainbowLines from 'simple-mind-map/src/plugins/RainbowLines.js'
 import Demonstrate from 'simple-mind-map/src/plugins/Demonstrate.js'
+import OuterFrame from 'simple-mind-map/src/plugins/OuterFrame.js'
 import { loadImage } from 'simple-mind-map/src/utils'
 // 协同编辑插件
 // import Cooperate from 'simple-mind-map/src/plugins/Cooperate.js'
@@ -102,6 +104,7 @@ import Scrollbar from './Scrollbar.vue'
 import FormulaSidebar from './FormulaSidebar.vue'
 import SourceCodeEdit from './SourceCodeEdit.vue'
 import NodeAttachment from './NodeAttachment.vue'
+import NodeOuterFrame from './NodeOuterFrame.vue'
 import * as api from '@/api'
 
 // 注册插件
@@ -121,6 +124,7 @@ MindMap.usePlugin(MiniMap)
   .usePlugin(Formula)
   .usePlugin(RainbowLines)
   .usePlugin(Demonstrate)
+  .usePlugin(OuterFrame)
 
 // 注册自定义主题
 customThemeList.forEach(item => {
@@ -156,7 +160,8 @@ export default {
     Scrollbar,
     FormulaSidebar,
     SourceCodeEdit,
-    NodeAttachment
+    NodeAttachment,
+    NodeOuterFrame
   },
   data() {
     return {

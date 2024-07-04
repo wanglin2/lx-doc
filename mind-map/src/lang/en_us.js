@@ -63,7 +63,7 @@ export default {
     isUseHandDrawnLikeStyle: 'Is use hand drawn like style',
     rootLineStartPos: 'Root line start pos',
     center: 'Center',
-    right: 'Right',
+    edge: 'Edge',
     rainbowLines: 'Rainbow lines',
     notUseRainbowLines: 'Not use rainbow lines'
   },
@@ -100,7 +100,15 @@ export default {
     removeNote: 'Remove note',
     removeCustomStyles: 'Remove custom styles',
     removeAllNodeCustomStyles: 'Remove all node custom styles',
-    exportNodeToPng: 'Export node to png'
+    exportNodeToPng: 'Export node to png',
+    copyToClipboard: 'Copy to clipboard',
+    copyToSmm: 'SMM',
+    copyToJson: 'JSON',
+    copyToMarkdown: 'Markdown',
+    copyToTxt: 'Txt',
+    copyToPng: 'Png',
+    copySuccess: 'Copy success',
+    copyFail: 'Copy fail'
   },
   count: {
     words: 'Words',
@@ -266,6 +274,7 @@ export default {
     painter: 'Painter',
     formula: 'Formula',
     attachment: 'Attachment',
+    outerFrame: 'Outer frame',
     more: 'More',
     selectFileTip: 'Please select a file',
     notSupportTip:
@@ -357,5 +366,12 @@ export default {
     lineWidth: 'Line width',
     padding: 'Padding',
     animate: 'Animate'
+  },
+  nodeOuterFrame: {
+    outerFrameSetting: 'Setting',
+    deleteOuterFrame: 'Delete outer frame',
+    boxStyle: 'Box style',
+    boxColor: 'Box color',
+    fillColor: 'Fill color'
   }
 }

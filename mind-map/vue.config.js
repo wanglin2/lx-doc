@@ -1,6 +1,4 @@
 const path = require('path')
-const isDev = process.env.NODE_ENV !== 'production'
-const isLibrary = process.env.NODE_ENV === 'library'
 
 module.exports = {
   publicPath: '/mind-map/',
@@ -27,12 +25,10 @@ module.exports = {
     // 移除 prefetch 插件
     config.plugins.delete('prefetch')
     // 给插入html页面内的js和css添加hash参数
-    if (!isLibrary) {
-      config.plugin('html').tap(args => {
-        args[0].hash = true
-        return args
-      })
-    }
+    config.plugin('html').tap(args => {
+      args[0].hash = true
+      return args
+    })
   },
   configureWebpack: {
     resolve: {

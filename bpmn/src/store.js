@@ -75,7 +75,6 @@ export const useStore = defineStore('main', {
           ...this.fileData,
           ...data
         }
-        console.log('updateFileData', this.fileData)
         await api.updateFile({
           id: this.fileData.id,
           ...data
