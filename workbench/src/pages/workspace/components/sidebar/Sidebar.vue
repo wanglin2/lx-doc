@@ -7,10 +7,7 @@
       <span class="title">{{ config.name }}</span>
     </div>
     <div class="createBox" @click.stop>
-      <div
-        class="createBtn"
-        @click="createTypeListVisible = !createTypeListVisible"
-      >
+      <div class="createBtn" @click="onCreate">
         <span class="iconfont icon-jia"></span>
         <span class="text">创建</span>
       </div>
@@ -71,12 +68,12 @@
 <script setup>
 import { nextTick, ref, watch, computed, onUnmounted } from 'vue'
 import config from '@/config'
-import api from '@/api'
 import useFileHandle from '@/hooks/useFileHandle'
 import { useStore } from '@/store'
 import FolderTree from '../common/FolderTree.vue'
 import emitter from '@/utils/eventBus'
 import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
 const route = useRoute()
@@ -91,6 +88,21 @@ window.addEventListener('click', hideCreateTypeList)
 
 // 创建新文件
 const { createAndOpenNewFile } = useFileHandle()
+
+// 点击创建按钮
+const onCreate = () => {
+  const len = config.createTypeList.length
+  if (len <= 0) {
+    ElMessage.warning('没有可创建的文件')
+    return
+  }
+  if (len === 1) {
+    // 如果只有一种文档类型，直接创建即可
+    createAndOpenNewFile(config.createTypeList[0].value)
+  } else {
+    createTypeListVisible.value = !createTypeListVisible.value
+  }
+}
 
 // 进入收藏页面
 const toCollect = () => {
