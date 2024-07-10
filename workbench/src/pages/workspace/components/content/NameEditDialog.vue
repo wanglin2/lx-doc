@@ -16,7 +16,10 @@
       @submit.native.stop.prevent
     >
       <el-form-item label="名称" prop="name">
-        <el-input v-model="editForm.name" />
+        <el-input
+          v-model="editForm.name"
+          @keydown.enter.stop="onConfirmClick"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -74,6 +77,7 @@ const onShow = data => {
   editData.value = data
   editForm.name = data.name || ''
   dialogVisible.value = true
+  ruleFormRef.value.clearValidate('name')
 }
 emitter.on('show_name_edit_dialog', onShow)
 
