@@ -45,7 +45,13 @@
             “{{ currentSearchText }}”的搜索结果：
           </div>
           <!-- 文件夹路径 -->
-          <div class="folderPath" v-else>
+          <FolderPath
+            v-else
+            :pathList="currentFolderPath"
+            :current="currentFolder"
+            @click="onFolderPathClick"
+          ></FolderPath>
+          <!-- <div class="folderPath" v-else>
             <div
               class="folderItem"
               v-for="item in currentFolderPath"
@@ -58,7 +64,7 @@
               {{ item.name }}
               <el-icon class="icon"><ArrowRight /></el-icon>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="right">
           <!-- 操作按钮 -->
@@ -127,20 +133,21 @@
 <script setup>
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { Search, ArrowRight } from '@element-plus/icons-vue'
-import Avatar from '../common/Avatar.vue'
+import Avatar from './components/common/Avatar.vue'
 import { useStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
-import NoData from '../common/NoData.vue'
-import ContextMenu from './ContextMenu.vue'
+import NoData from './components/common/NoData.vue'
+import ContextMenu from './components/content/ContextMenu.vue'
 import emitter from '@/utils/eventBus'
-import IconBtn from '../common/IconBtn.vue'
-import TypeFilter from './TypeFilter.vue'
-import Sort from './Sort.vue'
-import View from './View.vue'
+import IconBtn from './components/common/IconBtn.vue'
+import TypeFilter from './components/content/TypeFilter.vue'
+import Sort from './components/content/Sort.vue'
+import View from './components/content/View.vue'
 import useLayoutChange from '@/hooks/useLayoutChange'
 import { emitContextmenuEvent } from '@/hooks/useContextMenuEvent'
 import { RESOURCE_TYPES } from '@/constant'
+import FolderPath from './components/content/FolderPath.vue'
 
 const store = useStore()
 
@@ -475,6 +482,9 @@ onUnmounted(() => {
       padding: 0 24px;
 
       .left {
+        overflow: hidden;
+        margin-right: 12px;
+
         .searchTip {
           color: #212930;
           height: 40px;
@@ -550,6 +560,7 @@ onUnmounted(() => {
       .right {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
 
         .marginRight {
           margin-right: 12px;

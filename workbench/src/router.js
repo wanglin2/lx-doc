@@ -13,8 +13,7 @@ const routes = [
       {
         name: 'List',
         path: '',
-        component: () =>
-          import('@/pages/workspace/components/content/Content.vue')
+        component: () => import('@/pages/workspace/List.vue')
       },
       {
         name: 'Collect',
