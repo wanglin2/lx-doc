@@ -34,6 +34,11 @@ const routes = [
         name: 'Panorama',
         path: 'panorama',
         component: () => import('@/pages/workspace/Panorama.vue')
+      },
+      {
+        name: 'Preview',
+        path: 'preview/:type/:uid',
+        component: () => import('@/pages/workspace/Preview.vue')
       }
     ]
   },

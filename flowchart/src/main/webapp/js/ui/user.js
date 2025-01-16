@@ -82,8 +82,26 @@
       this.showMask = false
     },
     methods: {
-      back() {
-        location.href = '/'
+      async back() {
+        if (window.top !== window.self && window.parent) {
+          // 如果是 iframe 中运行，通知上层 window 后退
+          if (this.autoSaveStatus !== 'success') {
+            const answer = window.confirm('系统可能不会保存您所做的更改。')
+            if (!answer) return false
+          }
+          try {
+            window.parent.history.back()
+          } catch (e) {
+            window.parent.postMessage('history-back', '*')
+          }
+        } else {
+          // 如果是新窗口打开，跳到工作台标签页并且关闭当前标签页
+          const href = process.env.NODE_ENV === 'production' ? '/' : 'http://' + location.hostname + ':9090'
+          const workspaceWindow = window.open(href, 'lx-doc')
+          if (window !== workspaceWindow) {
+            window.close()
+          }
+        }
       },
       // 设置当前自动保存状态
       setAutoSaveStatus(data) {

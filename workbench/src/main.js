@@ -8,4 +8,8 @@ import './styles/style.less'
 import './styles/theme.less'
 import '@/assets/iconfont/iconfont.css'
 
+if (!window.name) {
+  window.name = 'lx-doc'
+}
+
 createApp(App).use(router).use(pinia).use(ElementPlus).mount('#app')

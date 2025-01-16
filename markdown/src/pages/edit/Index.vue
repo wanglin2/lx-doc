@@ -98,7 +98,7 @@ import { Emoji } from '@vavt/v3-extension'
 import '@vavt/v3-extension/lib/asset/Emoji.css'
 import { ExportPDF } from '@vavt/v3-extension'
 import '@vavt/v3-extension/lib/asset/ExportPDF.css'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import screenfull from 'screenfull'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
@@ -115,11 +115,28 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-const onBack = () => {
-  if (process.env.NODE_ENV === 'production') {
-    location.href = '/'
+const onBack = async () => {
+  if (window.top !== window.self && window.parent) {
+    // 如果是 iframe 中运行，通知上层 window 后退
+    if (store.autoSaveStatus !== 'success') {
+      await ElMessageBox.confirm(`系统可能不会保存您所做的更改。`, '警告', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    }
+    try {
+      window.parent.history.back()
+    } catch (e) {
+      window.parent.postMessage('history-back', '*')
+    }
   } else {
-    location.href = 'http://' + location.hostname + ':9090'
+    // 如果是新窗口打开，跳到工作台标签页并且关闭当前标签页
+    const href = process.env.NODE_ENV === 'production' ? '/' : 'http://' + location.hostname + ':9090'
+    const workspaceWindow = window.open(href, 'lx-doc')
+    if (window !== workspaceWindow) {
+      window.close()
+    }
   }
 }
 

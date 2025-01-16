@@ -198,11 +198,28 @@ export default {
     ...mapActions(['storeFileInfo']),
 
     // 返回工作台页面
-    onBack() {
-      if (process.env.NODE_ENV === 'production') {
-        location.href = '/'
+    async onBack() {
+      if (window.top !== window.self && window.parent) {
+        // 如果是 iframe 中运行，通知上层 window 后退
+        if (this.autoSaveStatus !== 'success') {
+          await this.$confirm(`系统可能不会保存您所做的更改。`, '警告', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+        }
+        try {
+          window.parent.history.back()
+        } catch (e) {
+          window.parent.postMessage('history-back', '*')
+        }
       } else {
-        location.href = 'http://' + location.hostname + ':9090'
+        // 如果是新窗口打开，跳到工作台标签页并且关闭当前标签页
+        const href = process.env.NODE_ENV === 'production' ? '/' : 'http://' + location.hostname + ':9090'
+        const workspaceWindow = window.open(href, 'lx-doc')
+        if (window !== workspaceWindow) {
+          window.close()
+        }
       }
     },
 

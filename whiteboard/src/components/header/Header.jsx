@@ -21,14 +21,29 @@ const uploadFilesMap = {}
 let isSaving = false
 let hasWaitSaveTask = false
 
+
 function Header({ excalidrawAPI }) {
   // 返回工作台
-  const onBack = () => {
-    if (process.env.NODE_ENV === 'production') {
-      location.href = '/'
-    } else {
-      location.href = 'http://' + location.hostname + ':9090'
+  const onBack = async () => {
+  if (window.top !== window.self && window.parent) {
+    // 如果是 iframe 中运行，通知上层 window 后退
+    if (store.autoSaveStatus !== 'success') {
+      const answer = window.confirm('系统可能不会保存您所做的更改。')
+      if (!answer) return false
     }
+    try {
+      window.parent.history.back()
+    } catch (e) {
+      window.parent.postMessage('history-back', '*')
+    }
+  } else {
+    // 如果是新窗口打开，跳到工作台标签页并且关闭当前标签页
+    const href = process.env.NODE_ENV === 'production' ? '/' : 'http://' + location.hostname + ':9090'
+    const workspaceWindow = window.open(href, 'lx-doc')
+    if (window !== workspaceWindow) {
+      window.close()
+    }
+  }
   }
 
   // 文件名
